@@ -65,7 +65,7 @@ class User implements UserInterface, \Serializable
         // $this->salt = md5(uniqid('', true));
     }
 
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
@@ -77,12 +77,12 @@ class User implements UserInterface, \Serializable
         return null;
     }
 
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
         return array('ROLE_USER');
     }
