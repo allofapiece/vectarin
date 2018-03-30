@@ -26,12 +26,6 @@ class Question
      */
     private $text;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Answer", inversedBy="questions")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $answers;
-
     public function getId()
     {
         return $this->id;
@@ -45,18 +39,6 @@ class Question
     public function setText(string $text): self
     {
         $this->text = $text;
-
-        return $this;
-    }
-
-    public function getAnswers(): ?Answer
-    {
-        return $this->answers;
-    }
-
-    public function setAnswers(?Answer $answers): self
-    {
-        $this->answers = $answers;
 
         return $this;
     }

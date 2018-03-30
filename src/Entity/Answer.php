@@ -33,16 +33,6 @@ class Answer
      */
     private $isCorrect;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Question", mappedBy="answer")
-     */
-    private $question;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Question", mappedBy="answers")
-     */
-    private $questions;
-
     public function __construct()
     {
         $this->question = new ArrayCollection();
@@ -76,44 +66,5 @@ class Answer
         $this->isCorrect = $isCorrect;
 
         return $this;
-    }
-
-    /**
-     * @return Collection|Question[]
-     */
-    public function getQuestion(): Collection
-    {
-        return $this->question;
-    }
-
-    public function addQuestion(Question $question): self
-    {
-        if (!$this->question->contains($question)) {
-            $this->question[] = $question;
-            $question->setAnswer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeQuestion(Question $question): self
-    {
-        if ($this->question->contains($question)) {
-            $this->question->removeElement($question);
-            // set the owning side to null (unless already changed)
-            if ($question->getAnswer() === $this) {
-                $question->setAnswer(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Question[]
-     */
-    public function getQuestions(): Collection
-    {
-        return $this->questions;
     }
 }

@@ -48,6 +48,16 @@ class User implements UserInterface, \Serializable
      */
     private $email;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $surname;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $secondName;
+
     public function __construct()
     {
         $this->isActive = true;
@@ -125,6 +135,30 @@ class User implements UserInterface, \Serializable
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getSurname(): ?string
+    {
+        return $this->surname;
+    }
+
+    public function setSurname(string $surname): self
+    {
+        $this->surname = $surname;
+
+        return $this;
+    }
+
+    public function getSecondName(): ?string
+    {
+        return $this->secondName;
+    }
+
+    public function setSecondName(string $secondName): self
+    {
+        $this->secondName = $secondName;
 
         return $this;
     }
