@@ -11,14 +11,29 @@ Encore
     // .enableVersioning(Encore.isProduction())
 
     // uncomment to define the assets of the project
-    // .addEntry('js/app', './assets/js/app.js')
-    // .addStyleEntry('css/app', './assets/css/app.scss')
+    .addEntry('js/app', './assets/js/app.js')
+
+    .addStyleEntry('css/app', './assets/css/app.scss')
+    .addStyleEntry('css/forms', './assets/css/forms.css')
 
     // uncomment if you use Sass/SCSS files
-    // .enableSassLoader()
+    .enableSassLoader(function(sassOptions) {}, {
+        resolveUrlLoader: false
+    })
 
     // uncomment for legacy applications that require $/jQuery as a global variable
-    // .autoProvidejQuery()
+    .autoProvidejQuery()
+
+    .enableSourceMaps(!Encore.isProduction())
+
+    // empty the outputPath dir before each build
+    .cleanupOutputBeforeBuild()
+
+    // show OS notifications when builds finish/fail
+    .enableBuildNotifications()
+
+// create hashed filenames (e.g. app.abc123.css)
+// .enableVersioning()
 ;
 
 module.exports = Encore.getWebpackConfig();
