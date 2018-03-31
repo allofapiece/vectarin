@@ -1,32 +1,57 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Listratsenka Stas
- * Date: 27.03.2018
- * Time: 20:36
- */
 
 namespace App\Controller;
 
 
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class QuizController extends Controller
 {
     /**
-     * @Route("/quizzes")
-     * @Route("/", name="quizzes")
+     * @Route("/admin/quiz/control",name="quiz.control")
+     * @return Response
      */
-    public function quizzesAction(){
-        return $this->render('quizzes/quizzes.html.twig');
+    public function quizControl()
+    {
+
     }
 
     /**
-     * @Route("/myquizzes", name="myquizzes")
+     * @Route("/admin/quiz/create",name="quiz.create")
+     * @return Response
      */
-    public function myQuizzesAction(){
-        return $this->render('quizzes/myquizzes.html.twig');
+    public function createQuiz()
+    {
+
     }
+
+    /**
+     * @Route("/admin/quiz/update/{id}",name="quiz.update")
+     * @return Response
+     */
+    public function updateQuiz()
+    {
+
+    }
+
+    /**
+     * @Route("/admin/quiz/delete/{id}",name="quiz.delete")
+     * @return Response
+     */
+    public function deleteQuiz()
+    {
+
+    }
+
+    /**
+     * @Route("/admin/quiz/show/{id}",name="quiz.show")
+     * @return Response
+     */
+    public function showQuizById()
+    {
+
+    }
+
 }
