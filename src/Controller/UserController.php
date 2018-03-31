@@ -1,24 +1,29 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Listratsenka Stas
- * Date: 27.03.2018
- * Time: 20:34
- */
 
 namespace App\Controller;
 
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class UserController extends Controller
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
+
+class UserController
 {
     /**
-     * @Route("/admin/users", name="users")
+     * @Route("/admin/users",name="user.list")
      */
-    public function signInAction(){
-        return $this->render('users/users.html.twig');
+    public function listUsers()
+    {
+
+    }
+
+    /**
+     * @Route("/user/{id}/update",name="user.update")
+     * @return Response
+     */
+    public function updateUser()
+    {
+
     }
 
 }
+
