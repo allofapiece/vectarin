@@ -1,0 +1,11 @@
+@media (min-width: 768px){
+    .navbar {
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+    }
+}
+
+.navbar-brand{
+    margin-right: 30px;
+}

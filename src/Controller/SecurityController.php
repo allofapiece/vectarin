@@ -15,17 +15,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class SecurityController extends Controller
 {
     /**
-     * @Route("/sign-in", name="signIn")
+     * @Route("/signin", name="signIn")
      */
     public function signInAction(){
         return $this->render('security/signin.html.twig');
     }
 
     /**
-     * @Route("/log-in", name="logIn")
+     * @Route("/login", name="login")
      */
-    public function logInAction(){
-        return new Response();
+    public function loginAction(){
+        return $this->render('security/login.html.twig');
     }
 
     /**
@@ -35,4 +35,10 @@ class SecurityController extends Controller
 
     }
 
+    /**
+     * @Route("/admin", name="admin")
+     */
+    public function adminAction(){
+        return new Response();
+    }
 }

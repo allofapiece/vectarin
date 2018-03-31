@@ -13,20 +13,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class QuizController extends Controller
+class QuestionController extends Controller
 {
     /**
-     * @Route("/quizzes")
-     * @Route("/", name="quizzes")
+     * @Route("/questions", name="questions")
      */
     public function quizzesAction(){
-        return $this->render('quizzes/quizzes.html.twig');
-    }
-
-    /**
-     * @Route("/myquizzes", name="myquizzes")
-     */
-    public function myQuizzesAction(){
-        return $this->render('quizzes/myquizzes.html.twig');
+        return $this->render('questions/questions.html.twig');
     }
 }
