@@ -21,6 +21,8 @@ security:
             form_login:
                 login_path: login
                 check_path: login
+                default_target_path: quiz.show
+                #always_use_default_target_path
 
             # activate different ways to authenticate
 
