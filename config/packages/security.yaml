@@ -19,6 +19,9 @@ security:
                 login_path: login
                 check_path: login
                 provider: our_db_provider
+                default_target_path: /home
+                username_parameter: "login[username]"
+                password_parameter: "login[password]"
             logout:
                 path: /logout
                 target: /

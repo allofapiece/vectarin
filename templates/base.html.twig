@@ -10,6 +10,7 @@
         {% endblock %}
     </head>
     <body>
+    <div id="wrapper">
         <header>
             {% block header %}
                 <nav class="navbar navbar-inverse">
@@ -25,21 +26,12 @@
                                 </button>
                                 <a class="navbar-brand" href="#">Vectarin.by</a>
                             </div>
-
-                            <!-- Соберите навигационные ссылки, формы, и другой контент для переключения -->
-                            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                                <ul class="nav navbar-nav">
-                                    {% block buttons %}
-                                        {% block btn_quizzes %}
-                                            <li><a href="{{ path('quizzes.show') }}">Викторины</a></li>
-                                        {% endblock %}
-
                                 <!-- Соберите навигационные ссылки, формы, и другой контент для переключения -->
                                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                                     <ul class="nav navbar-nav">
                                         {% block buttons %}
                                             {% block btn_quizzes %}
-                                                <li><a href="{{ path('quiz.show') }}">Викторины</a></li>
+                                                <li><a href="{{ path('quizzes.show') }}">Викторины</a></li>
                                             {% endblock %}
 
                                             {% block btn_my_quizzes %}
@@ -52,7 +44,7 @@
                                                 <li><a href="{{ path('questions') }}">Вопросы</a></li>
                                             {% endblock %}
                                             {% block btn_users %}
-                                                <li><a href="{{ path('users') }}">Пользователи</a></li>
+                                                <li><a href="{{ path('user.list') }}">Пользователи</a></li>
                                             {% endblock %}
 
                                         {% endif %}
@@ -90,7 +82,7 @@
                 </nav>
             {% endblock %}
         </header>
-        <div id="content">
+            <div id="content">
             {% block body %}
                 <div class="container">
                                                
@@ -115,9 +107,4 @@
             <script type="text/javascript" src="{{ asset('build/js/app.js') }}"></script>
         {% endblock %}
     </body>
-    <footer class="footer">
-        <div class="container">
-            <span class="text-muted">Created by <a href="https://github.com/allofapiece">allofapiece</a> & <a href="https://github.com/graschik">graschik</a></span>
-        </div>
-    </footer>
 </html>

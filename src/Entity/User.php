@@ -9,6 +9,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="app_users")
@@ -45,6 +46,7 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
+
 
     /**
      * @ORM\Column(name="is_remember", type="boolean")
@@ -196,23 +198,7 @@ class User implements UserInterface, \Serializable
     /**
      * @return mixed
      */
-    public function getIsRemember()
-    {
-        return $this->isRemember;
-    }
 
-    /**
-     * @param mixed $isRemember
-     */
-    public function setIsRemember(bool $isRemember)
-    {
-        $this->isRemember = $isRemember;
-    }
-
-
-    /**
-     * @return mixed
-     */
     public function getPlainPassword()
     {
         return $this->plainPassword;

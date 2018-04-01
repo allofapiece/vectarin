@@ -25,9 +25,6 @@ class LoginType extends AbstractType
         $builder
             ->add('username', TextType::class, array('label' => 'Логин'))
             ->add('password', PasswordType::class, array('label' => 'Пароль'))
-            ->add('is_remember', CheckboxType::class, array(
-                'label'    => 'Запомнить пароль'
-            ))
             ->add('save', SubmitType::class, array('label' => 'Войти'))
         ;
     }

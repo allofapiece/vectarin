@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 class SecurityController extends Controller
@@ -21,7 +22,7 @@ class SecurityController extends Controller
      * @param AuthenticationUtils $authenticationUtils
      * @return Response
      */
-    public function login(Request $request, AuthenticationUtils $authenticationUtils)
+    public function login(Request $request, AuthenticationUtils $authenticationUtils, ValidatorInterface $validator)
     {
         $user = new User();
         $user->setUsername("");
@@ -31,28 +32,15 @@ class SecurityController extends Controller
         $form = $this->createForm(LoginType::class, $user);
 
         $form->handleRequest($request);
+        $user = $form->getData();
+        $validateError = $validator->validate($user);
+        $authenticationError = $authenticationUtils->getLastAuthenticationError();
+        $lastUsername = $authenticationUtils->getLastUsername();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // $form->getData() holds the submitted values
-            // but, the original `$task` variable has also been updated
-            $user = $form->getData();
-
-            // ... perform some action, such as saving the task to the database
-            // for example, if Task is a Doctrine entity, save it!
-            // $entityManager = $this->getDoctrine()->getManager();
-            // $entityManager->persist($task);
-            // $entityManager->flush();
-
-            return $this->redirectToRoute('quiz.show');
-        }
-
-        $error=$authenticationUtils->getLastAuthenticationError();
-        $lastUsername=$authenticationUtils->getLastUsername();
-
-        return $this->render('security/login.html.twig',[
+        return $this->render('security/login.html.twig', [
             'form' => $form->createView(),
-            'last_username'=>$lastUsername,
-            'error'=>$error,
+            'authenticationError' => $authenticationError,
+            'validateError' => $validateError,
         ]);
     }
 
@@ -76,6 +64,12 @@ class SecurityController extends Controller
             // $form->getData() holds the submitted values
             // but, the original `$task` variable has also been updated
             $user = $form->getData();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // $form->getData() holds the submitted values
+            // but, the original `$task` variable has also been updated
+            $user = $form->getData();
+
 
             // ... perform some action, such as saving the task to the database
             // for example, if Task is a Doctrine entity, save it!

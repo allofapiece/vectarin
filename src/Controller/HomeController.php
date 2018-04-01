@@ -17,4 +17,12 @@ class HomeController extends Controller
     {
         return $this->render('/quizzes/quizzes.html.twig');
     }
+
+    /**
+     * @Route("/home",name="home")
+     */
+    public function home()
+    {
+        return $this->render('/quizzes/quizzes.html.twig');
+    }
 }
