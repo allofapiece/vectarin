@@ -1,0 +1,55 @@
+.form-security {
+    margin-top: 20px;
+    width: 40%;
+}
+.form-security .form-security-heading,
+.form-security .checkbox {
+    margin-bottom: 10px;
+}
+.form-security input[type="text"],
+.form-security input[type="password"] {
+    font-size: 16px;
+    height: auto;
+    margin-bottom: 15px;
+    padding: 7px 9px;
+}
+form .form-group label{
+    color: inherit;
+    font-size: 16px;
+    font-weight: normal;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.form-check-label{
+    font-weight: normal;
+}
+
+.security-content{
+}
+
+.form-security, .information-block{
+    display: inline;
+    float:left;
+}
+
+.information-block{
+    margin: 47px 0 0 30px;
+    width: 50%;
+}
+#content .container .panel{
+    padding-bottom: 10px;
+    display: block;
+}
+#content .container .panel .panel-body{
+    width: 100%;
+}
+
+@media (max-width: 768px){
+    .form-security {
+        width: 100%;
+    }
+    .information-block{
+        margin-left: 0;
+        width: 100%;
+    }
+}

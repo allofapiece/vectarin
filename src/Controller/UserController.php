@@ -10,10 +10,11 @@ class UserController
 {
     /**
      * @Route("/admin/users",name="user.list")
+     * @return Response
      */
     public function listUsers()
     {
-
+        return new Response();
     }
 
     /**
@@ -22,7 +23,7 @@ class UserController
      */
     public function updateUser()
     {
-
+        return new Response();
     }
 
 }

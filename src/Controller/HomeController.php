@@ -15,26 +15,14 @@ class HomeController extends Controller
      */
     public function indexAction()
     {
-        $question = new Question();
-        $question->setTextQuestion('Стасик лох?');
+        return $this->render('/quizzes/quizzes.html.twig');
+    }
 
-        $answer = new Answer();
-        $answer->setTextAnswer('Да');
-        $answer->setIsCorrect(true);
-        $answer->setQuestion($question);
-
-        $answerYes = new Answer();
-        $answerYes->setTextAnswer('Да');
-        $answerYes->setIsCorrect(false);
-        $answerYes->setQuestion($question);
-
-        $em=$this->getDoctrine()->getManager();
-        $em->persist($question);
-        $em->persist($answer);
-        $em->persist($answerYes);
-
-        $em->flush();
-
-        return new Response("kke");
+    /**
+     * @Route("/home",name="home")
+     */
+    public function home()
+    {
+        return $this->render('/quizzes/quizzes.html.twig');
     }
 }

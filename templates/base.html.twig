@@ -6,6 +6,7 @@
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('build/css/app.css') }}">
             <link rel="stylesheet" href="{{ asset('build/css/navbar.css') }}">
+            <link rel="stylesheet" href="{{ asset('build/css/footer.css') }}">
         {% endblock %}
     </head>
     <body>
@@ -22,46 +23,56 @@
                                     <span class="icon-bar"></span>
                                     <span class="icon-bar"></span>
                                 </button>
-                                <a class="navbar-brand" href="#">Vectain.by</a>
+                                <a class="navbar-brand" href="#">Vectarin.by</a>
                             </div>
 
-                            <!-- Соберите навигационные ссылки, формы, и другой контент для переключения -->
-                            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                                <ul class="nav navbar-nav">
-                                    {% block buttons %}
-                                        {% block btn_quizzes %}
-                                            <li><a href="{{ path('quizzes') }}">Викторины</a></li>
-                                        {% endblock %}
+                                <!-- Соберите навигационные ссылки, формы, и другой контент для переключения -->
+                                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                                    <ul class="nav navbar-nav">
+                                        {% block buttons %}
+                                            {% block btn_quizzes %}
+                                                <li><a href="{{ path('quizzes.show') }}">Викторины</a></li>
+                                            {% endblock %}
 
-                                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                            {% block btn_my_quizzes %}
+                                                <li><a href="{{ path('quizzes.user.show') }}">Мои викторины</a></li>
+                                            {% endblock %}
 
-                                        {% block btn_my_quizzes %}
-                                            <li><a href="{{ path('myquizzes') }}">Мои викторины</a></li>
-                                        {% endblock %}
+                                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
-                                        {% endif %}
-
-                                        {% if is_granted('ROLE_ADMIN') %}
-
-                                        {% block btn_questions %}
-                                            <li><a href="{{ path('questions') }}">Вопросы</a></li>
-                                        {% endblock %}
-                                        {% block btn_users %}
-                                            <li><a href="{{ path('users') }}">Пользователи</a></li>
-                                        {% endblock %}
+                                            {% block btn_questions %}
+                                                <li><a href="{{ path('questions') }}">Вопросы</a></li>
+                                            {% endblock %}
+                                            {% block btn_users %}
+                                                <li><a href="{{ path('user.list') }}">Пользователи</a></li>
+                                            {% endblock %}
 
                                         {% endif %}
                                     {% endblock %}
                                 </ul>
                                 <ul class="nav navbar-nav navbar-right">
                                     <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+                                                {% block user_name %}
+                                                    {{ app.user.username }}
+                                                {% endblock %}
+
+                                            {% endif %}
+                                        <span class="caret"></span></a>
                                         <ul class="dropdown-menu">
                                             <li><a href="#">Action</a></li>
                                             <li><a href="#">Another action</a></li>
                                             <li><a href="#">Something else here</a></li>
                                             <li role="separator" class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
+                                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+                                                {% block btn_exit %}
+                                                    <li><a href="{{ path('logout') }}">Выйти</a> </li>
+                                                {% endblock %}
+
+                                            {% endif %}
                                         </ul>
                                     </li>
                                 </ul>
@@ -74,6 +85,7 @@
         <div id="content">
             {% block body %}
                 <div class="container">
+                                               
                         <h3>
                             {% block section_title %}
                             {% endblock %}
@@ -82,11 +94,17 @@
                             {% block section_content %}
                             {% endblock %}
                         </div>
-                </div>
-            {% endblock %}
+                    </div>
+                {% endblock %}
+            </div>
         </div>
         {% block javascripts %}
             <script type="text/javascript" src="{{ asset('build/js/app.js') }}"></script>
         {% endblock %}
     </body>
+    <footer class="footer">
+        <div class="container">
+            <span class="text-muted">Created by <a href="https://github.com/allofapiece">allofapiece</a> & <a href="https://github.com/graschik">graschik</a></span>
+        </div>
+    </footer>
 </html>
