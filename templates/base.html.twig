@@ -30,13 +30,13 @@
                                 <ul class="nav navbar-nav">
                                     {% block buttons %}
                                         {% block btn_quizzes %}
-                                            <li><a href="{{ path('quizzes') }}">Викторины</a></li>
+                                            <li><a href="{{ path('quiz.show') }}">Викторины</a></li>
                                         {% endblock %}
 
                                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
                                         {% block btn_my_quizzes %}
-                                            <li><a href="{{ path('myquizzes') }}">Мои викторины</a></li>
+                                            <li><a href="{{ path('quiz.own') }}">Мои викторины</a></li>
                                         {% endblock %}
 
                                         {% endif %}
@@ -44,10 +44,10 @@
 
 
                                         {% block btn_questions %}
-                                            <li><a href="{{ path('questions') }}">Вопросы</a></li>
+                                            <li><a href="{{ path('question.show') }}">Вопросы</a></li>
                                         {% endblock %}
                                         {% block btn_users %}
-                                            <li><a href="{{ path('users') }}">Пользователи</a></li>
+                                            <li><a href="{{ path('user.list') }}">Пользователи</a></li>
                                         {% endblock %}
 
                                         {% endif %}
@@ -89,4 +89,9 @@
             <script type="text/javascript" src="{{ asset('build/js/app.js') }}"></script>
         {% endblock %}
     </body>
+    <footer class="footer">
+        <div class="container">
+            <span class="text-muted">Place sticky footer content here.</span>
+        </div>
+    </footer>
 </html>

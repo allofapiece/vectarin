@@ -39,6 +39,10 @@ class User implements UserInterface, \Serializable
     private $isActive;
 
     /**
+     * @ORM\Column(name="is_remember", type="boolean")
+     */
+    private $isRemember;
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $firstname;
@@ -162,4 +166,36 @@ class User implements UserInterface, \Serializable
 
         return $this;
     }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsRemember()
+    {
+        return $this->isRemember;
+    }
+
+    /**
+     * @param mixed $isRemember
+     */
+    public function setIsRemember(bool $isRemember)
+    {
+        $this->isRemember = $isRemember;
+    }
+
+
 }

@@ -1,6 +1,6 @@
 .form-security {
     margin-top: 20px;
-    max-width: 50%;
+    width: 40%;
 }
 .form-security .form-security-heading,
 .form-security .checkbox {
@@ -19,11 +19,37 @@ form .form-group label{
     font-weight: normal;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+
+.form-check-label{
+    font-weight: normal;
+}
+
+.security-content{
+}
+
+.form-security, .information-block{
+    display: inline;
+    float:left;
+}
+
+.information-block{
+    margin: 47px 0 0 30px;
+    width: 50%;
+}
+#content .container .panel{
+    padding-bottom: 10px;
+    display: block;
+}
+#content .container .panel .panel-body{
+    width: 100%;
+}
+
 @media (max-width: 768px){
     .form-security {
-        max-width: 100%;
+        width: 100%;
     }
-}
-.information-block{
-    float:left;
+    .information-block{
+        margin-left: 0;
+        width: 100%;
+    }
 }
