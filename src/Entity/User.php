@@ -1,9 +1,15 @@
 <?php
+/**
+ * Created by Listratenko Stas.
+ * Date: 27.03.2018
+ * Time: 23:24
+ */
 
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="app_users")
@@ -20,18 +26,27 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=25, unique=true)
+     * @Assert\NotBlank()
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\NotBlank()
      */
     private $password;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
+     */
+    private $plainPassword;
 
     /**
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
+
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -40,16 +55,20 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $surname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $secondName;
 
@@ -157,4 +176,35 @@ class User implements UserInterface, \Serializable
 
         return $this;
     }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param mixed $plainPassword
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+    }
+
 }

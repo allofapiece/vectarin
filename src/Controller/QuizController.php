@@ -15,7 +15,7 @@ class QuizController extends Controller
      */
     public function quizControl()
     {
-
+        return new Response();
     }
 
     /**
@@ -24,7 +24,7 @@ class QuizController extends Controller
      */
     public function createQuiz()
     {
-
+        return new Response();
     }
 
     /**
@@ -33,7 +33,7 @@ class QuizController extends Controller
      */
     public function updateQuiz()
     {
-
+        return new Response();
     }
 
     /**
@@ -42,16 +42,34 @@ class QuizController extends Controller
      */
     public function deleteQuiz()
     {
-
+        return new Response();
     }
 
     /**
-     * @Route("/admin/quiz/show/{id}",name="quiz.show")
+     * @Route("/admin/quiz/show/{id}",name="quiz.show.id")
      * @return Response
      */
     public function showQuizById()
     {
+        return new Response();
+    }
 
+    /**
+     * @Route("/quiz/own",name="quiz.own")
+     * @return Response
+     */
+    public function showOwnQuizzes()
+    {
+        return $this->render('quizzes/myquizzes.html.twig');
+    }
+
+    /**
+     * @Route("/admin/quiz/show",name="quiz.show.admin")
+     * @return Response
+     */
+    public function showAllQuizzesForAdmin()
+    {
+        return new Response();
     }
 
     /**
@@ -78,5 +96,4 @@ class QuizController extends Controller
     {
 
     }
-
 }
