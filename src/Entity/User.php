@@ -25,13 +25,21 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=25, unique=true)
+     * @Assert\NotBlank()
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\NotBlank()
      */
     private $password;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
+     */
+    private $plainPassword;
 
     /**
      * @ORM\Column(name="is_active", type="boolean")
@@ -49,16 +57,20 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $surname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $secondName;
 
@@ -195,6 +207,22 @@ class User implements UserInterface, \Serializable
     public function setIsRemember(bool $isRemember)
     {
         $this->isRemember = $isRemember;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param mixed $plainPassword
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
     }
 
 

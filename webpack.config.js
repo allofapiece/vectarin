@@ -16,6 +16,7 @@ Encore
     .addStyleEntry('css/app', './assets/css/app.scss')
     .addStyleEntry('css/forms', './assets/css/forms.css')
     .addStyleEntry('css/navbar', './assets/css/navbar.css')
+    .addStyleEntry('css/footer', './assets/css/footer.css')
 
     // uncomment if you use Sass/SCSS files
     .enableSassLoader(function(sassOptions) {}, {
