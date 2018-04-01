@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\LoginType;
+
 use App\Form\SignupType;
 use Symfony\Component\HttpFoundation\Request;
 

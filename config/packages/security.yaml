@@ -24,7 +24,7 @@ security:
                 default_target_path: quiz.show
                 username_parameter: login[username]
                 password_parameter: login[password]
-                                #always_use_default_target_path
+
                 #always_use_default_target_path
 
             # activate different ways to authenticate

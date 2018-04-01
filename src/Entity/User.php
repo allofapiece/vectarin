@@ -209,6 +209,7 @@ class User implements UserInterface, \Serializable
         $this->isRemember = $isRemember;
     }
 
+
     /**
      * @return mixed
      */
@@ -224,6 +225,5 @@ class User implements UserInterface, \Serializable
     {
         $this->plainPassword = $plainPassword;
     }
-
 
 }
