@@ -54,4 +54,29 @@ class QuizController extends Controller
 
     }
 
+    /**
+     * @Route("/admin/quiz/show",name="quizzes.admin.show")
+     * @return Response
+     */
+    public function showQuizzesAdmin()
+    {
+
+    }
+
+    /**
+     * @Route("/quiz/show",name="quizzes.show")
+     */
+    public function showAllQuiz()
+    {
+
+    }
+
+    /**
+     * @Route("/quiz/user",name="quizzes.user.show")
+     */
+    public function showUserQuizzes()
+    {
+
+    }
+
 }

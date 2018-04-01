@@ -22,7 +22,7 @@
                                     <span class="icon-bar"></span>
                                     <span class="icon-bar"></span>
                                 </button>
-                                <a class="navbar-brand" href="#">Vectain.by</a>
+                                <a class="navbar-brand" href="#">Vectarin.by</a>
                             </div>
 
                             <!-- Соберите навигационные ссылки, формы, и другой контент для переключения -->
@@ -30,38 +30,52 @@
                                 <ul class="nav navbar-nav">
                                     {% block buttons %}
                                         {% block btn_quizzes %}
-                                            <li><a href="{{ path('quizzes') }}">Викторины</a></li>
+                                            <li><a href="{{ path('quizzes.show') }}">Викторины</a></li>
                                         {% endblock %}
 
                                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
-                                        {% block btn_my_quizzes %}
-                                            <li><a href="{{ path('myquizzes') }}">Мои викторины</a></li>
-                                        {% endblock %}
+                                            {% block btn_my_quizzes %}
+                                                <li><a href="{{ path('quizzes.user.show') }}">Мои викторины</a></li>
+                                            {% endblock %}
 
                                         {% endif %}
                                         {% if is_granted('ROLE_ADMIN') %}
 
 
-                                        {% block btn_questions %}
-                                            <li><a href="{{ path('questions') }}">Вопросы</a></li>
-                                        {% endblock %}
-                                        {% block btn_users %}
-                                            <li><a href="{{ path('users') }}">Пользователи</a></li>
-                                        {% endblock %}
+                                            {% block btn_questions %}
+                                                <li><a href="{{ path('questions') }}">Вопросы</a></li>
+                                            {% endblock %}
+                                            {% block btn_users %}
+                                                <li><a href="{{ path('users') }}">Пользователи</a></li>
+                                            {% endblock %}
 
                                         {% endif %}
                                     {% endblock %}
                                 </ul>
                                 <ul class="nav navbar-nav navbar-right">
                                     <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+                                                {% block user_name %}
+                                                    {{ app.user.username }}
+                                                {% endblock %}
+
+                                            {% endif %}
+                                        <span class="caret"></span></a>
                                         <ul class="dropdown-menu">
                                             <li><a href="#">Action</a></li>
                                             <li><a href="#">Another action</a></li>
                                             <li><a href="#">Something else here</a></li>
                                             <li role="separator" class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
+                                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+                                                {% block btn_exit %}
+                                                    <li><a href="{{ path('logout') }}">Выйти</a> </li>
+                                                {% endblock %}
+
+                                            {% endif %}
                                         </ul>
                                     </li>
                                 </ul>
