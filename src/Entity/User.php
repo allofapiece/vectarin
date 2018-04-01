@@ -1,9 +1,4 @@
 <?php
-/**
- * Created by Listratenko Stas.
- * Date: 27.03.2018
- * Time: 23:24
- */
 
 namespace App\Entity;
 
