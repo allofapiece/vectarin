@@ -73,11 +73,27 @@ class QuizController extends Controller
     }
 
     /**
-     * @Route("/quiz/show",name="quiz.show")
+     * @Route("/admin/quiz/show",name="quizzes.admin.show")
      * @return Response
      */
-    public function showAllQuizzesForUser()
+    public function showQuizzesAdmin()
     {
-        return $this->render('quizzes/quizzes.html.twig');
+
+    }
+
+    /**
+     * @Route("/quiz/show",name="quizzes.show")
+     */
+    public function showAllQuiz()
+    {
+
+    }
+
+    /**
+     * @Route("/quiz/user",name="quizzes.user.show")
+     */
+    public function showUserQuizzes()
+    {
+
     }
 }

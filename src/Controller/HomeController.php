@@ -15,26 +15,6 @@ class HomeController extends Controller
      */
     public function indexAction()
     {
-        $question = new Question();
-        $question->setTextQuestion('Стасик лох?');
-
-        $answer = new Answer();
-        $answer->setTextAnswer('Да');
-        $answer->setIsCorrect(true);
-        $answer->setQuestion($question);
-
-        $answerYes = new Answer();
-        $answerYes->setTextAnswer('Да');
-        $answerYes->setIsCorrect(false);
-        $answerYes->setQuestion($question);
-
-        $em=$this->getDoctrine()->getManager();
-        $em->persist($question);
-        $em->persist($answer);
-        $em->persist($answerYes);
-
-        $em->flush();
-
-        return new Response("kke");
+        return $this->render('/quizzes/quizzes.html.twig');
     }
 }

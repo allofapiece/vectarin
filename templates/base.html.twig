@@ -10,23 +10,29 @@
         {% endblock %}
     </head>
     <body>
-        <div id="wrapper">
-            <header>
-                {% block header %}
-                    <nav class="navbar navbar-inverse">
-                        <div class="container-fluid">
-                            <div class="container">
-                                <!-- Brand и toggle сгруппированы для лучшего отображения на мобильных дисплеях -->
-                                <div class="navbar-header">
-                                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                                        <span class="sr-only">Toggle navigation</span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                    </button>
-                                    <a class="navbar-brand" href="#">Vectain.by</a>
-                                </div>
+        <header>
+            {% block header %}
+                <nav class="navbar navbar-inverse">
+                    <div class="container-fluid">
+                        <div class="container">
+                            <!-- Brand и toggle сгруппированы для лучшего отображения на мобильных дисплеях -->
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                                <a class="navbar-brand" href="#">Vectarin.by</a>
+                            </div>
 
+                            <!-- Соберите навигационные ссылки, формы, и другой контент для переключения -->
+                            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                                <ul class="nav navbar-nav">
+                                    {% block buttons %}
+                                        {% block btn_quizzes %}
+                                            <li><a href="{{ path('quizzes.show') }}">Викторины</a></li>
+                                        {% endblock %}
 
                                 <!-- Соберите навигационные ссылки, формы, и другой контент для переключения -->
                                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -36,50 +42,58 @@
                                                 <li><a href="{{ path('quiz.show') }}">Викторины</a></li>
                                             {% endblock %}
 
+                                            {% block btn_my_quizzes %}
+                                                <li><a href="{{ path('quizzes.user.show') }}">Мои викторины</a></li>
+                                            {% endblock %}
 
                                             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
+                                            {% block btn_questions %}
+                                                <li><a href="{{ path('questions') }}">Вопросы</a></li>
+                                            {% endblock %}
+                                            {% block btn_users %}
+                                                <li><a href="{{ path('users') }}">Пользователи</a></li>
+                                            {% endblock %}
 
-                                                {% block btn_my_quizzes %}
-                                                    <li><a href="{{ path('quiz.own') }}">Мои викторины</a></li>
+                                        {% endif %}
+                                    {% endblock %}
+                                </ul>
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+                                                {% block user_name %}
+                                                    {{ app.user.username }}
                                                 {% endblock %}
-
 
                                             {% endif %}
-                                            {% if is_granted('ROLE_ADMIN') %}
+                                        <span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#">Action</a></li>
+                                            <li><a href="#">Another action</a></li>
+                                            <li><a href="#">Something else here</a></li>
+                                            <li role="separator" class="divider"></li>
+                                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
-
-                                                {% block btn_questions %}
-                                                    <li><a href="{{ path('question.show') }}">Вопросы</a></li>
-                                                {% endblock %}
-                                                {% block btn_users %}
-                                                    <li><a href="{{ path('user.list') }}">Пользователи</a></li>
+                                                {% block btn_exit %}
+                                                    <li><a href="{{ path('logout') }}">Выйти</a> </li>
                                                 {% endblock %}
 
                                             {% endif %}
-                                        {% endblock %}
-                                    </ul>
-                                    <ul class="nav navbar-nav navbar-right">
-                                        <li class="dropdown">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Action</a></li>
-                                                <li><a href="#">Another action</a></li>
-                                                <li><a href="#">Something else here</a></li>
-                                                <li role="separator" class="divider"></li>
-                                                <li><a href="#">Separated link</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </div><!-- /.navbar-collapse -->
-                            </div>
-                        </div><!-- /.container-fluid -->
-                    </nav>
-                {% endblock %}
-            </header>
-            <div id="content">
-                {% block body %}
-                    <div class="container">
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div><!-- /.navbar-collapse -->
+                        </div>
+                    </div><!-- /.container-fluid -->
+                </nav>
+            {% endblock %}
+        </header>
+        <div id="content">
+            {% block body %}
+                <div class="container">
+                                               
                         <h3>
                             {% block section_title %}
                             {% endblock %}
