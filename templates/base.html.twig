@@ -6,6 +6,7 @@
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('build/css/app.css') }}">
             <link rel="stylesheet" href="{{ asset('build/css/navbar.css') }}">
+            <link rel="stylesheet" href="{{ asset('build/css/footer.css') }}">
         {% endblock %}
     </head>
     <body>
@@ -33,15 +34,19 @@
                                             <li><a href="{{ path('quizzes.show') }}">Викторины</a></li>
                                         {% endblock %}
 
-                                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                <!-- Соберите навигационные ссылки, формы, и другой контент для переключения -->
+                                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                                    <ul class="nav navbar-nav">
+                                        {% block buttons %}
+                                            {% block btn_quizzes %}
+                                                <li><a href="{{ path('quiz.show') }}">Викторины</a></li>
+                                            {% endblock %}
 
                                             {% block btn_my_quizzes %}
                                                 <li><a href="{{ path('quizzes.user.show') }}">Мои викторины</a></li>
                                             {% endblock %}
 
-                                        {% endif %}
-                                        {% if is_granted('ROLE_ADMIN') %}
-
+                                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
                                             {% block btn_questions %}
                                                 <li><a href="{{ path('questions') }}">Вопросы</a></li>
@@ -88,6 +93,7 @@
         <div id="content">
             {% block body %}
                 <div class="container">
+                                               
                         <h3>
                             {% block section_title %}
                             {% endblock %}
@@ -96,11 +102,22 @@
                             {% block section_content %}
                             {% endblock %}
                         </div>
+                    </div>
+                {% endblock %}
+            </div>
+            <footer class="footer">
+                <div class="container">
+                    <span class="text-muted">Created by <a href="https://github.com/allofapiece">allofapiece</a> & <a href="https://github.com/graschik">graschik</a></span>
                 </div>
-            {% endblock %}
+            </footer>
         </div>
         {% block javascripts %}
             <script type="text/javascript" src="{{ asset('build/js/app.js') }}"></script>
         {% endblock %}
     </body>
+    <footer class="footer">
+        <div class="container">
+            <span class="text-muted">Created by <a href="https://github.com/allofapiece">allofapiece</a> & <a href="https://github.com/graschik">graschik</a></span>
+        </div>
+    </footer>
 </html>
