@@ -9,7 +9,6 @@
    }) }}
    {% if error %}
       <div class="alert alert-danger" role="alert">Неправильная комбинация логина и пароля!</div>
-      {{ form.errors(form) }}
    {% endif %}
    <div class="form-group">
       {{ form_label(form.username) }}
