@@ -4,45 +4,33 @@
 {% block section_title %}Регистрация{% endblock %}
 
 {% block form %}
-    {#{{ form_start(form, {
+    {{ form_start(form, {
         'action': path('login'),
         'method': 'POST',
+        'attr':{novalidate:'novalidate'},
     }) }}
-    {% if error %}
-        <div class="alert alert-danger" role="alert">Неправильная комбинация логина и пароля!</div>
-    {% endif %}
     <div class="form-group">
-        {{ form_label(form.firstname) }}
-        {{ form_widget(form.firstname) }}
+        {{ form_row(form.firstname) }}
     </div>
     <div class="form-group">
-        {{ form_label(form.surname) }}
-        {{ form_widget(form.surname) }}
+        {{ form_row(form.surname) }}
     </div>
     <div class="form-group">
-        {{ form_label(form.secondname) }}
-        {{ form_widget(form.secondname) }}
+        {{ form_row(form.secondname) }}
     </div>
     <div class="form-group">
-        {{ form_label(form.email) }}
-        {{ form_widget(form.email) }}
+        {{ form_row(form.email) }}
     </div>
     <div class="form-group">
-        {{ form_label(form.username) }}
-        {{ form_widget(form.username) }}
+        {{ form_row(form.username) }}
     </div>
     <div class="form-group">
-        {{ form_label(form.password) }}
-        {{ form_widget(form.password) }}
+        {{ form_row(form.plainPassword) }}
     </div>
-    <div class="form-group">
-        {{ form_label(form.confirm) }}
-        {{ form_widget(form.confirm) }}
-    </div>
-    {{ form_widget(form.save, {
+    {{ form_widget(form.confirm, {
         'attr': {'class': 'btn btn-success'},
     }) }}
-    {{ form_end(form) }}#}
+    {{ form_end(form) }}
 {% endblock %}
 
 {% block information %}
@@ -57,12 +45,4 @@
                 ваши данные и будьте осторожны при их вводе.</p>
         </div>
     </div>
-
-{% extends 'base.html.twig' %}
-
-{% block section_title %}
-    Регистрация
-{% endblock %}
-{% block section_content %}
-
 {% endblock %}

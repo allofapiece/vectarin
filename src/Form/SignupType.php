@@ -37,7 +37,7 @@ class SignupType extends AbstractType
             ->add('email', EmailType::class, array(
                 'label'    => 'Электронная почта'
             ))
-            ->add('save', SubmitType::class, array('label' => 'Зарегистрироваться'))
+            ->add('confirm', SubmitType::class, array('label' => 'Зарегистрироваться'))
         ;
     }
 

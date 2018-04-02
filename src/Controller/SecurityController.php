@@ -32,8 +32,13 @@ class SecurityController extends Controller
         $form = $this->createForm(LoginType::class, $user);
 
         $form->handleRequest($request);
-        $user = $form->getData();
-        $validateError = $validator->validate($user);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $user = $form->getData();
+
+            return $this->redirectToRoute('home');
+        }
+
 
         $authenticationError = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
@@ -41,7 +46,6 @@ class SecurityController extends Controller
         return $this->render('security/login.html.twig', [
             'form' => $form->createView(),
             'authenticationError' => $authenticationError,
-            'validateError' => $validateError,
         ]);
     }
 
@@ -52,28 +56,21 @@ class SecurityController extends Controller
      */
     public function signup(Request $request)
     {
-        /*$user = new User();
+        $user = new User();
         $user->setUsername("");
         $user->setPassword("");
         $user->setFirstname("");
+        $user->setEmail("");
+        $user->setSecondName("");
+        $user->setSurname("");
 
         $form = $this->createForm(SignupType::class, $user);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // $form->getData() holds the submitted values
-            // but, the original `$task` variable has also been updated
             $user = $form->getData();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // $form->getData() holds the submitted values
-            // but, the original `$task` variable has also been updated
-            $user = $form->getData();
-
-
-            // ... perform some action, such as saving the task to the database
-            // for example, if Task is a Doctrine entity, save it!
             // $entityManager = $this->getDoctrine()->getManager();
             // $entityManager->persist($task);
             // $entityManager->flush();
@@ -83,8 +80,7 @@ class SecurityController extends Controller
 
         return $this->render('security/signup.html.twig',[
             'form' => $form->createView()
-        ]);*/
-        return new Response();
+        ]);
     }
 
     /**
