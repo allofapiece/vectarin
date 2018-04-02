@@ -10,23 +10,23 @@
         {% endblock %}
     </head>
     <body>
-    <div id="wrapper">
-        <header>
-            {% block header %}
-                <nav class="navbar navbar-inverse">
-                    <div class="container-fluid">
-                        <div class="container">
-                            <!-- Brand и toggle сгруппированы для лучшего отображения на мобильных дисплеях -->
-                            <div class="navbar-header">
-                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                                    <span class="sr-only">Toggle navigation</span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                </button>
-                                <a class="navbar-brand" href="#">Vectarin.by</a>
-                            </div>
-                                <!-- Соберите навигационные ссылки, формы, и другой контент для переключения -->
+        <div id="wrapper">
+            <header>
+                {% block header %}
+                    <nav class="navbar navbar-inverse">
+                        <div class="container-fluid">
+                            <div class="container">
+                                <!-- Brand и toggle сгруппированы для лучшего отображения на мобильных дисплеях -->
+                                <div class="navbar-header">
+                                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                        <span class="sr-only">Toggle navigation</span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                    </button>
+                                    <a class="navbar-brand" href="#">Vectarin.by</a>
+                                </div>
+                                    <!-- Соберите навигационные ссылки, формы, и другой контент для переключения -->
                                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                                     <ul class="nav navbar-nav">
                                         {% block buttons %}
@@ -34,66 +34,99 @@
                                                 <li><a href="{{ path('quizzes.show') }}">Викторины</a></li>
                                             {% endblock %}
 
-                                            {% block btn_my_quizzes %}
-                                                <li><a href="{{ path('quizzes.user.show') }}">Мои викторины</a></li>
-                                            {% endblock %}
-
                                             {% if is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')%}
 
-                                            {% block btn_questions %}
-                                                <li><a href="{{ path('questions') }}">Вопросы</a></li>
-                                            {% endblock %}
-                                            {% block btn_users %}
-                                                <li><a href="{{ path('user.list') }}">Пользователи</a></li>
-                                            {% endblock %}
+                                                {% block btn_my_quizzes %}
+                                                    <li><a href="{{ path('quizzes.user.show') }}">Мои викторины</a></li>
+                                                {% endblock %}
 
+                                                {% if is_granted('ROLE_ADMIN') %}
+
+                                                    {% block btn_questions %}
+                                                        <li><a href="{{ path('questions') }}">Вопросы</a></li>
+                                                    {% endblock %}
+
+                                                    {% block btn_users %}
+                                                        <li><a href="{{ path('user.list') }}">Пользователи</a></li>
+                                                    {% endblock %}
+
+                                                {% endif %}
+
+                                            {% endif %}
+
+                                        {% endblock %}
+                                    </ul>
+                                    <ul class="nav navbar-nav navbar-right">
+
+                                        {% if is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')%}
+
+                                        {#<li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+
+                                                    {% block user_name %}
+                                                        {{ app.user.username }}
+                                                    {% endblock %}
+                                                <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Action</a></li>
+                                                <li><a href="#">Another action</a></li>
+                                                <li><a href="#">Something else here</a></li>
+                                                <li role="separator" class="divider"></li>
+                                                {% if is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')%}
+
+                                                    {% block btn_exit %}
+                                                        <li><a href="{{ path('logout') }}">Выйти</a> </li>
+                                                    {% endblock %}
+
+                                                {% endif %}
+                                            </ul>
+                                        </li>#}
+                                        <div class="btn-group">
+                                            <button  onclick="location.href = '{{ path('logout') }}'" type="button" class="btn btn-default navbar-btn">Выйти</button>
+                                            <button type="button" class="btn btn-default dropdown-toggle navbar-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="caret"></span>
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li class="dropdown-header">Вы вошли как</li>
+                                                <li class="dropdown-header dropdown-username">{{ app.user.username }}</li>
+                                                <li role="separator" class="divider"></li>
+                                                <li><a href="#">Action</a></li>
+                                                <li><a href="#">Another action</a></li>
+                                                <li><a href="#">Something else here</a></li>
+                                                <li role="separator" class="divider"></li>
+                                                <li><a href="#">Separated link</a></li>
+                                            </ul>
+                                        </div>
+
+                                        {% elseif is_granted('IS_AUTHENTICATED_ANONYMOUSLY') %}
+                                            <a href="{{ path('signup') }}"><button type="button" class="btn btn-default navbar-btn">Регистрация</button></a>
+                                            <a href="{{ path('login') }}"><button type="button" class="btn btn-default navbar-btn">Войти</button></a>
                                         {% endif %}
-                                    {% endblock %}
-                                </ul>
-                                <ul class="nav navbar-nav navbar-right">
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('IS_AUTHENTICATED_FULLY')%}
 
-                                                {% block user_name %}
-                                                    {{ app.user.username }}
-                                                {% endblock %}
-
-                                            {% endif %}
-                                        <span class="caret"></span></a>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li role="separator" class="divider"></li>
-                                            {% if is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')%}
-
-                                                {% block btn_exit %}
-                                                    <li><a href="{{ path('logout') }}">Выйти</a> </li>
-                                                {% endblock %}
-
-                                            {% endif %}
                                         </ul>
-                                    </li>
-                                </ul>
-                            </div><!-- /.navbar-collapse -->
-                        </div>
-                    </div><!-- /.container-fluid -->
-                </nav>
-            {% endblock %}
-        </header>
+                                    </div><!-- /.navbar-collapse -->
+                            </div><!-- /.container -->
+                        </div><!-- /.container-fluid -->
+                    </nav>
+                {% endblock %}
+            </header>
             <div id="content">
-            {% block body %}
-                <div class="container">
-                                               
+
+                {% block body %}
+                    <div class="container">
+
                         <h3>
                             {% block section_title %}
                             {% endblock %}
                         </h3>
+
                         <div class="panel">
                             {% block section_content %}
                             {% endblock %}
                         </div>
+
                     </div>
                 {% endblock %}
             </div>
