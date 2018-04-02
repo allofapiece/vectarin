@@ -9,6 +9,7 @@ use App\Form\SignupType;
 use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -25,20 +26,10 @@ class SecurityController extends Controller
     public function login(Request $request, AuthenticationUtils $authenticationUtils, ValidatorInterface $validator)
     {
         $user = new User();
-        $user->setUsername("");
-        $user->setPassword("");
-        $user->setFirstname("");
 
         $form = $this->createForm(LoginType::class, $user);
 
         $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()){
-            $user = $form->getData();
-
-            return $this->redirectToRoute('home');
-        }
-
 
         $authenticationError = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
@@ -49,33 +40,37 @@ class SecurityController extends Controller
         ]);
     }
 
+
     /**
      * @Route("/signup",name="signup")
      * @param Request $request
      * @return Response
      */
-    public function signup(Request $request)
+    public function signup(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $user = new User();
-        $user->setUsername("");
-        $user->setPassword("");
-        $user->setFirstname("");
-        $user->setEmail("");
-        $user->setSecondName("");
-        $user->setSurname("");
-
         $form = $this->createForm(SignupType::class, $user);
 
+        // 2) handle the submit (will only happen on POST)
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $form->getData();
+            // 3) Encode the password (you could also do this via Doctrine listener)
 
-            // $entityManager = $this->getDoctrine()->getManager();
-            // $entityManager->persist($task);
-            // $entityManager->flush();
+            $user=$form->getData();
 
-            return $this->redirectToRoute('quiz.show');
+            $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
+            $user->setPassword($password);
+
+            // 4) save the User!
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            // ... do any other work - like sending them an email, etc
+            // maybe set a "flash" success message for the user
+
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('security/signup.html.twig',[
