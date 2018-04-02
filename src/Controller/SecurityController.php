@@ -34,6 +34,7 @@ class SecurityController extends Controller
         $form->handleRequest($request);
         $user = $form->getData();
         $validateError = $validator->validate($user);
+
         $authenticationError = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 

@@ -18,6 +18,13 @@
     {% endif %}
 
     <div class="form-group">
+        {% if form_errors(form.username) %}
+            <div class="alert alert-danger" role="alert">
+                {% for error in form_errors(form.username) %}
+                {{ error.message }}
+                    {% endfor %}
+            </div>
+        {% endif %}
         {{ form_label(form.username) }}
         {{ form_widget(form.username, { 'attr': {'value': ''} }) }}
     </div>

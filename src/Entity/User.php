@@ -32,12 +32,16 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *     message = "Поле должно быть заполнено"
+     * )
      */
     private $password;
 
     /**
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *     message = "Поле должно быть заполнено"
+     * )
      * @Assert\Length(max=4096)
      */
     private $plainPassword;
@@ -49,30 +53,37 @@ class User implements UserInterface, \Serializable
 
 
     /**
-     * @ORM\Column(name="is_remember", type="boolean")
-     */
-    private $isRemember;
-    /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message = "Поле должно быть заполнено"
+     * )
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank()
-     * @Assert\Email()
+     * @Assert\NotBlank(
+     *     message = "Поле должно быть заполнено"
+     * )
+     * @Assert\Email(
+     *     message = "Поле должно быть адресом электронной почты"
+     * )
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *     message = "Поле должно быть заполнено"
+     * )
      */
     private $surname;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *     message = "Поле должно быть заполнено"
+     * )
      */
     private $secondName;
 
