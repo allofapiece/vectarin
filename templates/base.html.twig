@@ -38,7 +38,7 @@
                                                 <li><a href="{{ path('quizzes.user.show') }}">Мои викторины</a></li>
                                             {% endblock %}
 
-                                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                            {% if is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')%}
 
                                             {% block btn_questions %}
                                                 <li><a href="{{ path('questions') }}">Вопросы</a></li>
@@ -53,7 +53,7 @@
                                 <ul class="nav navbar-nav navbar-right">
                                     <li class="dropdown">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('IS_AUTHENTICATED_FULLY')%}
 
                                                 {% block user_name %}
                                                     {{ app.user.username }}
@@ -66,7 +66,7 @@
                                             <li><a href="#">Another action</a></li>
                                             <li><a href="#">Something else here</a></li>
                                             <li role="separator" class="divider"></li>
-                                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                            {% if is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')%}
 
                                                 {% block btn_exit %}
                                                     <li><a href="{{ path('logout') }}">Выйти</a> </li>

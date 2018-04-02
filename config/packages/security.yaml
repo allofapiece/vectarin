@@ -30,6 +30,8 @@ security:
                 secret: '%kernel.secret%'
                 lifetime: 604800
                 path: /
+                remember_me_parameter: login[remember_me]
+                domain: ~
 
             # activate different ways to authenticate
 
