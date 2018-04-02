@@ -1,9 +1,4 @@
 <?php
-/**
- * Created by Listratenko Stas.
- * Date: 27.03.2018
- * Time: 23:24
- */
 
 namespace App\Entity;
 
@@ -32,9 +27,6 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Assert\NotBlank(
-     *     message = "Поле должно быть заполнено"
-     * )
      */
     private $password;
 
@@ -85,13 +77,23 @@ class User implements UserInterface, \Serializable
      *     message = "Поле должно быть заполнено"
      * )
      */
-    private $secondName;
+    private $secondname;
+
+    /**
+     * @var array
+     * @ORM\ManyToMany(targetEntity="Role",inversedBy="users")
+     */
+    private $roles;
 
     public function __construct()
     {
         $this->isActive = true;
-        // may not be needed, see section on salt below
-        // $this->salt = md5(uniqid('', true));
+        $this->setUsername('');
+        $this->setPassword('');
+        $this->setFirstname('');
+        $this->setEmail('');
+        $this->setSecondname('');
+        $this->setSurname('');
     }
 
     public function getUsername(): string
@@ -113,7 +115,12 @@ class User implements UserInterface, \Serializable
 
     public function getRoles(): array
     {
-        return array('ROLE_USER');
+            return array('ROLE_USER');
+    }
+
+    public function setRoles(array $roles)
+    {
+        $this->roles=$roles;
     }
 
     public function eraseCredentials()
@@ -149,7 +156,7 @@ class User implements UserInterface, \Serializable
         return $this->firstname;
     }
 
-    public function setFirstname(string $firstname): self
+    public function setFirstname(string $firstname=null): self
     {
         $this->firstname = $firstname;
 
@@ -161,7 +168,7 @@ class User implements UserInterface, \Serializable
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(string $email=null): self
     {
         $this->email = $email;
 
@@ -173,33 +180,33 @@ class User implements UserInterface, \Serializable
         return $this->surname;
     }
 
-    public function setSurname(string $surname): self
+    public function setSurname(string $surname=null): self
     {
         $this->surname = $surname;
 
         return $this;
     }
 
-    public function getSecondName(): ?string
+    public function getSecondname(): ?string
     {
-        return $this->secondName;
+        return $this->secondname;
     }
 
-    public function setSecondName(string $secondName): self
+    public function setSecondname(string $secondName=null): self
     {
-        $this->secondName = $secondName;
+        $this->secondname = $secondName;
 
         return $this;
     }
 
-    public function setUsername(string $username): self
+    public function setUsername(string $username=null): self
     {
         $this->username = $username;
 
         return $this;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(string $password=null): self
     {
         $this->password = $password;
 
@@ -218,7 +225,7 @@ class User implements UserInterface, \Serializable
     /**
      * @param mixed $plainPassword
      */
-    public function setPlainPassword($plainPassword)
+    public function setPlainPassword($plainPassword=null)
     {
         $this->plainPassword = $plainPassword;
     }
