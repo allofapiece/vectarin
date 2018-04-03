@@ -8,8 +8,8 @@
         'method': 'POST',
         'attr':{novalidate:'novalidate'},
     }) }}
-    {% if authenticationError %}
-        <div class="alert alert-danger" role="alert">Неверный логин или пароль!</div>
+    {% if authenticationError  %}
+        <div class="alert alert-danger" role="alert"> {{ authenticationError.messageKey }}</div>
     {% endif %}
 
     <div class="form-group">
