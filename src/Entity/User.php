@@ -3,14 +3,14 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="app_users")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface, \Serializable
+class User implements AdvancedUserInterface, \Serializable
 {
     /**
      * @ORM\Column(type="integer")
@@ -81,9 +81,15 @@ class User implements UserInterface, \Serializable
 
     /**
      * @var array
-     * @ORM\ManyToMany(targetEntity="Role",inversedBy="users")
+     * @ORM\Column(type="json_array")
      */
-    private $roles;
+    private $roles = [];
+
+    /**
+     * @ORM\Column(type="string",length=255)
+     */
+    private $token;
+
 
     public function __construct()
     {
@@ -115,16 +121,36 @@ class User implements UserInterface, \Serializable
 
     public function getRoles(): array
     {
-            return array('ROLE_USER');
+        return array('ROLE_USER');
     }
 
     public function setRoles(array $roles)
     {
-        $this->roles=$roles;
+        $this->roles = $roles;
     }
 
     public function eraseCredentials()
     {
+    }
+
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->isActive;
     }
 
     /** @see \Serializable::serialize() */
@@ -134,6 +160,7 @@ class User implements UserInterface, \Serializable
             $this->id,
             $this->username,
             $this->password,
+            $this->isActive,
             // see section on salt below
             // $this->salt,
         ));
@@ -146,6 +173,7 @@ class User implements UserInterface, \Serializable
             $this->id,
             $this->username,
             $this->password,
+            $this->isActive,
             // see section on salt below
             // $this->salt
             ) = unserialize($serialized);
@@ -156,7 +184,7 @@ class User implements UserInterface, \Serializable
         return $this->firstname;
     }
 
-    public function setFirstname(string $firstname=null): self
+    public function setFirstname(string $firstname = null): self
     {
         $this->firstname = $firstname;
 
@@ -168,7 +196,7 @@ class User implements UserInterface, \Serializable
         return $this->email;
     }
 
-    public function setEmail(string $email=null): self
+    public function setEmail(string $email = null): self
     {
         $this->email = $email;
 
@@ -180,7 +208,7 @@ class User implements UserInterface, \Serializable
         return $this->surname;
     }
 
-    public function setSurname(string $surname=null): self
+    public function setSurname(string $surname = null): self
     {
         $this->surname = $surname;
 
@@ -192,21 +220,21 @@ class User implements UserInterface, \Serializable
         return $this->secondname;
     }
 
-    public function setSecondname(string $secondName=null): self
+    public function setSecondname(string $secondName = null): self
     {
         $this->secondname = $secondName;
 
         return $this;
     }
 
-    public function setUsername(string $username=null): self
+    public function setUsername(string $username = null): self
     {
         $this->username = $username;
 
         return $this;
     }
 
-    public function setPassword(string $password=null): self
+    public function setPassword(string $password = null): self
     {
         $this->password = $password;
 
@@ -225,9 +253,34 @@ class User implements UserInterface, \Serializable
     /**
      * @param mixed $plainPassword
      */
-    public function setPlainPassword($plainPassword=null)
+    public function setPlainPassword($plainPassword = null)
     {
         $this->plainPassword = $plainPassword;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param mixed $token
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+    }
+
+    /**
+     * @param mixed $isActive
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+    }
+
 
 }
