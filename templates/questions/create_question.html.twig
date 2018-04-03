@@ -1,0 +1,36 @@
+{% extends 'questions/question_action_layout.html.twig' %}
+
+{% block title %}Создание вопроса{% endblock %}
+
+{% block section_title %}Создание вопроса{% endblock %}
+
+{% block main_info %}
+    {{ form_start(form, {
+        'action': path('question.create'),
+        'method': 'POST',
+        'attr': {novalidate:'novalidate'}
+    }) }}
+    <div class="form-group">
+        {{ form_row(form.text) }}
+    </div>
+{% endblock %}
+
+{% block answers %}
+    {{ form_label(form.answers) }}
+    {{ form_errors(form.answers) }}
+
+    <ul id="email-fields-list"
+        data-prototype="{{ form_widget(form.answers.vars.prototype)|e }}"
+        data-widget-tags="{{ '<li></li>'|e }}">
+        {% for answer in form.answers %}
+            <li>
+                {{ form_errors(answer) }}
+                {{ form_widget(answer) }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href="#"
+       class="add-another-collection-widget"
+       data-list="#email-fields-list">Add another answer</a>
+{% endblock %}

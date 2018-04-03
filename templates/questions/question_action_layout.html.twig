@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('build/css/questions.css') }}">
+{% endblock %}
+
+{% block section_title %}
+
+{% endblock %}
+
+{% block section_content %}
+
+    {% block main_info %}
+
+    {% endblock %}
+
+    {% block answers %}
+
+    {% endblock %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('build/js/questions.js') }}"></script>
+{% endblock %}

@@ -33,6 +33,12 @@ class Answer
      */
     private $isCorrect;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Question", inversedBy="answers")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $question;
+
     public function __construct()
     {
         $this->question = new ArrayCollection();
@@ -64,6 +70,18 @@ class Answer
     public function setIsCorrect(bool $isCorrect): self
     {
         $this->isCorrect = $isCorrect;
+
+        return $this;
+    }
+
+    public function getQuestion(): ?Question
+    {
+        return $this->question;
+    }
+
+    public function setQuestion(?Question $question): self
+    {
+        $this->question = $question;
 
         return $this;
     }

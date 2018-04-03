@@ -21,7 +21,15 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=25, unique=true)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *     message = "Поле должно быть заполнено"
+     * )
+     * @Assert\Length(
+     *     min = 4,
+     *     max = 18,
+     *     minMessage = "Длинна поля 'Логин' должна быть не меньше {{ limit }} ",
+     *     maxMessage = "Длинна поля 'Логин' должна быть не больше {{ limit }} "
+     * )
      */
     private $username;
 
@@ -39,7 +47,15 @@ class User implements AdvancedUserInterface, \Serializable
     private $plainPassword;
 
     /**
-     * @ORM\Column(name="is_active", type="boolean")
+     * @ORM\Column(name="is_active", type="boolean")@Assert\Length(
+     *     min = 4,
+     *     max = 18,
+     *     minMessage = "Длинна поля 'Пароль' должна быть не меньше {{ limit }} ",
+     *     maxMessage = "Длинна поля 'Пароль' должна быть не больше {{ limit }} "
+     * )
+     * @Assert\Valid(
+     *
+     * )
      */
     private $isActive;
 
@@ -48,6 +64,12 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(
      *     message = "Поле должно быть заполнено"
+     * )
+     * @Assert\Length(
+     *     min = 2,
+     *     max = 50,
+     *     minMessage = "Длинна поля 'Имя' должна быть не меньше {{ limit }} ",
+     *     maxMessage = "Длинна поля 'Имя' должна быть не больше {{ limit }} "
      * )
      */
     private $firstname;
@@ -58,7 +80,13 @@ class User implements AdvancedUserInterface, \Serializable
      *     message = "Поле должно быть заполнено"
      * )
      * @Assert\Email(
-     *     message = "Поле должно быть адресом электронной почты"
+     *     message = "Поле должно соответствовать формату электронной почты"
+     * )
+     * @Assert\Length(
+     *     min = 4,
+     *     max = 50,
+     *     minMessage = "Длинна поля 'email' должна быть не меньше {{ limit }} ",
+     *     maxMessage = "Длинна поля 'email' должна быть не больше {{ limit }} "
      * )
      */
     private $email;
@@ -68,6 +96,12 @@ class User implements AdvancedUserInterface, \Serializable
      * @Assert\NotBlank(
      *     message = "Поле должно быть заполнено"
      * )
+     * @Assert\Length(
+     *     min = 2,
+     *     max = 50,
+     *     minMessage = "Длинна поля 'Фамилия' должна быть не меньше {{ limit }} ",
+     *     maxMessage = "Длинна поля 'Фамилия' должна быть не больше {{ limit }} "
+     * )
      */
     private $surname;
 
@@ -75,6 +109,12 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(
      *     message = "Поле должно быть заполнено"
+     * )
+     * @Assert\Length(
+     *     min = 4,
+     *     max = 50,
+     *     minMessage = "Длинна поля 'Отчество' должна быть не меньше {{ limit }} ",
+     *     maxMessage = "Длинна поля 'Отчество' должна быть не больше {{ limit }} "
      * )
      */
     private $secondname;
