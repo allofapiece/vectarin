@@ -2,17 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\RecoveryPassword\CreateEmailRequest;
+use App\Entity\RecoveryPassword\CreateRecoveryPassword;
 use App\Entity\User;
 use App\Form\LoginType;
-
+use App\Form\RecoveryPassword\RecoveryTypeEmail;
+use App\Form\RecoveryPassword\RecoveryTypePassword;
 use App\Form\SignupType;
 use App\Service\GenerateToken;
 use App\Service\MessageSender;
 use App\Service\UserService\UserService;
 use Symfony\Component\HttpFoundation\Request;
-
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -52,8 +53,7 @@ class SecurityController extends Controller
      */
     public function signup(Request $request, UserService $userService, MessageSender $messageSender)
     {
-        $user = new User();
-        $form = $this->createForm(SignupType::class, $user);
+        $form = $this->createForm(SignupType::class, new User());
 
         $form->handleRequest($request);
 
@@ -89,7 +89,7 @@ class SecurityController extends Controller
             ->findOneBy(['token' => $token]);
 
         if (!$user) {
-            throw $this->createNotFoundException('This user not found!');
+            throw $this->createNotFoundException('Access denied!');
         }
 
         $userService->setUserActive($user);
@@ -101,13 +101,81 @@ class SecurityController extends Controller
 
 
     /**
-     * @Route("/recovery", name="recovery")
+     * @Route("/recovery-password-1", name="recovery.password.email")
      * @param Request $request
+     * @param MessageSender $messageSender
+     * @param GenerateToken $generateToken
+     * @param UserService $userService
      * @return Response
      */
-    public function passwordRecovery(Request $request)
+    public function sendMessageToRecoveryPassword(Request $request, MessageSender $messageSender, GenerateToken $generateToken, UserService $userService)
     {
-        return new Response();
+        $form = $this->createForm(RecoveryTypeEmail::class, new CreateEmailRequest());
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $email = $form->getData();
+
+            $user = $this->getDoctrine()
+                ->getRepository(User::class)
+                ->findOneBy(['email' => $email->getEmail()]);
+
+            if ($user) {
+                $user->setRecoveryToken($generateToken->generate($user->getPassword()));
+
+                $userService->executeQueryToDb($user);
+
+                $messageSender->sendRecoveryPasswordMessage($user);
+            }
+        }
+
+        return $this->render('security/recovery_password_step_1.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/recovery-password-2/{token}",name="recovery.password")
+     * @param Request $request
+     * @param UserService $userService
+     * @param $token
+     * @return Response
+     */
+    public function passwordRecovery(Request $request, UserService $userService, $token)
+    {
+        $user = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->findOneBy(['recoveryToken' => $token]);
+
+        if (!$user) {
+            throw $this->createNotFoundException('Access denied!');
+        }
+
+        $form = $this->createForm(RecoveryTypePassword::class, new CreateRecoveryPassword());
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $password = $form->getData();
+
+            $user->setPlainPassword($password->getPlainPassword());
+
+            $userService->setEncodePassword($user);
+
+            $user->setRecoveryToken('');
+
+            $userService->executeQueryToDb($user);
+
+            return $this->redirect('/login');
+        }
+
+        return $this->render('security/recovery_password_step_2.html.twig', [
+            'form' => $form->createView(),
+            'token'=>$token,
+        ]);
     }
 
 }
