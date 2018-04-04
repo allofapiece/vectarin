@@ -44,7 +44,7 @@
                                                 {% if is_granted('ROLE_ADMIN') %}
 
                                                     {% block btn_questions %}
-                                                        <li><a href="{{ path('questions') }}">Вопросы</a></li>
+                                                        <li><a href="{{ path('question.create') }}">Вопросы</a></li>
                                                     {% endblock %}
 
                                                     {% block btn_users %}
