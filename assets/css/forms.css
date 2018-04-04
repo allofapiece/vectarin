@@ -1,13 +1,14 @@
-.form-security {
+.form-content {
+    display: inline;
     margin-top: 20px;
     width: 40%;
 }
-.form-security .form-security-heading,
-.form-security .checkbox {
+.form-content .form-content-heading,
+.form-content .checkbox {
     margin-bottom: 10px;
 }
-.form-security input[type="text"],
-.form-security input[type="password"] {
+.form-content input[type="text"],
+.form-content input[type="password"] {
     font-size: 16px;
     height: auto;
     margin-bottom: 15px;
@@ -18,10 +19,7 @@
     font-weight: normal;
 }
 
-.security-content{
-}
-
-.form-security, .information-block{
+.form-content, .information-block, .answers{
     display: inline;
     float:left;
 }
@@ -39,7 +37,7 @@
 }
 
 @media (max-width: 768px){
-    .form-security {
+    .form-content {
         width: 100%;
     }
     .information-block{

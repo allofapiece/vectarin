@@ -3,6 +3,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('build/css/questions.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/css/forms.css') }}">
 {% endblock %}
 
 {% block section_title %}
@@ -10,15 +11,21 @@
 {% endblock %}
 
 {% block section_content %}
+    <div class="clearfix section-content">
 
-    {% block main_info %}
+        <div class="form-content main-info">
+            {% block main_info %}
+s
+            {% endblock %}
+        </div>
 
-    {% endblock %}
+        <div class="form-content answers-content">
+            {% block answers %}
 
-    {% block answers %}
+            {% endblock %}
+        </div>
 
-    {% endblock %}
-
+    </div>
 {% endblock %}
 
 {% block javascripts %}
