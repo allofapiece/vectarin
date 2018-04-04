@@ -47,15 +47,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $plainPassword;
 
     /**
-     * @ORM\Column(name="is_active", type="boolean")@Assert\Length(
-     *     min = 4,
-     *     max = 18,
-     *     minMessage = "Длинна поля 'Пароль' должна быть не меньше {{ limit }} ",
-     *     maxMessage = "Длинна поля 'Пароль' должна быть не больше {{ limit }} "
-     * )
-     * @Assert\Valid(
-     *
-     * )
+     * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
 
@@ -75,7 +67,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $firstname;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank(
      *     message = "Поле должно быть заполнено"
      * )
@@ -130,6 +122,11 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $token;
 
+    /**
+     * @ORM\Column(type="string",length=255, nullable=true)
+     */
+    private $recoveryToken;
+
 
     public function __construct()
     {
@@ -161,7 +158,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     public function getRoles(): array
     {
-        return array('ROLE_USER');
+        return $this->roles;
     }
 
     public function setRoles(array $roles)
@@ -320,6 +317,22 @@ class User implements AdvancedUserInterface, \Serializable
     public function setIsActive($isActive)
     {
         $this->isActive = $isActive;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecoveryToken()
+    {
+        return $this->recoveryToken;
+    }
+
+    /**
+     * @param mixed $recoveryToken
+     */
+    public function setRecoveryToken($recoveryToken)
+    {
+        $this->recoveryToken = $recoveryToken;
     }
 
 
