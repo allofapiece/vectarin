@@ -1,25 +1,50 @@
-jQuery(document).ready(function () {
-    jQuery('.add-another-collection-widget').click(function (e) {
+var $collectionHolder;
+
+// setup an "add a tag" link
+var $addAnswerLink = $('<a href="#" class="add_tag_link">Add a tag</a>');
+var $newLinkLi = $('<li></li>').append($addAnswerLink);
+
+jQuery(document).ready(function() {
+    // Get the ul that holds the collection of answers
+    $collectionHolder = $('ul.answers');
+
+    // add the "add a tag" anchor and li to the answers ul
+    $collectionHolder.append($newLinkLi);
+
+    // count the current form inputs we have (e.g. 2), use that as the new
+    // index when inserting a new item (e.g. 2)
+    $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+    $addAnswerLink.on('click', function(e) {
+        // prevent the link from creating a "#" on the URL
         e.preventDefault();
-        var list = jQuery(jQuery(this).attr('data-list'));
-        // Try to find the counter of the list
-        var counter = list.data('widget-counter') | list.children().length;
-        // If the counter does not exist, use the length of the list
-        if (!counter) { counter = list.children().length; }
 
-        // grab the prototype template
-        var newWidget = list.attr('data-prototype');
-        // replace the "__name__" used in the id and name of the prototype
-        // with a number that's unique to your emails
-        // end name attribute looks like name="contact[emails][2]"
-        newWidget = newWidget.replace(/__name__/g, counter);
-        // Increase the counter
-        counter++;
-        // And store it, the length cannot be used if deleting widgets is allowed
-        list.data(' widget-counter', counter);
-
-        // create a new list element and add it to the list
-        var newElem = jQuery(list.attr('data-widget-tags')).html(newWidget);
-        newElem.appendTo(list);
+        // add a new tag form (see next code block)
+        $addAnswerForm($collectionHolder, $newLinkLi);
     });
 });
+
+function $addAnswerForm($collectionHolder, $newLinkLi) {
+    // Get the data-prototype explained earlier
+    var prototype = $collectionHolder.data('prototype');
+
+    // get the new index
+    var index = $collectionHolder.data('index');
+
+    var newForm = prototype;
+    // You need this only if you didn't set 'label' => false in your answers field in TaskType
+    // Replace '__name__label__' in the prototype's HTML to
+    // instead be a number based on how many items we have
+    // newForm = newForm.replace(/__name__label__/g, index);
+
+    // Replace '__name__' in the prototype's HTML to
+    // instead be a number based on how many items we have
+    newForm = newForm.replace(/__name__/g, index);
+
+    // increase the index with one for the next item
+    $collectionHolder.data('index', index + 1);
+
+    // Display the form in the page in an li, before the "Add a tag" link li
+    var $newFormLi = $('<li></li>').append(newForm);
+    $newLinkLi.before($newFormLi);
+}

@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\Question;
 use App\Form\Question\QuestionCreateType;
+use App\Service\QuestionService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,13 +17,20 @@ class QuestionController extends Controller
      * @Route("/admin/question/create", name="question.create")
      * @return Response
      */
-    public function createQuestion(Request $request)
+    public function createQuestion(Request $request, QuestionService $questionService)
     {
         $question = new Question();
 
         $form = $this->createForm(QuestionCreateType::class, $question);
 
         $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $questionService->updateDBEntity($question);
+
+            return $this->redirectToRoute('home');
+        }
 
         return $this->render('questions/create_question.html.twig', [
             'form' => $form->createView()

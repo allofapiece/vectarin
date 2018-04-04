@@ -5721,7 +5721,7 @@ Lockfile:
 
 Trace: 
   Error: Command failed.
-  Exit code: 1
+  Exit code: 3221225786
   Command: C:\Windows\system32\cmd.exe
   Arguments: /d /s /c D:\Programming\Projects\PHP\vectarin\node_modules\.bin\encore dev --watch
   Directory: D:\Programming\Projects\PHP\vectarin
