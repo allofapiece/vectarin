@@ -335,5 +335,21 @@ class User implements AdvancedUserInterface, \Serializable
         $this->recoveryToken = $recoveryToken;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
 
 }

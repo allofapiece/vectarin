@@ -8,4 +8,67 @@
 {% endblock %}
 {% block section_content %}
 
+    <table>
+
+    </table>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{{ knp_pagination_sortable(pagination, 'Id', 'u.id') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Имя', 'u.firstname') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Фамилия', 'u.surname') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Отчество', 'u.secondname') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Почта', 'u.email') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Статус', 'u.is_active') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Роль', 'u.roles') }}</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        {% for user in pagination  %}
+        <tbody>
+        <tr>
+            <td>{{ user.getId }}</td>
+            <td>{{ user.getFirstName }}</td>
+            <td>{{ user.getSurname }}</td>
+            <td>{{ user.getSecondname }}</td>
+            <td>{{ user.getEmail }}</td>
+            <td>
+                {% if user.getIsActive %}
+                    Активный
+                {% else %}
+                    Неактивный
+                {% endif %}
+            </td>
+            <td>
+                {% if user.getRoles[0]=='ROLE_USER' %}
+                    Пользователь
+                {% else %}
+                    Админ
+                {% endif %}
+            </td>
+            <td>
+                {% if user.getIsActive %}
+                    <div class="btn btn-success btn-xs">
+                        <i class="glyphicon glyphicon-lock "></i>
+                    </div>
+                {% else %}
+                    <div class="btn btn-primary btn-xs">
+                        <i class="glyphicon glyphicon-lock "></i>
+                    </div>
+                {% endif %}
+
+                <div class="btn btn-danger btn-xs">
+                    <i class="glyphicon glyphicon-remove "></i>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+    <div class="pagination">
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+    </div>
+
 {% endblock %}
