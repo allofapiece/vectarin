@@ -5,9 +5,11 @@ namespace App\Service\UserService;
 
 use App\Entity\User;
 use App\Service\GenerateToken;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
 
 class UserService
 {
@@ -35,10 +37,15 @@ class UserService
      */
     public function setDefaultValues(User $user)
     {
-        $password = $this->passwordEncoder->encodePassword($user, $user->getPlainPassword());
-        $user->setPassword($password);
+        $this->setEncodePassword($user);
         $user->setToken($this->generateToken->generate($user->getEmail()));
         $user->setIsActive(0);
+    }
+
+    public function setEncodePassword(User $user)
+    {
+        $password = $this->passwordEncoder->encodePassword($user, $user->getPlainPassword());
+        $user->setPassword($password);
     }
 
     /**
@@ -60,6 +67,5 @@ class UserService
         $user->setToken('');
 
         $user->setRoles(['ROLE_USER']);
-
     }
 }

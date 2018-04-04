@@ -28,7 +28,7 @@ class MessageSender
     {
         $message = (new \Swift_Message('Подтверждение регистрации на Victarin.by'))
             ->setFrom('allseeing98@gmail.com')
-            ->setTo('allseeing98@gmail.com')
+            ->setTo($user->getEmail())
             ->setBody(
                 $this->templating->render(
                     'emails/registration.html.twig', [
@@ -41,5 +41,20 @@ class MessageSender
         $this->mailer->send($message);
     }
 
+    public function sendRecoveryPasswordMessage(User $user)
+    {
+        $message = (new \Swift_Message('Восстановление пароля на Victarin.by'))
+        ->setFrom('allseeing98@gmail.com')
+        ->setTo($user->getEmail())
+        ->setBody(
+            $this->templating->render(
+                'emails/recovery_password.html.twig', [
+                'token' => $user->getRecoveryToken(),
+            ]),
+            'text/html'
+        );
+
+        $this->mailer->send($message);
+    }
 
 }
