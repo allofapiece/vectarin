@@ -32,15 +32,21 @@ class AnswerType extends AbstractType
                     new NotBlank([
                         'message' => 'Поле не должно быть пустым'
                     ])
+                ],
+                'label' => false,
+                'attr' => [
+                    'placeholder' => 'Ответ'
                 ]
             ])
-            ->add('is_correct', RadioType::class);
+            ->add('is_correct', RadioType::class, [
+                'label' => 'Верный ответ'
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Answer::class,
+            'data_class' => Answer::class
         ]);
     }
 }
