@@ -5,6 +5,12 @@ var $addAnswerLink = $('<a href="#" class="add_tag_link">Add a tag</a>');
 var $newLinkLi = $('<li></li>').append($addAnswerLink);
 
 jQuery(document).ready(function() {
+    $collectionHolder = $('ul.answers');
+
+    // add a delete link to all of the existing tag form li elements
+    $collectionHolder.find('li').each(function() {
+        addAnswerFormDeleteLink($(this));
+    });
     // Get the ul that holds the collection of answers
     $collectionHolder = $('ul.answers');
 
@@ -47,4 +53,19 @@ function $addAnswerForm($collectionHolder, $newLinkLi) {
     // Display the form in the page in an li, before the "Add a tag" link li
     var $newFormLi = $('<li></li>').append(newForm);
     $newLinkLi.before($newFormLi);
+
+    addAnswerFormDeleteLink($newFormLi);
+}
+
+function addAnswerFormDeleteLink($answerFormLi) {
+    var $removeFormA = $('<a href="#">delete this tag</a>');
+    $answerFormLi.append($removeFormA);
+
+    $removeFormA.on('click', function(e) {
+        // prevent the link from creating a "#" on the URL
+        e.preventDefault();
+
+        // remove the li for the tag form
+        $answerFormLi.remove();
+    });
 }
