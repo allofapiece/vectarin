@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Listratsenka Stas
- * Date: 03.04.2018
- * Time: 17:54
- */
 
 namespace App\Form\Question;
 
