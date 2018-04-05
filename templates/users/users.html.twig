@@ -48,18 +48,18 @@
             </td>
             <td>
                 {% if user.getIsActive %}
-                    <div class="btn btn-success btn-xs">
+                    <a class="btn btn-success btn-xs" href="{{ path('user.update.is_active', {'id': user.getId}) }}">
                         <i class="glyphicon glyphicon-lock "></i>
-                    </div>
+                    </a>
                 {% else %}
-                    <div class="btn btn-primary btn-xs">
+                    <a class="btn btn-primary btn-xs" href="{{ path('user.update.is_active', {'id': user.getId}) }}">
                         <i class="glyphicon glyphicon-lock "></i>
-                    </div>
+                    </a>
                 {% endif %}
 
-                <div class="btn btn-danger btn-xs">
+                <a class="btn btn-danger btn-xs" href="{{ path('user.delete', {'id': user.getId}) }}">
                     <i class="glyphicon glyphicon-remove "></i>
-                </div>
+                </a>
             </td>
         </tr>
         </tbody>
