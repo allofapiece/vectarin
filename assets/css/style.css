@@ -4,3 +4,8 @@
     font-weight: normal;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+
+.btn-md{
+    padding: 9px 10px;
+    border-width: 0.5px;
+}

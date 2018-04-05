@@ -1,7 +1,10 @@
 var $collectionHolder;
 
 // setup an "add a tag" link
-var $addAnswerLink = $('<a href="#" class="add_tag_link">Add a tag</a>');
+var $addAnswerLink = $(
+    '<button type="button" class="btn btn-primary">Добавить ответ</button>' +
+    ''
+);
 var $newLinkLi = $('<li></li>').append($addAnswerLink);
 
 jQuery(document).ready(function() {
@@ -21,14 +24,25 @@ jQuery(document).ready(function() {
     // index when inserting a new item (e.g. 2)
     $collectionHolder.data('index', $collectionHolder.find(':input').length);
 
+    //Initialisation of firsst input answer field
+    if($('.form-error-message').length == 0){
+        $addAnswerForm($collectionHolder, $newLinkLi);
+    }
+
+    checkChanges();
+
     $addAnswerLink.on('click', function(e) {
         // prevent the link from creating a "#" on the URL
         e.preventDefault();
 
         // add a new tag form (see next code block)
         $addAnswerForm($collectionHolder, $newLinkLi);
+
+        checkChanges();
     });
 });
+
+var $isPress = false;
 
 function $addAnswerForm($collectionHolder, $newLinkLi) {
     // Get the data-prototype explained earlier
@@ -54,18 +68,70 @@ function $addAnswerForm($collectionHolder, $newLinkLi) {
     var $newFormLi = $('<li></li>').append(newForm);
     $newLinkLi.before($newFormLi);
 
+
     addAnswerFormDeleteLink($newFormLi);
 }
 
 function addAnswerFormDeleteLink($answerFormLi) {
-    var $removeFormA = $('<a href="#">delete this tag</a>');
-    $answerFormLi.append($removeFormA);
+    var $removeFormA = $(
+        '<span class="input-group-btn disabled">' +
+            '<button class="btn btn-danger btn-md delete" type="button">' +
+                '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>' +
+            '</button>' +
+        '</span>');
+    $answerFormLi.find('.input-group').append($removeFormA);
 
     $removeFormA.on('click', function(e) {
+
         // prevent the link from creating a "#" on the URL
         e.preventDefault();
 
         // remove the li for the tag form
-        $answerFormLi.remove();
+        if(!$(this).hasClass('disabled')){
+            $answerFormLi.each(function () {
+                $(this).remove();
+                return false;
+            });
+
+            checkChanges();
+        }
     });
+}
+
+function checkChanges() {
+    setNumbers();
+    checkRemoveButtonsAmount();
+    checkRadioValue()
+}
+
+function setNumbers() {
+    var $numbers = jQuery('.number');
+    var $count = 0;
+    $numbers.each(function () {
+        $count++;
+        $(this).text(''+$count);
+    })
+}
+
+function checkRemoveButtonsAmount() {
+    if($('.delete').length == 1){
+        $('.delete').addClass('disabled');
+        $('.input-group-btn').addClass('disabled');
+    } else {
+        $('.input-group-btn').removeClass('disabled');
+        $('.disabled').removeClass('disabled');
+    }
+
+}
+
+function checkRadioValue() {
+    var $radioButtons = $('input[type="radio"]');
+
+    $radioButtons.on('change', function (e) {
+        $radioButtons.each(function () {
+            if(this != e.target){
+                $(this).prop('checked', false);
+            }
+        })
+    })
 }
