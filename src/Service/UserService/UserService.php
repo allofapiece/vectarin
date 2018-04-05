@@ -68,4 +68,25 @@ class UserService
 
         $user->setRoles(['ROLE_USER']);
     }
+
+    /**
+     * @param User $user
+     */
+    public function changeIsActive(User $user)
+    {
+        if ($user->getIsActive() == '0') {
+            $user->setIsActive('1');
+        } else {
+            $user->setIsActive('0');
+        }
+        return;
+    }
+
+    /**
+     * @return EntityManagerInterface
+     */
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
 }
