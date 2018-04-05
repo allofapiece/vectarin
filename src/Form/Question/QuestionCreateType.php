@@ -21,6 +21,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class QuestionCreateType extends AbstractType
 {
@@ -31,20 +33,33 @@ class QuestionCreateType extends AbstractType
                 'label' => 'Текст вопроса',
                 'attr' => [
                     'placeholder' => 'Вопрос'
+                ],
+                'constraints' => [
+                    new Length([
+                        'min' => 2,
+                        'max' => 50,
+                        'minMessage' => 'Число символов не должно быть меньше {{ limit }}',
+                        'maxMessage' => 'Число символов не должно быть больше {{ limit }}'
+                    ]),
+                    new NotBlank([
+                        'message' => 'Поле не должно быть пустым.'
+                    ])
                 ]
             ])
             ->add('answers', CollectionType::class, array(
-                'label' => 'Ответы на вопрос',
+                'label' => false,
                 'by_reference' => false,
-                'required' => true,
-                'disabled' => false,
                 'allow_add' => true,
                 'entry_type' => AnswerType::class,
                 // these options are passed to each "email" type
                 'entry_options' => array(
-                    'label' => false
-                    //'attr' => array('class' => 'email-box'),
+                    'label' => false,
+                    'attr' => array(
+                        'class' => 'form-cotrol',
+                        ),
+
                 ),
+
                 ))
             ->add('save', SubmitType::class, array('label' => 'Создать вопрос'))
         ;

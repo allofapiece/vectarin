@@ -25,6 +25,10 @@ class QuestionController extends Controller
 
         $form->handleRequest($request);
 
+        $question = $form->getData();
+
+
+
         if($form->isSubmitted() && $form->isValid()){
 
             $questionService->updateDBEntity($question);
@@ -33,7 +37,7 @@ class QuestionController extends Controller
         }
 
         return $this->render('questions/create_question.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 

@@ -27,7 +27,7 @@ class MessageSender
     public function sendConfirmationMessage(User $user)
     {
         $message = (new \Swift_Message('Подтверждение регистрации на Victarin.by'))
-            ->setFrom('allseeing98@gmail.com')
+            ->setFrom('stasana1998@gmail.com')
             ->setTo($user->getEmail())
             ->setBody(
                 $this->templating->render(

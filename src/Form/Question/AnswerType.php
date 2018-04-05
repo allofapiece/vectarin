@@ -28,18 +28,25 @@ class AnswerType extends AbstractType
                     new Length([
                         'min' => 2,
                         'max' => 50,
+                        'minMessage' => 'Число символов не должно быть меньше {{ limit }}',
+                        'maxMessage' => 'Число символов не должно быть больше {{ limit }}'
                     ]),
                     new NotBlank([
-                        'message' => 'Поле не должно быть пустым'
+                        'message' => 'Поле не должно быть пустым. Удалите его, если оно не нужно.'
                     ])
                 ],
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Ответ'
+                    'placeholder' => 'Ответ',
+                    'class' => 'form-control'
                 ]
             ])
             ->add('is_correct', RadioType::class, [
-                'label' => 'Верный ответ'
+                'label' => false,
+                'attr' => [
+                    'name' => 'answer',
+                    'checked' => false
+                ]
             ]);
     }
 

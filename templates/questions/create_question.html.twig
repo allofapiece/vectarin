@@ -1,5 +1,22 @@
 {% extends 'questions/question_action_layout.html.twig' %}
 
+{% import _self as formMacros %}
+
+{% macro printAnswer(answerForm) %}
+   <li>{{  form_errors(answerForm.text) }}
+       <div class="input-group">
+           <span class="input-group-addon number"></span>
+           {{ form_widget(answerForm.text) }}
+           <span class="input-group-addon">
+               {{ form_widget(answerForm.is_correct) }}
+           </span>
+       </div>
+       {{ form_widget(answerForm.text) }}
+
+   </li>
+
+{% endmacro %}
+
 {% block title %}Создание вопроса{% endblock %}
 
 {% block section_title %}Создание вопроса{% endblock %}
@@ -12,43 +29,29 @@
         'attr': {novalidate:'novalidate'}
     }) }}
     {# render the task's only field: description #}
-    {{ form_row(form.text) }}
+    {{ form_label(form.text) }}
+    <div id="question" class="input-group">
+            {{ form_widget(form.text) }}
+        <span class="input-group-addon">?</span>
+    </div>
 
     <div class="form-group">
         <label class="form-control-label required">Список ответов</label>
     </div>
-    <div class="form-group">
-        <ul class="answers" data-prototype="{{ form_widget(form.answers.vars.prototype)|e('html_attr') }}">
-            {% for answer in form.answers %}
-                <li>{{ form_row(answer.text) }}</li>
-            {% endfor %}
-        </ul>
-    </div>
+
+    <ul class="answers list-group" data-prototype="{{ formMacros.printAnswer(form.answers.vars.prototype)|e('html_attr') }}">
+        {% for answer in form.answers %}
+            {{ formMacros.printAnswer(answer) }}
+        {% endfor %}
+    </ul>
 
     <div class="form-group">
         {{ form_widget(form.save, {
             'attr': {'class': 'btn btn-success'},
         }) }}
     </div>
+    {{ form_rest(form) }}
 {% endblock %}
 
 {% block answers %}
-    {#{{ form_label(form.answers) }}
-    {{ form_errors(form.answers) }}
-
-    <ul id="answer-fields-list"
-        class="tags"
-        data-prototype="{{ form_widget(form.answers.vars.prototype)|e('html_attr') }}">
-    </ul>
-    <div class="form-group">
-    <a href="#"
-       class="add-another-collection-widget"
-       data-list="#answer-fields-list">Add another answer</a>
-    </div>
-    <div class="form-group">
-    {{ form_widget(form.save, {
-        'attr': {'class': 'btn btn-success'},
-    }) }}
-    </div>
-    {{ form_end(form) }}#}
 {% endblock %}
