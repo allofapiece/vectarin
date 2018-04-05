@@ -6,6 +6,8 @@ namespace App\Controller;
 use App\Entity\Question;
 use App\Form\Question\QuestionCreateType;
 use App\Service\QuestionService;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,10 +40,10 @@ class QuestionController extends Controller
     }
 
     /**
-     * @Route("/admin/question/update/{id}",name="question.create.id")
+     * @Route("/admin/question/update/{id}",name="question.update")
      * @return Response
      */
-    public function updateQuestion()
+    public function updateQuestion($id)
     {
         return new Response();
     }
@@ -56,12 +58,27 @@ class QuestionController extends Controller
     }
 
     /**
-     * @Route("/admin/question/show",name="question.show")
+     * @Route("/admin/questions/show",name="questions.show")
+     * @param PaginatorInterface $paginator
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
      * @return Response
      */
-    public function showQuestions()
+    public function showQuestions(PaginatorInterface $paginator, EntityManagerInterface $entityManager, Request $request)
     {
-        return $this->render('questions/questions.html.twig');
+        $dql = "SELECT u FROM App\Entity\Question u";
+
+        $query = $entityManager->createQuery($dql);
+
+        $paginator = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            2
+        );
+
+        return $this->render('questions/questions_show.html.twig', [
+            'pagination' => $paginator,
+        ]);
     }
 
     /**
