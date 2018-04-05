@@ -12,6 +12,8 @@
         'attr': {novalidate:'novalidate'}
     }) }}
     {# render the task's only field: description #}
+
+    {{ form_row(form._token) }}
     {{ form_row(form.text) }}
 
     <div class="form-group">
