@@ -8,8 +8,8 @@
         'method': 'POST',
         'attr':{novalidate:'novalidate'},
     }) }}
-    {% if authenticationError %}
-        <div class="alert alert-danger" role="alert">Неверный логин или пароль!</div>
+    {% if authenticationError  %}
+        <div class="alert alert-danger" role="alert"> {{ authenticationError.messageKey }}</div>
     {% endif %}
 
     <div class="form-group">
@@ -36,7 +36,7 @@
         <div class="panel-heading">Обратите внимание</div>
         <div class="panel-body">
             <p>У вас ещё нет профиля? <a href="{{ path('signup') }}">Зарегистрируйтесь</a>.</p>
-            <p>Если вы забыли пароль, вы можете <a href="{{ path('recovery') }}">восстановить</a> его.</p>
+            <p>Если вы забыли пароль, вы можете <a href="{{ path('recovery.password.email') }}">восстановить</a> его.</p>
             <p>Помните, вы вводите личные данные, утеря которых может вызвать проблемы
                 с входом и другими функции на данном сервисе. Не предоставляйте никому
                 ваши данные и будьте осторожны при их вводе.</p>

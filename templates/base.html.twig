@@ -5,6 +5,7 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('build/css/app.css') }}">
+            <link rel="stylesheet" href="{{ asset('build/css/style.css') }}">
             <link rel="stylesheet" href="{{ asset('build/css/navbar.css') }}">
             <link rel="stylesheet" href="{{ asset('build/css/footer.css') }}">
         {% endblock %}
@@ -43,7 +44,7 @@
                                                 {% if is_granted('ROLE_ADMIN') %}
 
                                                     {% block btn_questions %}
-                                                        <li><a href="{{ path('questions') }}">Вопросы</a></li>
+                                                        <li><a href="{{ path('questions.show') }}">Вопросы</a></li>
                                                     {% endblock %}
 
                                                     {% block btn_users %}
@@ -60,28 +61,6 @@
 
                                         {% if is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')%}
 
-                                        {#<li class="dropdown">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-
-                                                    {% block user_name %}
-                                                        {{ app.user.username }}
-                                                    {% endblock %}
-                                                <span class="caret"></span>
-                                            </a>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Action</a></li>
-                                                <li><a href="#">Another action</a></li>
-                                                <li><a href="#">Something else here</a></li>
-                                                <li role="separator" class="divider"></li>
-                                                {% if is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')%}
-
-                                                    {% block btn_exit %}
-                                                        <li><a href="{{ path('logout') }}">Выйти</a> </li>
-                                                    {% endblock %}
-
-                                                {% endif %}
-                                            </ul>
-                                        </li>#}
                                         <div class="btn-group">
                                             <button  onclick="location.href = '{{ path('logout') }}'" type="button" class="btn btn-default navbar-btn">Выйти</button>
                                             <button type="button" class="btn btn-default dropdown-toggle navbar-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

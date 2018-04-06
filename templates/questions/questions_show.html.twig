@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+{% block title %}Вопросы{% endblock %}
+
+{% block btn_questions %}
+    <li class="active"><a href="{{ path('questions.show') }}">Вопросы <span class="sr-only">(current)</span></a></li>
+{% endblock %}
+
+{% block section_title %}
+    Вопросы
+{% endblock %}
+{% block section_content %}
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th width="5%">{{ knp_pagination_sortable(pagination, 'Id', 'u.id') }}</th>
+            <th width="85%">{{ knp_pagination_sortable(pagination, 'Вопрос', 'u.text') }}</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        {% for user in pagination  %}
+            <tbody>
+            <tr onclick="location.href = '{{ path('question.update',{'id': user.getId}) }}'" class="question-line">
+                <td>{{ user.getId }}</td>
+                <td>{{ user.getText }}</td>
+                <td>
+                    <a class="btn btn-success btn-xs">
+                        <i class="glyphicon glyphicon-pencil "></i>
+                    </a>
+                    <a class="btn btn-danger btn-xs">
+                        <i class="glyphicon glyphicon-remove "></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        {% endfor %}
+    </table>
+
+    <div class="pagination">
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
+
+{% endblock %}
