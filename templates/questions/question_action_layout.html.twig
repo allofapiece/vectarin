@@ -15,14 +15,12 @@
 
         <div class="form-content main-info">
             {% block main_info %}
-s
+                {% include('questions/question_detail.html.twig') %}
             {% endblock %}
         </div>
 
         <div class="form-content answers-content">
-            {% block answers %}
-
-            {% endblock %}
+            {% block answers %}{% endblock %}
         </div>
 
     </div>

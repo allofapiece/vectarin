@@ -55,8 +55,9 @@ class QuestionController extends Controller
             return $this->redirectToRoute('question.show');
         }
 
-        return $this->render('questions/question_detail.html.twig', [
+        return $this->render('questions/question_create.html.twig', [
             'form' => $form->createView(),
+            'action' => 'create',
             'errors' => $this->questionDataChecker->getMessages()
         ]);
     }
@@ -95,8 +96,9 @@ class QuestionController extends Controller
             // redirect back to question show page
             return $this->redirectToRoute('questions.show');
         }
-        return $this->render('questions/question_detail.html.twig', [
+        return $this->render('questions/question_update.html.twig', [
             'form' => $editForm->createView(),
+            'action' => 'update',
             'errors' => $this->questionDataChecker->getMessages()
         ]);
     }
