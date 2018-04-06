@@ -24,9 +24,6 @@ class AnswerType extends AbstractType
                         'max' => 50,
                         'minMessage' => 'Число символов не должно быть меньше {{ limit }}',
                         'maxMessage' => 'Число символов не должно быть больше {{ limit }}'
-                    ]),
-                    new NotBlank([
-                        'message' => 'Поле не должно быть пустым. Удалите его, если оно не нужно.'
                     ])
                 ],
                 'label' => false,
