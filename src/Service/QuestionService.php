@@ -30,6 +30,7 @@ class QuestionService
     public function create(Question $question)
     {
         $this->questionOptimization->optimizeQuestionText($question);
+        $this->questionOptimization->addQuestionCharacterIfNotExist($question);
 
         $this->entityManager->persist($question);
         $this->entityManager->flush();
@@ -38,6 +39,7 @@ class QuestionService
     public function update(Question $question, ArrayCollection $originalAnswers)
     {
         $this->questionOptimization->optimizeQuestionText($question);
+        $this->questionOptimization->addQuestionCharacterIfNotExist($question);
 
         // remove the relationship between the tag and the Task
         foreach ($originalAnswers as $answer) {
