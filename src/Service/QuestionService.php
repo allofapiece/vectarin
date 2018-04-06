@@ -61,4 +61,28 @@ class QuestionService
         $this->entityManager->flush();
     }
 
+    public function find(int $id): Question{
+        $question = $this
+            ->entityManager
+            ->getRepository(Question::class)
+            ->find($id);
+
+        //TODO should create custom exception
+
+        return $question;
+    }
+
+    public function delete(Question $question){
+
+
+        //TODO should create custom exception
+        /*if (!$question) {
+            throw $this->createNotFoundException('Данный вопрос не найден!');
+        }*/
+
+        $this->entityManager->remove($question);
+
+        $this->entityManager->flush();
+    }
+
 }

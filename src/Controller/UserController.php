@@ -68,9 +68,9 @@ class UserController extends Controller
      */
     public function deleteUser(Request $request, UserService $userService, $id)
     {
-        $user=$this->checkUserById($id);
+        $user = $this->checkUserById($id);
 
-        $entityManager=$this->getDoctrine()->getManager();
+        $entityManager = $this->getDoctrine()->getManager();
 
         $entityManager->remove($user);
 

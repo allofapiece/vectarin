@@ -104,12 +104,16 @@ class QuestionController extends Controller
     }
 
     /**
-     * @Route("/admin/question/delete/{id}",name="question.delete.id")
+     * @Route("/admin/question/delete/{id}",name="question.delete")
      * @return Response
      */
-    public function deleteQuestion()
+    public function deleteQuestion(int $id)
     {
-        return new Response();
+        $question = $this->questionService->find($id);
+
+        $this->questionService->delete($question);
+
+        return $this->redirectToRoute('questions.show');
     }
 
     /**
