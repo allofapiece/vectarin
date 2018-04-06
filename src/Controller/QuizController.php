@@ -3,12 +3,22 @@
 namespace App\Controller;
 
 
+use App\Service\QuizService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class QuizController extends Controller
 {
+
+    private $quizService;
+
+    public function __construct(QuizService $quizService)
+    {
+        $this->quizService = $quizService;
+    }
+
+
     /**
      * @Route("/admin/quiz/control",name="quiz.control")
      * @return Response
@@ -68,7 +78,11 @@ class QuizController extends Controller
      */
     public function showAllQuiz()
     {
-        return $this->render('quizzes/quizzes.html.twig');
+        $quizzes = $this->quizService->findAll();
+
+        return $this->render('quizzes/quizzes.html.twig', [
+            'quizzes' => $quizzes
+        ]);
     }
 
     /**
