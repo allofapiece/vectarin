@@ -18,7 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class QuestionCreateType extends AbstractType
+class QuestionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -55,7 +55,7 @@ class QuestionCreateType extends AbstractType
                 ),
 
                 ))
-            ->add('save', SubmitType::class, array('label' => 'Создать вопрос'))
+            ->add('save', SubmitType::class, array('label' => 'Сохранить вопрос'))
         ;
     }
 

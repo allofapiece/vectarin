@@ -1,16 +1,15 @@
 {% extends 'base.html.twig' %}
 {% block title %}Вопросы{% endblock %}
+
 {% block btn_questions %}
     <li class="active"><a href="{{ path('questions.show') }}">Вопросы <span class="sr-only">(current)</span></a></li>
 {% endblock %}
+
 {% block section_title %}
     Вопросы
 {% endblock %}
 {% block section_content %}
 
-    <table>
-
-    </table>
     <table class="table table-hover">
         <thead>
         <tr>
@@ -21,7 +20,7 @@
         </thead>
         {% for user in pagination  %}
             <tbody>
-            <tr onclick="location.href = '{{ path('question.update',{'id': user.getId}) }}'" class="qustion-line">
+            <tr onclick="location.href = '{{ path('question.update',{'id': user.getId}) }}'" class="question-line">
                 <td>{{ user.getId }}</td>
                 <td>{{ user.getText }}</td>
                 <td>
@@ -36,6 +35,7 @@
             </tbody>
         {% endfor %}
     </table>
+
     <div class="pagination">
         <div class="navigation">
             {{ knp_pagination_render(pagination) }}

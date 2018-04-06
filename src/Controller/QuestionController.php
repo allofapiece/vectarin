@@ -4,8 +4,11 @@ namespace App\Controller;
 
 
 use App\Entity\Question;
-use App\Form\Question\QuestionCreateType;
+use App\Form\Question\QuestionType;
+use App\Service\DataChecker\QuestionDataChecker;
+use App\Service\QuestionOptimization;
 use App\Service\QuestionService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -15,31 +18,46 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class QuestionController extends Controller
 {
+    private $questionDataChecker;
+    private $questionOptimization;
+    private $questionService;
+
+    public function __construct(
+        QuestionService $questionService,
+        QuestionDataChecker $questionDataChecker
+    )
+    {
+        $this->questionService = $questionService;
+        $this->questionDataChecker = $questionDataChecker;
+    }
+
     /**
      * @Route("/admin/question/create", name="question.create")
      * @return Response
      */
-    public function createQuestion(Request $request, QuestionService $questionService)
+    public function createQuestion(Request $request)
     {
         $question = new Question();
 
-        $form = $this->createForm(QuestionCreateType::class, $question);
+        $form = $this->createForm(QuestionType::class, $question);
 
         $form->handleRequest($request);
 
         $question = $form->getData();
 
+        if($form->isSubmitted() &&
+            $form->isValid() &&
+            false === $this->questionDataChecker->checkData($question)
+        ){
 
+            $this->questionService->create($question);
 
-        if($form->isSubmitted() && $form->isValid()){
-
-            $questionService->updateDBEntity($question);
-
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('question.show');
         }
 
-        return $this->render('questions/create_question.html.twig', [
+        return $this->render('questions/question_detail.html.twig', [
             'form' => $form->createView(),
+            'errors' => $this->questionDataChecker->getMessages()
         ]);
     }
 
@@ -47,9 +65,40 @@ class QuestionController extends Controller
      * @Route("/admin/question/update/{id}",name="question.update")
      * @return Response
      */
-    public function updateQuestion($id)
+    public function updateQuestion($id, Request $request)
     {
-        return new Response();
+        $entityManager = $this->getDoctrine()->getManager();
+        $question = $entityManager->getRepository(Question::class)->find($id);
+
+        if (!$question) {
+            throw $this->createNotFoundException('No task found for id '.$id);
+        }
+
+        $originalAnswers = new ArrayCollection();
+
+        // Create an ArrayCollection of the current Tag objects in the database
+        foreach ($question->getAnswers() as $answer) {
+            $originalAnswers->add($answer);
+        }
+
+        $editForm = $this->createForm(QuestionType::class, $question);
+
+        $editForm->handleRequest($request);
+
+        if($editForm->isSubmitted() &&
+            $editForm->isValid() &&
+            false === $this->questionDataChecker->checkData($question)
+        ){
+
+            $this->questionService->update($question, $originalAnswers);
+
+            // redirect back to question show page
+            return $this->redirectToRoute('questions.show');
+        }
+        return $this->render('questions/question_detail.html.twig', [
+            'form' => $editForm->createView(),
+            'errors' => $this->questionDataChecker->getMessages()
+        ]);
     }
 
     /**
@@ -77,7 +126,7 @@ class QuestionController extends Controller
         $paginator = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
-            2
+            15
         );
 
         return $this->render('questions/questions_show.html.twig', [
@@ -85,12 +134,4 @@ class QuestionController extends Controller
         ]);
     }
 
-    /**
-     * @Route("/admin/question/show/{id}",name="question.show.id")
-     * @return Response
-     */
-    public function showQuestionById()
-    {
-        return new Response();
-    }
 }
