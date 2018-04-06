@@ -20,3 +20,5 @@ vendor
 ###> symfony/web-server-bundle ###
 /.web-server-pid
 ###< symfony/web-server-bundle ###
+
+/config/packages/swiftmailer.yaml
