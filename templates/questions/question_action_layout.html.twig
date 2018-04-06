@@ -6,23 +6,19 @@
     <link rel="stylesheet" href="{{ asset('build/css/questions.css') }}">
 {% endblock %}
 
-{% block section_title %}
-
-{% endblock %}
+{% block section_title %}{% endblock %}
 
 {% block section_content %}
     <div class="clearfix section-content">
 
         <div class="form-content main-info">
             {% block main_info %}
-s
+                {% include('questions/question_detail.html.twig') %}
             {% endblock %}
         </div>
 
         <div class="form-content answers-content">
-            {% block answers %}
-
-            {% endblock %}
+            {% block answers %}{% endblock %}
         </div>
 
     </div>

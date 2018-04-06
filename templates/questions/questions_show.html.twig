@@ -8,8 +8,13 @@
 {% block section_title %}
     Вопросы
 {% endblock %}
-{% block section_content %}
 
+{% block section_content %}
+    <button type="button"
+            class="btn btn-success"
+            onclick="location.href = '{{ path('question.create') }}'">
+        Добавить вопрос
+    </button>
     <table class="table table-hover">
         <thead>
         <tr>
@@ -18,17 +23,17 @@
             <th>Действия</th>
         </tr>
         </thead>
-        {% for user in pagination  %}
+        {% for question in pagination  %}
             <tbody>
-            <tr onclick="location.href = '{{ path('question.update',{'id': user.getId}) }}'" class="question-line">
-                <td>{{ user.getId }}</td>
-                <td>{{ user.getText }}</td>
+            <tr onclick="location.href = '{{ path('question.update',{'id': question.getId}) }}'" class="question-line">
+                <td>{{ question.getId }}</td>
+                <td>{{ question.getText }}</td>
                 <td>
                     <a class="btn btn-success btn-xs">
                         <i class="glyphicon glyphicon-pencil "></i>
                     </a>
-                    <a class="btn btn-danger btn-xs">
-                        <i class="glyphicon glyphicon-remove "></i>
+                    <a class="btn btn-danger btn-xs" href="{{ path('question.delete',{'id': question.getId}) }}">
+                        <i class="glyphicon glyphicon-remove " ></i>
                     </a>
                 </td>
             </tr>

@@ -5,11 +5,11 @@ namespace App\Service\UserService;
 
 use App\Entity\User;
 use App\Service\GenerateToken;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
 
 class UserService
 {
@@ -19,30 +19,39 @@ class UserService
 
     private $entityManager;
 
+    private $paginator;
+
     /**
      * UserService constructor.
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @param GenerateToken $generateToken
      * @param EntityManagerInterface $entityManager
+     * @param PaginatorInterface $paginator
      */
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder, GenerateToken $generateToken, EntityManagerInterface $entityManager)
+    public function __construct(
+        UserPasswordEncoderInterface $passwordEncoder,
+        GenerateToken $generateToken,
+        EntityManagerInterface $entityManager,
+        PaginatorInterface $paginator
+    )
     {
         $this->generateToken = $generateToken;
         $this->passwordEncoder = $passwordEncoder;
         $this->entityManager = $entityManager;
+        $this->paginator = $paginator;
     }
 
     /**
      * @param User $user
      */
-    public function setDefaultValues(User $user)
+    public function setDefaultValues(User $user): void
     {
         $this->setEncodePassword($user);
         $user->setToken($this->generateToken->generate($user->getEmail()));
         $user->setIsActive(0);
     }
 
-    public function setEncodePassword(User $user)
+    public function setEncodePassword(User $user): void
     {
         $password = $this->passwordEncoder->encodePassword($user, $user->getPlainPassword());
         $user->setPassword($password);
@@ -50,8 +59,9 @@ class UserService
 
     /**
      * @param User $user
+     * @return void
      */
-    public function executeQueryToDb(User $user)
+    public function commit(User $user): void
     {
         $this->entityManager->persist($user);
         $this->entityManager->flush();
@@ -59,8 +69,9 @@ class UserService
 
     /**
      * @param User $user
+     * @return void
      */
-    public function setUserActive(User $user)
+    public function setUserActive(User $user): void
     {
         $user->setIsActive(1);
 
@@ -71,22 +82,98 @@ class UserService
 
     /**
      * @param User $user
+     * @return void
      */
-    public function changeIsActive(User $user)
+    public function changeIsActive(User $user): void
     {
         if ($user->getIsActive() == '0') {
             $user->setIsActive('1');
         } else {
             $user->setIsActive('0');
         }
-        return;
     }
 
     /**
-     * @return EntityManagerInterface
+     * @param int $usersOnPage
+     * @param Request $request
+     * @return PaginatorInterface
      */
-    public function getEntityManager()
+    public function createPaginator(int $usersOnPage, Request $request)
     {
-        return $this->entityManager;
+        $this->paginator = $this->paginator->paginate(
+            $this->findAllQuery(),
+            $request->query->getInt('page', 1),
+            $usersOnPage
+        );
+
+        return $this->paginator;
     }
+
+    /**
+     * @param User $user
+     * @return void
+     */
+    public function delete(User $user): void
+    {
+        //TODO should create custom exception
+        /*if (!$question) {
+            throw $this->createNotFoundException('Данный вопрос не найден!');
+        }*/
+
+        $this->entityManager->remove($user);
+    }
+
+    /**
+     * @param $id
+     * @return User
+     */
+    public function find($id): User
+    {
+        $user = $this->entityManager
+            ->getRepository(User::class)
+            ->find($id);
+
+
+        //TODO create custom exceptions or throw it up
+        /*if (!$user) {
+            throw $this->createNotFoundException('Данный пользователь не найден!');
+        }
+
+        if (in_array('ROLE_ADMIN',$user->getRoles())) {
+            throw $this->createAccessDeniedException('Вы не можете менять данные администратора!');
+        }*/
+
+        return $user;
+    }
+
+    /**
+     * @return Query
+     */
+    public function findAllQuery(): Query
+    {
+        $dql = "SELECT u FROM App\Entity\User u";
+
+        $query = $this->entityManager->createQuery($dql);
+
+        return $query;
+    }
+
+    /**
+     * @return PaginatorInterface
+     */
+    public function getPaginator()
+    {
+        return $this->paginator;
+    }
+
+    /**
+     * @param PaginatorInterface $paginator
+     * @return void
+     */
+    public function setPaginator(PaginatorInterface $paginator): void
+    {
+        $this->paginator = $paginator;
+    }
+
+
 }

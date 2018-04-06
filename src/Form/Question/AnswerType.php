@@ -20,7 +20,7 @@ class AnswerType extends AbstractType
             ->add('text', TextType::class, [
                 'constraints' => [
                     new Length([
-                        'min' => 2,
+                        'min' => 1,
                         'max' => 50,
                         'minMessage' => 'Число символов не должно быть меньше {{ limit }}',
                         'maxMessage' => 'Число символов не должно быть больше {{ limit }}'

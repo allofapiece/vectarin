@@ -25,7 +25,7 @@ jQuery(document).ready(function() {
     $collectionHolder.data('index', $collectionHolder.find(':input').length);
 
     //Initialisation of firsst input answer field
-    if($('.form-error-message').length == 0){
+    if($('.form-error-message').length == 0 && $('#question').attr('action') != ''){
         $addAnswerForm($collectionHolder, $newLinkLi);
     }
 

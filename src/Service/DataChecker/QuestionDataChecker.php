@@ -13,6 +13,10 @@ use App\Entity\Question;
 class QuestionDataChecker extends DataCheckerService
 {
 
+    /**
+     * @param Question $question
+     * @return bool
+     */
     public function checkData(Question $question): bool
     {
         $this->setIsError(false);

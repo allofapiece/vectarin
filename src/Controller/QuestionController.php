@@ -6,7 +6,6 @@ namespace App\Controller;
 use App\Entity\Question;
 use App\Form\Question\QuestionType;
 use App\Service\DataChecker\QuestionDataChecker;
-use App\Service\QuestionOptimization;
 use App\Service\QuestionService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,10 +17,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class QuestionController extends Controller
 {
+
+    const QUESTIONS_ON_PAGE = 15;
+
     private $questionDataChecker;
-    private $questionOptimization;
+
     private $questionService;
 
+    /**
+     * QuestionController constructor.
+     * @param QuestionService $questionService
+     * @param QuestionDataChecker $questionDataChecker
+     */
     public function __construct(
         QuestionService $questionService,
         QuestionDataChecker $questionDataChecker
@@ -33,9 +40,10 @@ class QuestionController extends Controller
 
     /**
      * @Route("/admin/question/create", name="question.create")
+     * @param Request $request
      * @return Response
      */
-    public function createQuestion(Request $request)
+    public function createQuestion(Request $request): Response
     {
         $question = new Question();
 
@@ -52,26 +60,30 @@ class QuestionController extends Controller
 
             $this->questionService->create($question);
 
+            $this->questionService->commit($question);
+
             return $this->redirectToRoute('question.show');
         }
 
-        return $this->render('questions/question_detail.html.twig', [
+        return $this->render('questions/question_create.html.twig', [
             'form' => $form->createView(),
+            'action' => 'create',
             'errors' => $this->questionDataChecker->getMessages()
         ]);
     }
 
     /**
-     * @Route("/admin/question/update/{id}",name="question.update")
+     * @Route("/admin/question/update/{id}", name="question.update")
+     * @param int $id
+     * @param Request $request
      * @return Response
      */
-    public function updateQuestion($id, Request $request)
+    public function updateQuestion(int $id, Request $request): Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $question = $entityManager->getRepository(Question::class)->find($id);
+        $question = $this->questionService->find($id);
 
         if (!$question) {
-            throw $this->createNotFoundException('No task found for id '.$id);
+            throw $this->createNotFoundException('No task found for id ' . $id);
         }
 
         $originalAnswers = new ArrayCollection();
@@ -92,45 +104,42 @@ class QuestionController extends Controller
 
             $this->questionService->update($question, $originalAnswers);
 
+            $this->questionService->commit($question);
             // redirect back to question show page
             return $this->redirectToRoute('questions.show');
         }
-        return $this->render('questions/question_detail.html.twig', [
+        return $this->render('questions/question_update.html.twig', [
             'form' => $editForm->createView(),
+            'action' => 'update',
             'errors' => $this->questionDataChecker->getMessages()
         ]);
     }
 
     /**
-     * @Route("/admin/question/delete/{id}",name="question.delete.id")
+     * @Route("/admin/question/delete/{id}", name="question.delete")
+     * @param int $id
      * @return Response
      */
-    public function deleteQuestion()
+    public function deleteQuestion(int $id): Response
     {
-        return new Response();
+        $question = $this->questionService->find($id);
+
+        $this->questionService->delete($question);
+
+        return $this->redirectToRoute('questions.show');
     }
 
     /**
      * @Route("/admin/questions/show",name="questions.show")
-     * @param PaginatorInterface $paginator
-     * @param EntityManagerInterface $entityManager
      * @param Request $request
      * @return Response
      */
-    public function showQuestions(PaginatorInterface $paginator, EntityManagerInterface $entityManager, Request $request)
+    public function showQuestions(Request $request): Response
     {
-        $dql = "SELECT u FROM App\Entity\Question u";
-
-        $query = $entityManager->createQuery($dql);
-
-        $paginator = $paginator->paginate(
-            $query,
-            $request->query->getInt('page', 1),
-            15
-        );
+        $this->questionService->createPaginator(self::QUESTIONS_ON_PAGE, $request);
 
         return $this->render('questions/questions_show.html.twig', [
-            'pagination' => $paginator,
+            'pagination' => $this->questionService->getPaginator(),
         ]);
     }
 
