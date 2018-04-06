@@ -24,6 +24,12 @@ class QuestionService
 
     private $paginator;
 
+    /**
+     * QuestionService constructor.
+     * @param EntityManagerInterface $entityManager
+     * @param QuestionOptimization $questionOptimization
+     * @param PaginatorInterface $paginator
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
         QuestionOptimization $questionOptimization,
@@ -35,16 +41,22 @@ class QuestionService
         $this->paginator = $paginator;
     }
 
-    public function create(Question $question)
+    /**
+     * @param Question $question
+     * @return void
+     */
+    public function create(Question $question): void
     {
         $this->questionOptimization->optimizeQuestionText($question);
         $this->questionOptimization->addQuestionCharacterIfNotExist($question);
-
-        $this->entityManager->persist($question);
-        $this->entityManager->flush();
     }
 
-    public function update(Question $question, ArrayCollection $originalAnswers)
+    /**
+     * @param Question $question
+     * @param ArrayCollection $originalAnswers
+     * @return void
+     */
+    public function update(Question $question, ArrayCollection $originalAnswers): void
     {
         $this->questionOptimization->optimizeQuestionText($question);
         $this->questionOptimization->addQuestionCharacterIfNotExist($question);
@@ -52,19 +64,21 @@ class QuestionService
         // remove the relationship between the tag and the Task
         foreach ($originalAnswers as $answer) {
             if (false === $question->getAnswers()->contains($answer)) {
-                // remove the Task from the Tag
+
+                // remove the Question from the Answer
                 $answer->getQuestions()->removeElement($question);
 
-                // if it was a many-to-one relationship, remove the relationship like this
-                // $answer->setTask(null);
-
                 $this->entityManager->persist($answer);
-
-                // if you wanted to delete the Tag entirely, you can also do that
-                // $entityManager->remove($answer);
             }
         }
+    }
 
+    /**
+     * @param Question $question
+     * @return void
+     */
+    public function commit(Question $question): void
+    {
         $this->entityManager->persist($question);
         $this->entityManager->flush();
     }

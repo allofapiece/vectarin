@@ -60,6 +60,8 @@ class QuestionController extends Controller
 
             $this->questionService->create($question);
 
+            $this->questionService->commit($question);
+
             return $this->redirectToRoute('question.show');
         }
 
@@ -78,11 +80,10 @@ class QuestionController extends Controller
      */
     public function updateQuestion(int $id, Request $request): Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $question = $entityManager->getRepository(Question::class)->find($id);
+        $question = $this->questionService->find($id);
 
         if (!$question) {
-            throw $this->createNotFoundException('No task found for id '.$id);
+            throw $this->createNotFoundException('No task found for id ' . $id);
         }
 
         $originalAnswers = new ArrayCollection();
@@ -103,6 +104,7 @@ class QuestionController extends Controller
 
             $this->questionService->update($question, $originalAnswers);
 
+            $this->questionService->commit($question);
             // redirect back to question show page
             return $this->redirectToRoute('questions.show');
         }
