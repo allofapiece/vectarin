@@ -11,31 +11,36 @@ namespace App\Service\DataChecker;
 
 abstract class DataCheckerService
 {
-    private $message;
+    private $messages;
     private $isError;
-    private $entity;
 
-    public function __construct(object $entity = null)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $messages = array();
     }
-
-    abstract public function checkData(object $entity);
 
     /**
      * @return mixed
      */
-    public function getMessage()
+    public function getMessages()
     {
-        return $this->message;
+        return $this->messages;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function setMessages(array $messages)
+    {
+        $this->messages = $messages;
     }
 
     /**
      * @param mixed $message
      */
-    public function setMessage($message)
+    public function addMessage(string $message)
     {
-        $this->message = $message;
+        $this->messages[] = $message;
     }
 
     /**
@@ -53,22 +58,5 @@ abstract class DataCheckerService
     {
         $this->isError = $isError;
     }
-
-    /**
-     * @return object
-     */
-    public function getEntity()
-    {
-        return $this->entity;
-    }
-
-    /**
-     * @param object $entity
-     */
-    public function setEntity($entity)
-    {
-        $this->entity = $entity;
-    }
-
 
 }

@@ -44,7 +44,7 @@ class MessageSender
     public function sendRecoveryPasswordMessage(User $user)
     {
         $message = (new \Swift_Message('Восстановление пароля на Victarin.by'))
-        ->setFrom('allseeing98@gmail.com')
+        ->setFrom('stasana1998@gmail.com')
         ->setTo($user->getEmail())
         ->setBody(
             $this->templating->render(
