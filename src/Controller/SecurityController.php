@@ -34,12 +34,17 @@ class SecurityController extends Controller
 
         $form->handleRequest($request);
 
-        $authenticationError = $authenticationUtils->getLastAuthenticationError();
+        if($form->isSubmitted() && $form->isValid()){
+
+            return $this->redirectToRoute('home');
+        }
+
+        //$authenticationError = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', [
             'form' => $form->createView(),
-            'authenticationError' => $authenticationError,
+            //'authenticationError' => $authenticationError,
         ]);
     }
 
@@ -63,7 +68,7 @@ class SecurityController extends Controller
 
             $userService->setDefaultValues($user);
 
-            $userService->executeQueryToDb($user);
+            $userService->commit($user);
 
             $messageSender->sendConfirmationMessage($user);
 
@@ -94,7 +99,7 @@ class SecurityController extends Controller
 
         $userService->setUserActive($user);
 
-        $userService->executeQueryToDb($user);
+        $userService->commit($user);
 
         return $this->redirect('/login');
     }
@@ -125,7 +130,7 @@ class SecurityController extends Controller
             if ($user) {
                 $user->setRecoveryToken($generateToken->generate($user->getPassword()));
 
-                $userService->executeQueryToDb($user);
+                $userService->commit($user);
 
                 $messageSender->sendRecoveryPasswordMessage($user);
             }
@@ -167,7 +172,7 @@ class SecurityController extends Controller
 
             $user->setRecoveryToken('');
 
-            $userService->executeQueryToDb($user);
+            $userService->commit($user);
 
             return $this->redirect('/login');
         }

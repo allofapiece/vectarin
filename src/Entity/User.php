@@ -21,15 +21,6 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=25, unique=true)
-     * @Assert\NotBlank(
-     *     message = "Поле должно быть заполнено"
-     * )
-     * @Assert\Length(
-     *     min = 4,
-     *     max = 18,
-     *     minMessage = "Длинна поля 'Логин' должна быть не меньше {{ limit }} ",
-     *     maxMessage = "Длинна поля 'Логин' должна быть не больше {{ limit }} "
-     * )
      */
     private $username;
 
@@ -38,12 +29,6 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $password;
 
-    /**
-     * @Assert\NotBlank(
-     *     message = "Поле должно быть заполнено"
-     * )
-     * @Assert\Length(max=4096)
-     */
     private $plainPassword;
 
     /**
@@ -54,60 +39,21 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(
-     *     message = "Поле должно быть заполнено"
-     * )
-     * @Assert\Length(
-     *     min = 2,
-     *     max = 50,
-     *     minMessage = "Длинна поля 'Имя' должна быть не меньше {{ limit }} ",
-     *     maxMessage = "Длинна поля 'Имя' должна быть не больше {{ limit }} "
-     * )
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
-     * @Assert\NotBlank(
-     *     message = "Поле должно быть заполнено"
-     * )
-     * @Assert\Email(
-     *     message = "Поле должно соответствовать формату электронной почты"
-     * )
-     * @Assert\Length(
-     *     min = 4,
-     *     max = 50,
-     *     minMessage = "Длинна поля 'email' должна быть не меньше {{ limit }} ",
-     *     maxMessage = "Длинна поля 'email' должна быть не больше {{ limit }} "
-     * )
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(
-     *     message = "Поле должно быть заполнено"
-     * )
-     * @Assert\Length(
-     *     min = 2,
-     *     max = 50,
-     *     minMessage = "Длинна поля 'Фамилия' должна быть не меньше {{ limit }} ",
-     *     maxMessage = "Длинна поля 'Фамилия' должна быть не больше {{ limit }} "
-     * )
      */
     private $surname;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(
-     *     message = "Поле должно быть заполнено"
-     * )
-     * @Assert\Length(
-     *     min = 4,
-     *     max = 50,
-     *     minMessage = "Длинна поля 'Отчество' должна быть не меньше {{ limit }} ",
-     *     maxMessage = "Длинна поля 'Отчество' должна быть не больше {{ limit }} "
-     * )
      */
     private $secondname;
 
