@@ -1,14 +1,3 @@
 swiftmailer:
-    transport:        gmail
-    username:         stasana1998@gmail.com
-    password:         FOROSTSTAS19980911
-    host:             localhost
-    port:             465
-    encryption:       ssl
-    auth-mode:        login
+    url: '%env(MAILER_URL)%'
     spool: { type: 'memory' }
-    stream_options:
-        ssl:
-            allow_self_signed: true
-            verify_peer: false
-            verify_peer_name: false
