@@ -8,8 +8,13 @@
 {% block section_title %}
     Вопросы
 {% endblock %}
-{% block section_content %}
 
+{% block section_content %}
+    <button type="button"
+            class="btn btn-success"
+            onclick="location.href = '{{ path('question.create') }}'">
+        Добавить вопрос
+    </button>
     <table class="table table-hover">
         <thead>
         <tr>
