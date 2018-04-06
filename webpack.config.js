@@ -20,6 +20,7 @@ Encore
     .addStyleEntry('css/navbar', './assets/css/navbar.css')
     .addStyleEntry('css/footer', './assets/css/footer.css')
     .addStyleEntry('css/questions', './assets/css/questions.css')
+    .addStyleEntry('css/quizzes', './assets/css/quizzes.css')
 
 
     // uncomment if you use Sass/SCSS files
