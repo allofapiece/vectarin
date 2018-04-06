@@ -1,21 +1,6 @@
 {% extends 'questions/question_action_layout.html.twig' %}
 
-{% import _self as formMacros %}
-
-{% macro printAnswer(answerForm) %}
-   <li>{{  form_errors(answerForm.text) }}
-       <div class="input-group">
-           <span class="input-group-addon number"></span>
-           {{ form_widget(answerForm.text) }}
-           <span class="input-group-addon">
-               {{ form_widget(answerForm.is_correct) }}
-           </span>
-       </div>
-       {{ form_widget(answerForm.text) }}
-
-   </li>
-
-{% endmacro %}
+{% import 'answers/answer_detail.html.twig' as answerForm %}
 
 {% block title %}Создание вопроса{% endblock %}
 
@@ -54,9 +39,9 @@
         <label class="form-control-label required">Список ответов</label>
     </div>
 
-    <ul class="answers list-group" data-prototype="{{ formMacros.printAnswer(form.answers.vars.prototype)|e('html_attr') }}">
+    <ul class="answers list-group" data-prototype="{{ answerForm.answerDetail(form.answers.vars.prototype)|e('html_attr') }}">
         {% for answer in form.answers %}
-            {{ formMacros.printAnswer(answer) }}
+            {{ answerForm.answerDetail(answer) }}
         {% endfor %}
     </ul>
 
