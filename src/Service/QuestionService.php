@@ -12,19 +12,27 @@ namespace App\Service;
 use App\Entity\Question;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class QuestionService
 {
     private $entityManager;
+
     private $questionOptimization;
+
+    private $paginator;
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        QuestionOptimization $questionOptimization
+        QuestionOptimization $questionOptimization,
+        PaginatorInterface $paginator
     )
     {
         $this->entityManager = $entityManager;
         $this->questionOptimization = $questionOptimization;
+        $this->paginator = $paginator;
     }
 
     public function create(Question $question)
@@ -84,5 +92,52 @@ class QuestionService
 
         $this->entityManager->flush();
     }
+
+    /**
+     * @param int $usersOnPage
+     * @param Request $request
+     * @return PaginatorInterface
+     */
+    public function createPaginator(int $usersOnPage, Request $request)
+    {
+        $this->paginator = $this->paginator->paginate(
+            $this->findAllQuery(),
+            $request->query->getInt('page', 1),
+            $usersOnPage
+        );
+
+        return $this->paginator;
+    }
+
+    /**
+     * @return Query
+     */
+    public function findAllQuery(): Query
+    {
+        $dql = "SELECT u FROM App\Entity\Question u";
+
+        $query = $this->entityManager->createQuery($dql);
+
+        return $query;
+    }
+
+    /**
+     * @return PaginatorInterface
+     */
+    public function getPaginator()
+    {
+        return $this->paginator;
+    }
+
+    /**
+     * @param PaginatorInterface $paginator
+     * @return void
+     */
+    public function setPaginator(PaginatorInterface $paginator): void
+    {
+        $this->paginator = $paginator;
+    }
+
+
 
 }
