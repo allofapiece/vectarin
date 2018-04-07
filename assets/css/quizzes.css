@@ -4,10 +4,17 @@
 
 .quiz{
     width: 40%;
-    height: 200px;
+    min-height: 150px;
     margin: 0 15px 10px 0;
     display: inline-block;
 }
+.quiz-tools{
+    float:right;
+    position: relative;
+    top: 8px;
+    right: 8px;
+}
+
 @media (max-width: 767px) {
     .quiz {
         width: 100%;
@@ -15,8 +22,8 @@
     } }
 @media (min-width: 768px) {
     .quiz {
-        width: 40%;
-        height: 40%;
+        width: 46%;
+        height: 46%;
     } }
 @media (min-width: 992px) {
     .quiz {
