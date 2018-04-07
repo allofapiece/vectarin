@@ -121,7 +121,7 @@ function ajaxSearch() {
                 },
                 dataType: "text",
                 success: function(msg){
-                    
+
                     if (value==jQuery(that).val()) {
                         var result = JSON.parse(msg);
                         jQuery.each(result, function(key, arr) {
@@ -159,12 +159,14 @@ function ajaxSearch() {
 }
 
 function blurSearch() {
+    $('html').on('click', function (e) {
+        if($(this) != $('#enitiesNav') && $(this) != $('input#search.form-control')){
+            $('#entitiesNav').hide();
+        }
+    });
     $('#search').on('focusin', function () {
         if($('#entitiesNav').find('li').html() != null){
             $('#entitiesNav').show();
         }
     });
-    $('#search').on('blur', function () {
-        $('#entitiesNav').hide();
-    })
 }

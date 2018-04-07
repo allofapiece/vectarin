@@ -10,15 +10,22 @@ namespace App\Service;
 
 
 use App\Entity\Quiz;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
 class QuizService
 {
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    private $questionService;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        QuestionService $questionService
+    )
     {
         $this->entityManager = $entityManager;
+        $this->questionService = $questionService;
     }
 
     public function findAll(): array
@@ -29,6 +36,51 @@ class QuizService
             ->findAll();
 
         return $quizzes;
+    }
+
+    /**
+     * @param Quiz $quiz
+     * @return void
+     */
+    public function deleteEmptyQuestions(Quiz $quiz): void
+    {
+        foreach($quiz->getQuestions() as $question){
+
+            if($question->getText() == null || $question->getText() == ""){
+
+                $quiz->getQuestions()->removeElement($question);
+
+                $this->entityManager->remove($question);
+
+                $this->questionService->deleteQuestion($question);
+            }
+
+        }
+
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param Quiz $quiz
+     * @param ArrayCollection $originalAnswers
+     * @return void
+     */
+    public function update(Quiz $quiz, ArrayCollection $originalQuestions): void
+    {
+        //$this->questionOptimization->optimizeQuestionText($quiz);
+        //$this->questionOptimization->addQuestionCharacterIfNotExist($quiz);
+
+        // remove the relationship between the tag and the Task
+        foreach ($originalQuestions as $question) {
+            if (false === $quiz->getQuestions()->contains($question)) {
+                $question->getQuizzes()->removeElement($quiz);
+                //$question->setQuiz(null);
+
+                $this->entityManager->persist($question);
+                $this->entityManager->remove($question);
+
+            }
+        }
     }
 
     /**

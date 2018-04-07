@@ -9,6 +9,7 @@ use App\Form\QuizType;
 use App\Service\DataChecker\QuizDataChecker;
 use App\Service\QuestionService;
 use App\Service\QuizService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,20 +50,6 @@ class QuizController extends Controller
     {
         $quiz = new Quiz();
 
-        $question1 = new Question();
-        $question1->setText("Hewf");
-        $this->getDoctrine()->getManager()->persist($question1);
-        $this->getDoctrine()->getManager()->flush();
-
-
-
-        $question2 = new Question();
-        $question2->setText("Привет");
-
-        $quiz
-            ->addQuestion($question1)
-            ->addQuestion($question2);
-
         $form = $this->createForm(QuizType::class, $quiz);
 
         $form->handleRequest($request);
@@ -94,9 +81,44 @@ class QuizController extends Controller
      * @param int $id
      * @return Response
      */
-    public function updateQuiz(int $id)
+    public function updateQuiz(int $id, Request $request)
     {
-        return new Response();
+        $quiz = $this->quizService->find($id);
+
+        if (!$quiz) {
+            throw $this->createNotFoundException('No task found for id ' . $id);
+        }
+
+        $originalQuestions = new ArrayCollection();
+
+        // Create an ArrayCollection of the current Tag objects in the database
+        foreach ($quiz->getQuestions() as $question) {
+            $originalQuestions->add($question);
+        }
+
+        $editForm = $this->createForm(QuizType::class, $quiz);
+
+        $editForm->handleRequest($request);
+
+        $this->quizService->deleteEmptyQuestions($quiz);
+
+        if($editForm->isSubmitted() &&
+            $editForm->isValid() &&
+            true === $this->quizDataChecker->checkData($quiz)
+        ){
+
+            $this->quizService->update($quiz, $originalQuestions);
+
+            $this->quizService->commit($quiz);
+            // redirect back to question show page
+            return $this->redirectToRoute('quiz.show');
+        }
+
+        return $this->render('quizzes/quiz_update.html.twig', [
+            'form' => $editForm->createView(),
+            'action' => 'update',
+            'errors' => $this->quizDataChecker->getMessages()
+        ]);
     }
 
     /**

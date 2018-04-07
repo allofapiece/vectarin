@@ -42,6 +42,11 @@ class Quiz
      */
     private $questions;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActive;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -131,6 +136,18 @@ class Quiz
         if ($this->questions->contains($question)) {
             $this->questions->removeElement($question);
         }
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }
