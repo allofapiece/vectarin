@@ -89,6 +89,7 @@ class QuestionService
         $this->entityManager->flush();
     }
 
+    
     /**
      * @param int $id
      * @return Question
@@ -113,7 +114,6 @@ class QuestionService
             ->entityManager
             ->getRepository(Question::class)
             ->findAll();
-
         return $questions;
     }
 
@@ -197,5 +197,27 @@ class QuestionService
     }
 
 
+    public function getQuestionsByText(string $text): array
+    {
+        $questions = $this->entityManager
+            ->getRepository(Question::class)
+            ->findEntitiesByString($text);
+
+        if (!$questions) {
+            $result['entities']['error'] = 'Вопросы не найдены...';
+        } else {
+            $result['entities'] = $this->getFoundData($questions);
+        }
+
+        return $result;
+    }
+
+    public function getFoundData($questions)
+    {
+        foreach ($questions as $question) {
+            $foundData[$question->getId()] = $question->getText();
+        }
+        return $foundData;
+    }
 
 }

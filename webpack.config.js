@@ -13,6 +13,7 @@ Encore
     // uncomment to define the assets of the project
     .addEntry('js/app', './assets/js/app.js')
     .addEntry('js/questions', './assets/js/questions.js')
+    .addEntry('js/quizzes', './assets/js/quizzes.js')
 
     .addStyleEntry('css/app', './assets/css/app.scss')
     .addStyleEntry('css/style', './assets/css/style.css')
