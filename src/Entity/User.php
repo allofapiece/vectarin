@@ -75,6 +75,11 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $recoveryToken;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Game", mappedBy="user", orphanRemoval=true)
+     */
+    private $games;
+
 
     public function __construct()
     {
@@ -85,6 +90,7 @@ class User implements AdvancedUserInterface, \Serializable
         $this->setEmail('');
         $this->setSecondname('');
         $this->setSurname('');
+        $this->games = new ArrayCollection();
     }
 
     public function getUsername(): string
@@ -297,6 +303,37 @@ class User implements AdvancedUserInterface, \Serializable
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return Collection|Game[]
+     */
+    public function getGames(): Collection
+    {
+        return $this->games;
+    }
+
+    public function addGame(Game $game): self
+    {
+        if (!$this->games->contains($game)) {
+            $this->games[] = $game;
+            $game->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGame(Game $game): self
+    {
+        if ($this->games->contains($game)) {
+            $this->games->removeElement($game);
+            // set the owning side to null (unless already changed)
+            if ($game->getUser() === $this) {
+                $game->setUser(null);
+            }
+        }
+
+        return $this;
     }
 
 

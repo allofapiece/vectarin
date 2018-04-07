@@ -33,9 +33,20 @@ class Question
      */
     private $answers;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Quiz", mappedBy="questions")
+     */
+    private $quizzes;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Game", inversedBy="currentQuestion")
+     */
+    private $game;
+
     public function __construct()
     {
         $this->answers = new ArrayCollection();
+        $this->quizzes = new ArrayCollection();
     }
 
     public function getId()
@@ -82,6 +93,46 @@ class Question
                 $answer->setQuestion(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Quiz[]
+     */
+    public function getQuizzes(): Collection
+    {
+        return $this->quizzes;
+    }
+
+    public function addQuiz(Quiz $quiz): self
+    {
+        if (!$this->quizzes->contains($quiz)) {
+            $this->quizzes[] = $quiz;
+            $quiz->addQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuiz(Quiz $quiz): self
+    {
+        if ($this->quizzes->contains($quiz)) {
+            $this->quizzes->removeElement($quiz);
+            $quiz->removeQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function getGame(): ?Game
+    {
+        return $this->game;
+    }
+
+    public function setGame(?Game $game): self
+    {
+        $this->game = $game;
 
         return $this;
     }
