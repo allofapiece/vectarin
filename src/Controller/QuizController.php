@@ -3,12 +3,22 @@
 namespace App\Controller;
 
 
+use App\Service\QuizService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class QuizController extends Controller
 {
+
+    private $quizService;
+
+    public function __construct(QuizService $quizService)
+    {
+        $this->quizService = $quizService;
+    }
+
+
     /**
      * @Route("/admin/quiz/control",name="quiz.control")
      * @return Response
@@ -19,7 +29,7 @@ class QuizController extends Controller
     }
 
     /**
-     * @Route("/admin/quiz/create",name="quiz.create")
+     * @Route("/admin/quiz/create", name="quiz.create")
      * @return Response
      */
     public function createQuiz()
@@ -28,21 +38,29 @@ class QuizController extends Controller
     }
 
     /**
-     * @Route("/admin/quiz/update/{id}",name="quiz.update")
+     * @Route("/admin/quiz/update/{id}", name="quiz.update")
+     *
+     * @param int $id
      * @return Response
      */
-    public function updateQuiz()
+    public function updateQuiz(int $id)
     {
         return new Response();
     }
 
     /**
-     * @Route("/admin/quiz/delete/{id}",name="quiz.delete")
+     * @Route("/admin/quiz/delete/{id}", name="quiz.delete")
      * @return Response
      */
-    public function deleteQuiz()
+    public function deleteQuiz(int $id)
     {
-        return new Response();
+        $quiz = $this->quizService->find($id);
+
+        $this->quizService->delete($quiz);
+
+        $this->quizService->commit($quiz);
+
+        return $this->redirectToRoute('quiz.show');
     }
 
     /**
@@ -64,15 +82,19 @@ class QuizController extends Controller
     }
 
     /**
-     * @Route("/quiz/show",name="quizzes.show")
+     * @Route("/quiz/show",name="quiz.show")
      */
     public function showAllQuiz()
     {
-        return $this->render('quizzes/quizzes.html.twig');
+        $quizzes = $this->quizService->findAll();
+
+        return $this->render('quizzes/quizzes.html.twig', [
+            'quizzes' => $quizzes
+        ]);
     }
 
     /**
-     * @Route("/quiz/user",name="quizzes.user.show")
+     * @Route("/quiz/user",name="quiz.user.show")
      */
     public function showUserQuizzes()
     {

@@ -1,0 +1,17 @@
+<div class="quiz">
+    {% if is_granted("ROLE_ADMIN") %}
+        <div class="quiz-tools">
+            <a class="btn btn-primary btn-xs" href="{{ path('quiz.update', {'id': quiz.id}) }}">
+                <i class="glyphicon glyphicon-edit "></i>
+            </a>
+            <a class="btn btn-danger btn-xs" href="{{ path('quiz.delete', {'id': quiz.id}) }}">
+                <i class="glyphicon glyphicon-remove "></i>
+            </a>
+        </div>
+    {% endif %}
+    <div class="jumbotron">
+        <h3>{{ quiz.name }}</h3>
+        <p>{{ quiz.description }}</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Старт</a></p>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+.quizzes{
+
+}
+
+.quiz{
+    width: 40%;
+    min-height: 150px;
+    margin: 0 15px 10px 0;
+    display: inline-block;
+}
+.quiz-tools{
+    float:right;
+    position: relative;
+    top: 8px;
+    right: 8px;
+}
+
+@media (max-width: 767px) {
+    .quiz {
+        width: 100%;
+        height: 100%;
+    } }
+@media (min-width: 768px) {
+    .quiz {
+        width: 46%;
+        height: 46%;
+    } }
+@media (min-width: 992px) {
+    .quiz {
+        width: 30%;
+        height: 30%;
+    } }
+@media (min-width: 1200px) {
+    .quiz {
+        width: 30%;
+        height: 30%;
+    } }
