@@ -12,6 +12,6 @@
     <div class="jumbotron">
         <h3>{{ quiz.name }}</h3>
         <p>{{ quiz.description }}</p>
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Старт</a></p>
+        <p><a class="btn btn-primary btn-lg" href="{{ path('game.create', {'quizId': quiz.id}) }}" role="button">Старт</a></p>
     </div>
 </div>

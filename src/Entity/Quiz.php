@@ -33,13 +33,20 @@ class Quiz
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\OneToMany(targetEntity="App\Entity\Game", mappedBy="quiz", orphanRemoval=true)
      */
-    private $list;
+    private $games;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Question", inversedBy="quizzes")
+     */
+    private $questions;
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->games = new ArrayCollection();
+        $this->questions = new ArrayCollection();
     }
 
     public function getId()
@@ -71,14 +78,59 @@ class Quiz
         return $this;
     }
 
-    public function getList(): ?string
+    /**
+     * @return Collection|Game[]
+     */
+    public function getGames(): Collection
     {
-        return $this->list;
+        return $this->games;
     }
 
-    public function setList(string $list): self
+    public function addGame(Game $game): self
     {
-        $this->list = $list;
+        if (!$this->games->contains($game)) {
+            $this->games[] = $game;
+            $game->setQuiz($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGame(Game $game): self
+    {
+        if ($this->games->contains($game)) {
+            $this->games->removeElement($game);
+            // set the owning side to null (unless already changed)
+            if ($game->getQuiz() === $this) {
+                $game->setQuiz(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Question[]
+     */
+    public function getQuestions(): Collection
+    {
+        return $this->questions;
+    }
+
+    public function addQuestion(Question $question): self
+    {
+        if (!$this->questions->contains($question)) {
+            $this->questions[] = $question;
+        }
+
+        return $this;
+    }
+
+    public function removeQuestion(Question $question): self
+    {
+        if ($this->questions->contains($question)) {
+            $this->questions->removeElement($question);
+        }
 
         return $this;
     }

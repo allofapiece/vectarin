@@ -1,0 +1,11 @@
+{% extends 'games/game_layout.html.twig' %}
+
+{% block section_title %}Ответьте на вопрос{% endblock %}
+
+{% block section_content %}
+    <div class="quiz-game">
+        {{ form_start(form) }}
+
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
