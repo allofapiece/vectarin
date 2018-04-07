@@ -1,28 +1,30 @@
-{% extends 'base.html.twig' %}
+{% extends 'quizzes/quizzes_layout.html.twig' %}
+
 {% block title %}Викторины{% endblock %}
+
 {% block btn_quizzes %}
-    <li class="active"><a href="{{ path('quizzes.show') }}">Викторины <span class="sr-only">(current)</span></a></li>
+    <li class="active"><a href="{{ path('quiz.show') }}">Викторины <span class="sr-only">(current)</span></a></li>
 {% endblock %}
 
-{% block section_title %}
-    Викторины
-{% endblock %}
+{% block section_title %}Викторины{% endblock %}
+
 {% block section_content %}
-    <div class="sidebar-search">
-        <div class="input-group custom-search-form">
-            <input type="text" id="search" class="form-control" placeholder="Поиск вопросов...">
-        </div>
-        <!-- /input-group -->
-    </div>
-    <ul class="nav" id="side-menu">
-        <li>
-            <a href="#"> Entities<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level" id="entitiesNav">
-            </ul>
-        </li>
-    </ul>
-{% endblock %}
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript" src="{{ asset('build/js/quizzes.js') }}"></script>
-{% endblock %}
+{{ parent() }}
+  <div class="sidebar-search">
+          <div class="input-group custom-search-form">
+              <input type="text" id="search" class="form-control" placeholder="Поиск вопросов...">
+          </div>
+          <!-- /input-group -->
+      </div>
+      <ul class="nav" id="side-menu">
+          <li>
+              <a href="#"> Entities<span class="fa arrow"></span></a>
+              <ul class="nav nav-second-level" id="entitiesNav">
+              </ul>
+          </li>
+      </ul>
+  {% endblock %}
+  {% block javascripts %}
+      {{ parent() }}
+      <script type="text/javascript" src="{{ asset('build/js/quizzes.js') }}"></script>
+  {% endblock %}

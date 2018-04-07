@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 
+use App\Entity\Answer;
 use App\Entity\Question;
 use App\Form\Question\QuestionType;
 use App\Service\DataChecker\QuestionDataChecker;
@@ -63,7 +64,7 @@ class QuestionController extends Controller
 
             $this->questionService->commit($question);
 
-            return $this->redirectToRoute('question.show');
+            return $this->redirectToRoute('questions.show');
         }
 
         return $this->render('questions/question_create.html.twig', [
@@ -98,6 +99,8 @@ class QuestionController extends Controller
 
         $editForm->handleRequest($request);
 
+        $this->questionService->deleteEmptyAnswers($question);
+
         if($editForm->isSubmitted() &&
             $editForm->isValid() &&
             false === $this->questionDataChecker->checkData($question)
@@ -109,6 +112,7 @@ class QuestionController extends Controller
             // redirect back to question show page
             return $this->redirectToRoute('questions.show');
         }
+
         return $this->render('questions/question_update.html.twig', [
             'form' => $editForm->createView(),
             'action' => 'update',

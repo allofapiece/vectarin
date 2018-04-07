@@ -9,6 +9,7 @@
 namespace App\Service;
 
 
+use App\Entity\Answer;
 use App\Entity\Question;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,21 +25,25 @@ class QuestionService
 
     private $paginator;
 
+    private $answerService;
     /**
      * QuestionService constructor.
      * @param EntityManagerInterface $entityManager
      * @param QuestionOptimization $questionOptimization
      * @param PaginatorInterface $paginator
+     * @param AnswerService $answerService
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         QuestionOptimization $questionOptimization,
-        PaginatorInterface $paginator
+        PaginatorInterface $paginator,
+        AnswerService $answerService
     )
     {
         $this->entityManager = $entityManager;
         $this->questionOptimization = $questionOptimization;
         $this->paginator = $paginator;
+        $this->answerService = $answerService;
     }
 
     /**
@@ -65,10 +70,11 @@ class QuestionService
         foreach ($originalAnswers as $answer) {
             if (false === $question->getAnswers()->contains($answer)) {
 
-                // remove the Question from the Answer
-                $answer->getQuestions()->removeElement($question);
+                $answer->setQuestion(null);
 
                 $this->entityManager->persist($answer);
+                $this->entityManager->remove($answer);
+
             }
         }
     }
@@ -83,8 +89,12 @@ class QuestionService
         $this->entityManager->flush();
     }
 
-    public function find(int $id): Question
-    {
+    
+    /**
+     * @param int $id
+     * @return Question
+     */
+    public function find(int $id): Question{
         $question = $this
             ->entityManager
             ->getRepository(Question::class)
@@ -95,16 +105,48 @@ class QuestionService
         return $question;
     }
 
+    /**
+     * @return array
+     */
+    public function findAll(): array
+    {
+        $questions = $this
+            ->entityManager
+            ->getRepository(Question::class)
+            ->findAll();
+        return $questions;
+    }
+
     public function delete(Question $question)
     {
-
-
         //TODO should create custom exception
         /*if (!$question) {
             throw $this->createNotFoundException('Данный вопрос не найден!');
         }*/
 
         $this->entityManager->remove($question);
+
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param Question $question
+     * @return void
+     */
+    public function deleteEmptyAnswers(Question $question): void
+    {
+        foreach($question->getAnswers() as $answer){
+
+            if($answer->getText() == null || $answer->getText() == ""){
+
+                $question->getAnswers()->removeElement($answer);
+
+                $this->entityManager->remove($answer);
+
+                $this->answerService->deleteAnswer($answer);
+            }
+
+        }
 
         $this->entityManager->flush();
     }

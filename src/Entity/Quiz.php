@@ -39,6 +39,7 @@ class Quiz
 
     public function __construct()
     {
+        $this->users = new ArrayCollection();
     }
 
     public function getId()

@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('build/css/quizzes.css') }}">
+{% endblock %}
+
+{% block section_content %}
+
+    <div class="quizzes">
+
+        {% for quiz in quizzes %}
+            {% include('quizzes/quiz_detail.html.twig') %}
+        {% endfor %}
+
+    </div>
+
+{% endblock %}
