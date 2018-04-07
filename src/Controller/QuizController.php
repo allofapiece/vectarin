@@ -49,6 +49,20 @@ class QuizController extends Controller
     {
         $quiz = new Quiz();
 
+        $question1 = new Question();
+        $question1->setText("Hewf");
+        $this->getDoctrine()->getManager()->persist($question1);
+        $this->getDoctrine()->getManager()->flush();
+
+
+
+        $question2 = new Question();
+        $question2->setText("Привет");
+
+        $quiz
+            ->addQuestion($question1)
+            ->addQuestion($question2);
+
         $form = $this->createForm(QuizType::class, $quiz);
 
         $form->handleRequest($request);

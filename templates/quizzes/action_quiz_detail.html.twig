@@ -4,6 +4,7 @@
     'method': 'POST',
     'attr': {novalidate:'novalidate'}
 }) }}
+{{ form_row(form._token) }}
 {# render the task's only field: description #}
 {% if errors is defined %}
     {% for error in errors %}
@@ -28,14 +29,14 @@
 <div class="form-group">
     <label class="form-control-label required">Список вопросов</label>
 </div>
-<ul class="answers list-group" data-prototype="{{ questionForm.questionDetail(form.questions.vars.prototype)|e('html_attr') }}">
+<ul class="questions list-group" data-prototype="{{ questionForm.questionDetail(form.questions.vars.prototype)|e('html_attr') }}">
     {% for question in form.questions %}
         {{ questionForm.questionDetail(question) }}
     {% endfor %}
 </ul>
 <div class="sidebar-search">
     <div class="form-group custom-search-form">
-        <input type="text" id="search" class="form-control" placeholder="Поиск вопросов...">
+        <input autocomplete="off" type="text" id="search" class="form-control" placeholder="Поиск вопросов...">
     </div>
     <!-- /input-group -->
 </div>
@@ -50,4 +51,3 @@
         'attr': {'class': 'btn btn-success'},
     }) }}
 </div>
-{{ form_rest(form) }}

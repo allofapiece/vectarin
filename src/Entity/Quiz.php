@@ -38,7 +38,7 @@ class Quiz
     private $games;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Question", inversedBy="quizzes")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Question", inversedBy="quizzes",cascade={"persist"})
      */
     private $questions;
 
