@@ -10,6 +10,7 @@ use App\Service\QuestionService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -142,5 +143,4 @@ class QuestionController extends Controller
             'pagination' => $this->questionService->getPaginator(),
         ]);
     }
-
 }

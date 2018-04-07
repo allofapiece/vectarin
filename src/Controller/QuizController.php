@@ -3,7 +3,11 @@
 namespace App\Controller;
 
 
+use App\Entity\Question;
+use App\Service\QuestionService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -56,11 +60,15 @@ class QuizController extends Controller
 
     /**
      * @Route("/quiz/own",name="quiz.own")
+     * @param Request $request
+     * @param QuestionService $questionService
      * @return Response
      */
-    public function showOwnQuizzes()
+    public function showOwnQuizzes(Request $request, QuestionService $questionService)
     {
-        return $this->render('quizzes/myquizzes.html.twig');
+        $result=$questionService->getQuestionsByText($request->get('q'));
+
+        return new JsonResponse($result);
     }
 
     /**

@@ -83,7 +83,8 @@ class QuestionService
         $this->entityManager->flush();
     }
 
-    public function find(int $id): Question{
+    public function find(int $id): Question
+    {
         $question = $this
             ->entityManager
             ->getRepository(Question::class)
@@ -94,7 +95,8 @@ class QuestionService
         return $question;
     }
 
-    public function delete(Question $question){
+    public function delete(Question $question)
+    {
 
 
         //TODO should create custom exception
@@ -153,5 +155,27 @@ class QuestionService
     }
 
 
+    public function getQuestionsByText(string $text): array
+    {
+        $questions = $this->entityManager
+            ->getRepository(Question::class)
+            ->findEntitiesByString($text);
+
+        if (!$questions) {
+            $result['entities']['error'] = 'Вопросы не найдены...';
+        } else {
+            $result['entities'] = $this->getFoundData($questions);
+        }
+
+        return $result;
+    }
+
+    public function getFoundData($questions)
+    {
+        foreach ($questions as $question) {
+            $foundData[$question->getId()] = $question->getText();
+        }
+        return $foundData;
+    }
 
 }
