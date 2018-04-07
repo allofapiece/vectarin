@@ -4,6 +4,9 @@ namespace App\Controller;
 
 
 use App\Entity\Question;
+use App\Entity\Quiz;
+use App\Form\QuizType;
+use App\Service\DataChecker\QuizDataChecker;
 use App\Service\QuestionService;
 use App\Service\QuizService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -17,9 +20,15 @@ class QuizController extends Controller
 
     private $quizService;
 
-    public function __construct(QuizService $quizService)
+    private $quizDataChecker;
+
+    public function __construct(
+        QuizService $quizService,
+        QuizDataChecker $quizDataChecker
+    )
     {
         $this->quizService = $quizService;
+        $this->quizDataChecker = $quizDataChecker;
     }
 
 
@@ -36,9 +45,33 @@ class QuizController extends Controller
      * @Route("/admin/quiz/create", name="quiz.create")
      * @return Response
      */
-    public function createQuiz()
+    public function createQuiz(Request $request)
     {
-        return new Response();
+        $quiz = new Quiz();
+
+        $form = $this->createForm(QuizType::class, $quiz);
+
+        $form->handleRequest($request);
+
+        $quiz = $form->getData();
+
+        if($form->isSubmitted() &&
+            $form->isValid() &&
+            true === $this->quizDataChecker->checkData($quiz)
+        ){
+
+            $this->quizService->create($quiz);
+
+            $this->quizService->commit($quiz);
+
+            return $this->redirectToRoute('quiz.show');
+        }
+
+        return $this->render('quizzes/quiz_create.html.twig', [
+            'form' => $form->createView(),
+            'action' => 'create',
+            'errors' => $this->quizDataChecker->getMessages()
+        ]);
     }
 
     /**
@@ -84,7 +117,7 @@ class QuizController extends Controller
      */
     public function showOwnQuizzes(Request $request, QuestionService $questionService)
     {
-        $result=$questionService->getQuestionsByText($request->get('q'));
+        $result = $questionService->getQuestionsByText($request->get('q'));
 
         return new JsonResponse($result);
     }

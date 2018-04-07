@@ -7,6 +7,13 @@
 
 {% block section_content %}
 
+    {% if is_granted("ROLE_ADMIN") %}
+        <button type="button"
+                class="btn btn-success"
+                onclick="location.href = '{{ path('quiz.create') }}'">
+            Добавить викторину
+        </button>
+    {% endif %}
     <div class="quizzes">
 
         {% for quiz in quizzes %}

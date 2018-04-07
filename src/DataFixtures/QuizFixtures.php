@@ -9,6 +9,7 @@
 namespace App\DataFixtures;
 
 
+use App\Entity\Question;
 use App\Entity\Quiz;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -19,10 +20,12 @@ class QuizFixtures extends Fixture
     {
         // create 20 products! Bam!
         for ($i = 0; $i < 20; $i++) {
+
+
             $quiz = new Quiz();
             $quiz->setName('Викторина № '.$i);
             $quiz->setDescription('Очеень длинное описание для викторины №'.$i);
-            $quiz->setList('Dj');
+            //$quiz->addQuestion(new Question());
 
             $manager->persist($quiz);
         }

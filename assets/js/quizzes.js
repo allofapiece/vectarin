@@ -1,10 +1,18 @@
 jQuery(document).ready(function() {
+    ajaxSearch();
+
+    elementHandling();
+});
+
+
+function ajaxSearch() {
     var searchRequest = null;
     jQuery("#search").keyup(function() {
-        var minlength = 3;
+        var minlength = 1;
         var that = this;
         var value = jQuery(this).val();
         var entitySelector = jQuery("#entitiesNav").html('');
+        entitySelector.hide();
         if (value.length >= minlength ) {
             if (searchRequest != null)
                 searchRequest.abort();
@@ -23,9 +31,10 @@ jQuery(document).ready(function() {
                             jQuery.each(arr, function(id, value) {
                                 if (key == 'entities') {
                                     if (id != 'error') {
+                                        entitySelector.show();
                                         entitySelector.append('<li><a href="/daten/'+id+'">'+value+'</a></li>');
                                     } else {
-                                        entitySelector.append('<li class="errorLi">'+value+'</li>');
+
                                     }
                                 }
                             });
@@ -33,6 +42,8 @@ jQuery(document).ready(function() {
                     }
                 }
             });
+        } else {
+            entitySelector.hide();
         }
     });
-});
+}

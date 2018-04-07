@@ -204,7 +204,7 @@ class QuestionService
             ->findEntitiesByString($text);
 
         if (!$questions) {
-            $result['entities']['error'] = 'Вопросы не найдены...';
+            $result['entities']['error'] = 'Вопросы не найдены';
         } else {
             $result['entities'] = $this->getFoundData($questions);
         }

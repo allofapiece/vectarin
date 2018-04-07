@@ -101,7 +101,7 @@ class GameController extends Controller
 
         $result = $form->get('result')->getData();
 
-        if($form->isSubmitted && !$this->resultDataChecker->checkData($result)){
+        if($form->isSubmitted() && $this->resultDataChecker->checkData($result)){
 
             $this->gameService->checkResult($result, $game->getCurrentQuestion());
 
@@ -115,7 +115,8 @@ class GameController extends Controller
 
 
         return $this->render('games/game_play.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+
         ]);
 
         //$this->gameService->play($gameId, $questionNumber);

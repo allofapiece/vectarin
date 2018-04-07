@@ -47,6 +47,11 @@ class QuizService
         return $quiz;
     }
 
+    public function create(Quiz $quiz)
+    {
+
+    }
+
     /**
      * @param Quiz $quiz
      * @return void
