@@ -79,22 +79,34 @@ class QuizService
             }
 
         }
-        /*echo "<pre>";
-        var_dump($data->getQuestions());
-        echo "<pre>";
-        die;*/
-        // remove the relationship between the tag and the Task
-        foreach ($originalQuestions as $question) {
+        foreach($data->getQuestions() as $question){
+            $isExist = false;
+            foreach ($originalQuestions as $originalQuestion)
+                if($question->getText() == $originalQuestion->getText()){
+                    $isExist = true;
+                    break;
+            }
+            if(!$isExist){
+                $data->addQuestion($this
+                    ->entityManager
+                    ->getRepository(Question::class)
+                    ->findOneBy(['text' => $question->getText()])
+                );
+                $data->removeQuestion($question);
+            }
+        }
+
+        /*foreach ($originalQuestions as $question) {
             if (false === $data->getQuestions()->contains($question)) {
                 $question->getQuizzes()->removeElement($data);
-                //$question->setQuiz(null);
-
 
                 $this->entityManager->remove($question);
                 $this->entityManager->persist($question);
 
             }
-        }$this->entityManager->flush($data);
+        }*/
+
+        $this->entityManager->flush($data);
     }
 
     /**

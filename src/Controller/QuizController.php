@@ -97,12 +97,12 @@ class QuizController extends Controller
 
         $editForm = $this->createForm(QuizType::class, $quiz);
 
-        $editForm->submit($request->request->get($editForm->getName()));
+
 
         if($request->isMethod('POST') &&
             true === $this->quizDataChecker->checkData($quiz)
         ){
-
+            $editForm->submit($request->request->get($editForm->getName()));
             $data = $editForm->getData();
             $this->quizService->update($data, $originalQuestions);
 
