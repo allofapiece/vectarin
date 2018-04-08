@@ -1,22 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
-
-use App\Entity\Question;
 use App\Entity\Quiz;
 use App\Form\QuizType;
-use App\Service\DataChecker\QuizDataChecker;
-use App\Service\QuestionService;
 use App\Service\QuizCreateFormHandler;
-use App\Service\QuizCreator;
 use App\Service\QuizDeleter;
-use App\Service\QuizService;
 use App\Service\QuizUpdateFormHandler;
-use App\Service\QuizUpdater;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,23 +22,15 @@ class QuizController extends Controller
 
     private $quizDeleter;
 
-    private $quizService;
-
-    private $quizDataChecker;
-
     public function __construct(
         QuizCreateFormHandler $quizCreateFormHandler,
         QuizUpdateFormHandler $quizUpdateFormHandler,
-        QuizDeleter $quizDeleter,
-        QuizService $quizService,
-        QuizDataChecker $quizDataChecker
+        QuizDeleter $quizDeleter
     )
     {
         $this->quizCreateFormHandler = $quizCreateFormHandler;
         $this->quizUpdateFormHandler = $quizUpdateFormHandler;
         $this->quizDeleter = $quizDeleter;
-        $this->quizService = $quizService;
-        $this->quizDataChecker = $quizDataChecker;
     }
 
     /**
@@ -54,7 +39,7 @@ class QuizController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function createQuiz(Request $request)
+    public function createQuiz(Request $request): Response
     {
         $quiz = new Quiz();
 
@@ -104,7 +89,7 @@ class QuizController extends Controller
      * @param int $id
      * @return Response
      */
-    public function deleteQuiz(int $id)
+    public function deleteQuiz(int $id): Response
     {
         if(!$this->quizDeleter->delete($id)){
             throw $this->createNotFoundException('Викторины с индексом ' . $id . ' не существует ');
@@ -115,21 +100,21 @@ class QuizController extends Controller
 
     /**
      * @Route("/quiz/own",name="quiz.own")
-     * @param Request $request
-     * @param QuestionService $questionService
+     *
+     * @param Request $request=
      * @return Response
      */
-    public function showOwnQuizzes(Request $request, QuestionService $questionService)
+    public function showOwnQuizzes(Request $request)
     {
-        $result = $questionService->getQuestionsByText($request->get('q'));
-
-        return new JsonResponse($result);
+        return new Response();
     }
 
     /**
      * @Route("/quiz/show",name="quiz.show")
+     *
+     * @return Response
      */
-    public function showAllQuiz()
+    public function showAllQuizzes(): Response
     {
         $quizzes = $this
             ->getDoctrine()
@@ -141,11 +126,4 @@ class QuizController extends Controller
         ]);
     }
 
-    /**
-     * @Route("/quiz/user",name="quiz.user.show")
-     */
-    public function showUserQuizzes()
-    {
-
-    }
 }

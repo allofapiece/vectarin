@@ -151,17 +151,6 @@ class QuestionService
     }
 
     /**
-     * @param Question $question
-     * @return void
-     */
-    public function deleteQuestion(Question $question): void
-    {
-        $this->entityManager->remove($question);
-
-        $this->entityManager->flush();
-    }
-
-    /**
      * @param int $usersOnPage
      * @param Request $request
      * @return PaginatorInterface
@@ -204,30 +193,6 @@ class QuestionService
     public function setPaginator(PaginatorInterface $paginator): void
     {
         $this->paginator = $paginator;
-    }
-
-
-    public function getQuestionsByText(string $text): array
-    {
-        $questions = $this->entityManager
-            ->getRepository(Question::class)
-            ->findEntitiesByString($text);
-
-        if (!$questions) {
-            $result['entities']['error'] = 'Вопросы не найдены';
-        } else {
-            $result['entities'] = $this->getFoundData($questions);
-        }
-
-        return $result;
-    }
-
-    public function getFoundData($questions)
-    {
-        foreach ($questions as $question) {
-            $foundData[$question->getId()] = $question->getText();
-        }
-        return $foundData;
     }
 
 }

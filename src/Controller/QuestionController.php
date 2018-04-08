@@ -7,6 +7,7 @@ use App\Entity\Answer;
 use App\Entity\Question;
 use App\Form\Question\QuestionType;
 use App\Service\DataChecker\QuestionDataChecker;
+use App\Service\QuestionDeleter;
 use App\Service\QuestionService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,20 +23,25 @@ class QuestionController extends Controller
 
     const QUESTIONS_ON_PAGE = 15;
 
+    private $questionDeleter;
+
     private $questionDataChecker;
 
     private $questionService;
 
     /**
      * QuestionController constructor.
+     * @param QuestionDeleter $questionDeleter
      * @param QuestionService $questionService
      * @param QuestionDataChecker $questionDataChecker
      */
     public function __construct(
+        QuestionDeleter $questionDeleter,
         QuestionService $questionService,
         QuestionDataChecker $questionDataChecker
     )
     {
+        $this->questionDeleter = $questionDeleter;
         $this->questionService = $questionService;
         $this->questionDataChecker = $questionDataChecker;
     }
@@ -121,15 +127,20 @@ class QuestionController extends Controller
     }
 
     /**
-     * @Route("/admin/question/delete/{id}", name="question.delete")
+     * @Route(
+     *     "/admin/question/delete/{id}",
+     *      name="question.delete",
+     *      requirements={"id"="\d+"}
+     * )
+     *
      * @param int $id
      * @return Response
      */
     public function deleteQuestion(int $id): Response
     {
-        $question = $this->questionService->find($id);
-
-        $this->questionService->delete($question);
+        if(!$this->questionDeleter->delete($id)){
+            throw $this->createNotFoundException('Вопроса с индексом ' . $id . ' не существует ');
+        }
 
         return $this->redirectToRoute('questions.show');
     }
