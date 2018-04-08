@@ -50,6 +50,21 @@ class Game
      */
     private $correctQuestionsAmount;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isCorrectCurrentAnswer;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $numberOfQuestionsAnswered;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $gameIsOver;
+
     public function __construct()
     {
         $this->currentQuestion = new Question();
@@ -130,6 +145,54 @@ class Game
         $this->correctQuestionsAmount = $correctQuestionsAmount;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsCorrectCurrentAnswer()
+    {
+        return $this->isCorrectCurrentAnswer;
+    }
+
+    /**
+     * @param mixed $isCorrectCurrentAnswer
+     */
+    public function setIsCorrectCurrentAnswer($isCorrectCurrentAnswer)
+    {
+        $this->isCorrectCurrentAnswer = $isCorrectCurrentAnswer;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumberOfQuestionsAnswered()
+    {
+        return $this->numberOfQuestionsAnswered;
+    }
+
+    /**
+     * @param mixed $numberOfQuestionsAnswered
+     */
+    public function setNumberOfQuestionsAnswered($numberOfQuestionsAnswered)
+    {
+        $this->numberOfQuestionsAnswered = $numberOfQuestionsAnswered;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGameIsOver()
+    {
+        return $this->gameIsOver;
+    }
+
+    /**
+     * @param mixed $gameIsOver
+     */
+    public function setGameIsOver($gameIsOver)
+    {
+        $this->gameIsOver = $gameIsOver;
     }
 
 }
