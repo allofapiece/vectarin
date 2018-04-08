@@ -115,9 +115,10 @@ function ajaxSearch() {
                 searchRequest.abort();
             searchRequest = jQuery.ajax({
                 type: "GET",
-                url: "http://127.0.0.1:8000/quiz/own",
+                url: "http://127.0.0.1:8000/ajax/front-controller",
                 data: {
-                    'q' : value
+                    'route' : 'ajax.questions-search',
+                    'value' : value
                 },
                 dataType: "text",
                 success: function(msg){

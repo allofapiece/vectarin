@@ -23,10 +23,10 @@ class QuestionRepository extends EntityRepository
     }
 
     /**
-     * @param $str
+     * @param string $str
      * @return mixed
      */
-    public function findEntitiesByString($str){
+    public function findEntitiesByString(string $str){
         return $this->getEntityManager()
             ->createQuery(
                 'SELECT e FROM App\Entity\Question e
