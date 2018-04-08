@@ -2,13 +2,13 @@ Arguments:
   C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js run encore dev --watch
 
 PATH: 
-  C:\Users\Listratsenka Stas\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\Listratsenka Stas\bin;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Program Files\Microsoft SQL Server\110\Tools\Binn;C:\Program Files (x86)\Skype\Phone;C:\Program Files (x86)\Rational\common;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Java\jdk1.8.0_144\bin;D:\xampp;C:\Program Files (x86)\GtkSharp\2.12\bin;%JAVA_HOME%\bin;C:\Program Files\Common Files\Autodesk Shared;C:\Program Files (x86)\Autodesk\Backburner;C:\Program Files\MySQL\MySQL Utilities 1.6;C:\Program Files\MySQL\MySQL Server 5.7\bin;C:\Program Files\Git\cmd;C:\Program Files\dotnet;C:\Program Files\Microsoft SQL Server\130\Tools\Binn;D:\xampp\php;C:\ProgramData\ComposerSetup\bin;C:\Program Files\nodejs;C:\Program Files (x86)\Yarn\bin;C:\Users\Listratsenka Stas\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Java\jdk1.8.0_144\bin;C:\Users\Listratsenka Stas\AppData\Local\GitHubDesktop\bin;C:\Users\Listratsenka Stas\AppData\Roaming\Composer\vendor\bin;C:\Users\Listratsenka Stas\AppData\Roaming\npm;C:\Users\Listratsenka Stas\AppData\Local\Yarn\bin;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl
+  C:\Users\allse\bin;D:\Soft\Git\mingw64\bin;D:\Soft\Git\usr\local\bin;D:\Soft\Git\usr\bin;D:\Soft\Git\usr\bin;D:\Soft\Git\mingw64\bin;D:\Soft\Git\usr\bin;C:\Users\allse\bin;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;D:\Git\cmd;D:\Soft\HashiCorp\Vagrant\bin;D:\Soft\Git\cmd;D:\Soft\PuTTY;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Microsoft SQL Server\110\Tools\Binn;C:\Program Files (x86)\Skype\Phone;C:\Program Files\dotnet;C:\Program Files\Microsoft SQL Server\130\Tools\Binn;C:\Program Files\nodejs;C:\Program Files (x86)\Yarn\bin;C:\Users\allse\AppData\Local\Microsoft\WindowsApps;E:\;C:\Users\allse\AppData\Local\GitHubDesktop\bin;C:\Users\allse\AppData\Roaming\npm;C:\Users\allse\AppData\Local\Yarn\bin;D:\Soft\Git\usr\bin\vendor_perl;D:\Soft\Git\usr\bin\core_perl
 
 Yarn version: 
   1.5.1
 
 Node version: 
-  8.10.0
+  9.10.0
 
 Platform: 
   win32 x64
@@ -17,7 +17,7 @@ npm manifest:
   {
       "devDependencies": {
           "@symfony/webpack-encore": "^0.19.0",
-          "bootstrap-sass": "^4.0.0",
+          "bootstrap-sass": "^3.3.7",
           "jquery": "^3.3.1",
           "node-sass": "^4.8.3",
           "sass-loader": "^6.0.7",
@@ -928,6 +928,10 @@ Lockfile:
   bootstrap-sass@^3.3.7:
     version "3.3.7"
     resolved "https://registry.yarnpkg.com/bootstrap-sass/-/bootstrap-sass-3.3.7.tgz#6596c7ab40f6637393323ab0bc80d064fc630498"
+  
+  bootstrap@^4.0.0-alpha.6:
+    version "4.0.0"
+    resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.0.0.tgz#ceb03842c145fcc1b9b4e15da2a05656ba68469a"
   
   brace-expansion@^1.1.7:
     version "1.1.11"
@@ -5716,14 +5720,16 @@ Lockfile:
       window-size "0.1.0"
 
 Trace: 
-  Error: Command "encore" not found.
-      at new MessageError (C:\Program Files (x86)\Yarn\lib\cli.js:186:110)
-      at C:\Program Files (x86)\Yarn\lib\cli.js:87307:17
-      at Generator.next (<anonymous>)
-      at step (C:\Program Files (x86)\Yarn\lib\cli.js:98:30)
-      at C:\Program Files (x86)\Yarn\lib\cli.js:116:14
-      at new Promise (<anonymous>)
-      at new F (C:\Program Files (x86)\Yarn\lib\cli.js:23451:28)
-      at C:\Program Files (x86)\Yarn\lib\cli.js:95:12
-      at runCommand (C:\Program Files (x86)\Yarn\lib\cli.js:87312:22)
-      at Object.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:87412:14)
+  Error: Command failed.
+  Exit code: 3221225786
+  Command: C:\Windows\system32\cmd.exe
+  Arguments: /d /s /c E:\OSPanel\domains\vectarin\node_modules\.bin\encore dev --watch
+  Directory: E:\OSPanel\domains\vectarin
+  Output:
+  
+      at ProcessTermError.MessageError (C:\Program Files (x86)\Yarn\lib\cli.js:186:110)
+      at new ProcessTermError (C:\Program Files (x86)\Yarn\lib\cli.js:226:113)
+      at ChildProcess.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:30281:17)
+      at ChildProcess.emit (events.js:180:13)
+      at maybeClose (internal/child_process.js:936:16)
+      at Process.ChildProcess._handle.onexit (internal/child_process.js:220:5)

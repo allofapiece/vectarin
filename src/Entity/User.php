@@ -1,20 +1,18 @@
 <?php
-/**
- * Created by Listratenko Stas.
- * Date: 27.03.2018
- * Time: 23:24
- */
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="app_users")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface, \Serializable
+class User implements AdvancedUserInterface, \Serializable
 {
     /**
      * @ORM\Column(type="integer")
@@ -33,10 +31,13 @@ class User implements UserInterface, \Serializable
      */
     private $password;
 
+    private $plainPassword;
+
     /**
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
+
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -44,7 +45,7 @@ class User implements UserInterface, \Serializable
     private $firstname;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $email;
 
@@ -56,13 +57,40 @@ class User implements UserInterface, \Serializable
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $secondName;
+    private $secondname;
+
+    /**
+     * @var array
+     * @ORM\Column(type="json_array")
+     */
+    private $roles = [];
+
+    /**
+     * @ORM\Column(type="string",length=255)
+     */
+    private $token;
+
+    /**
+     * @ORM\Column(type="string",length=255, nullable=true)
+     */
+    private $recoveryToken;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Game", mappedBy="user", orphanRemoval=true)
+     */
+    private $games;
+
 
     public function __construct()
     {
         $this->isActive = true;
-        // may not be needed, see section on salt below
-        // $this->salt = md5(uniqid('', true));
+        $this->setUsername('');
+        $this->setPassword('');
+        $this->setFirstname('');
+        $this->setEmail('');
+        $this->setSecondname('');
+        $this->setSurname('');
+        $this->games = new ArrayCollection();
     }
 
     public function getUsername(): string
@@ -84,11 +112,36 @@ class User implements UserInterface, \Serializable
 
     public function getRoles(): array
     {
-        return array('ROLE_USER');
+        return $this->roles;
+    }
+
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
     }
 
     public function eraseCredentials()
     {
+    }
+
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->isActive;
     }
 
     /** @see \Serializable::serialize() */
@@ -98,6 +151,7 @@ class User implements UserInterface, \Serializable
             $this->id,
             $this->username,
             $this->password,
+            $this->isActive,
             // see section on salt below
             // $this->salt,
         ));
@@ -110,6 +164,7 @@ class User implements UserInterface, \Serializable
             $this->id,
             $this->username,
             $this->password,
+            $this->isActive,
             // see section on salt below
             // $this->salt
             ) = unserialize($serialized);
@@ -120,7 +175,7 @@ class User implements UserInterface, \Serializable
         return $this->firstname;
     }
 
-    public function setFirstname(string $firstname): self
+    public function setFirstname(string $firstname = null): self
     {
         $this->firstname = $firstname;
 
@@ -132,7 +187,7 @@ class User implements UserInterface, \Serializable
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(string $email = null): self
     {
         $this->email = $email;
 
@@ -144,22 +199,142 @@ class User implements UserInterface, \Serializable
         return $this->surname;
     }
 
-    public function setSurname(string $surname): self
+    public function setSurname(string $surname = null): self
     {
         $this->surname = $surname;
 
         return $this;
     }
 
-    public function getSecondName(): ?string
+    public function getSecondname(): ?string
     {
-        return $this->secondName;
+        return $this->secondname;
     }
 
-    public function setSecondName(string $secondName): self
+    public function setSecondname(string $secondName = null): self
     {
-        $this->secondName = $secondName;
+        $this->secondname = $secondName;
 
         return $this;
     }
+
+    public function setUsername(string $username = null): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    public function setPassword(string $password = null): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param mixed $plainPassword
+     */
+    public function setPlainPassword($plainPassword = null)
+    {
+        $this->plainPassword = $plainPassword;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param mixed $token
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+    }
+
+    /**
+     * @param mixed $isActive
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecoveryToken()
+    {
+        return $this->recoveryToken;
+    }
+
+    /**
+     * @param mixed $recoveryToken
+     */
+    public function setRecoveryToken($recoveryToken)
+    {
+        $this->recoveryToken = $recoveryToken;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return Collection|Game[]
+     */
+    public function getGames(): Collection
+    {
+        return $this->games;
+    }
+
+    public function addGame(Game $game): self
+    {
+        if (!$this->games->contains($game)) {
+            $this->games[] = $game;
+            $game->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGame(Game $game): self
+    {
+        if ($this->games->contains($game)) {
+            $this->games->removeElement($game);
+            // set the owning side to null (unless already changed)
+            if ($game->getUser() === $this) {
+                $game->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }

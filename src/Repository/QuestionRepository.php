@@ -4,6 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Question;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Mapping;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -12,39 +15,25 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method Question[]    findAll()
  * @method Question[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class QuestionRepository extends ServiceEntityRepository
+class QuestionRepository extends EntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct($em, Mapping\ClassMetadata $class)
     {
-        parent::__construct($registry, Question::class);
+        parent::__construct($em, $class);
     }
 
-//    /**
-//     * @return Question[] Returns an array of Question objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('q')
-            ->andWhere('q.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('q.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+    /**
+     * @param $str
+     * @return mixed
+     */
+    public function findEntitiesByString($str){
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT e FROM App\Entity\Question e
+                      WHERE e.text LIKE :str'
+            )
+            ->setParameter('str', '%'.$str.'%')
+            ->getResult();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Question
-    {
-        return $this->createQueryBuilder('q')
-            ->andWhere('q.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

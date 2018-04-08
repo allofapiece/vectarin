@@ -33,6 +33,12 @@ class Answer
      */
     private $isCorrect;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Question", inversedBy="answers", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     */
+    private $question;
+
     public function __construct()
     {
         $this->question = new ArrayCollection();
@@ -49,7 +55,7 @@ class Answer
         return $this->text;
     }
 
-    public function setText(string $text): self
+    public function setText(?string $text): self
     {
         $this->text = $text;
 
@@ -67,4 +73,18 @@ class Answer
 
         return $this;
     }
+
+    public function getQuestion(): ?Question
+    {
+        return $this->question;
+    }
+
+    public function setQuestion(?Question $question): self
+    {
+        $this->question = $question;
+
+        return $this;
+    }
+
+
 }

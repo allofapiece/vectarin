@@ -1,27 +1,41 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
-    providers:
-        in_memory:
-            memory:
-                users:
-                    ryan:
-                        password: $2y$13$Sue5mSdRuyYgBZQaX6QI.utugKsaa7rgdUb56GTT8Wqf9J1iOLQii
-                        roles: 'ROLE_USER'
-                    admin:
-                        password: $2y$13$QI16awCrEM3QxGlBFC2dAOUfQV1pnAdv1Gzfx4X7Hz8st2ZHVH/ni
-                        roles: 'ROLE_ADMIN'
+
     encoders:
-            Symfony\Component\Security\Core\User\User: bcrypt
+        App\Entity\User:
+            algorithm: bcrypt
+    providers:
+        our_db_provider:
+            entity:
+                class: App\Entity\User
+                property: username
     firewalls:
         dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            pattern: ^/(_(profiler|wdt|error)|css|images|js)/
             security: false
         main:
             anonymous: ~
+            form_login:
+                login_path: login
+                check_path: login
+                provider: our_db_provider
+                default_target_path: /home
+                username_parameter: "login[username]"
+                password_parameter: "login[password]"
+            logout:
+                path: /logout
+                target: /
+
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
+                remember_me_parameter: login[remember_me]
+                domain: ~
 
             # activate different ways to authenticate
 
-            http_basic: ~
+            # http_basic: ~
             # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
 
             # form_login: true
@@ -31,4 +45,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/game, roles: ROLE_USER }
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
