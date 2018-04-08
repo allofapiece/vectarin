@@ -29,16 +29,6 @@ class QuizService
         $this->questionService = $questionService;
     }
 
-    public function findAll(): array
-    {
-        $quizzes = $this
-            ->entityManager
-            ->getRepository(Quiz::class)
-            ->findAll();
-
-        return $quizzes;
-    }
-
     /**
      * @param Quiz $quiz
      * @return void
@@ -62,54 +52,6 @@ class QuizService
     }
 
     /**
-     * @param Quiz $quiz
-     * @param ArrayCollection $originalAnswers
-     * @return void
-     */
-    public function update(Quiz $data, ArrayCollection $originalQuestions): void
-    {
-        //$this->questionOptimization->optimizeQuestionText($quiz);
-        //$this->questionOptimization->addQuestionCharacterIfNotExist($quiz);
-        foreach($data->getQuestions() as $question){
-
-            if($question->getText() == null || $question->getText() == ""){
-
-                $data->getQuestions()->removeElement($question);
-
-            }
-
-        }
-        foreach($data->getQuestions() as $question){
-            $isExist = false;
-            foreach ($originalQuestions as $originalQuestion)
-                if($question->getText() == $originalQuestion->getText()){
-                    $isExist = true;
-                    break;
-            }
-            if(!$isExist){
-                $data->addQuestion($this
-                    ->entityManager
-                    ->getRepository(Question::class)
-                    ->findOneBy(['text' => $question->getText()])
-                );
-                $data->removeQuestion($question);
-            }
-        }
-
-        /*foreach ($originalQuestions as $question) {
-            if (false === $data->getQuestions()->contains($question)) {
-                $question->getQuizzes()->removeElement($data);
-
-                $this->entityManager->remove($question);
-                $this->entityManager->persist($question);
-
-            }
-        }*/
-
-        $this->entityManager->flush($data);
-    }
-
-    /**
      * @param int $id
      * @return Quiz
      */
@@ -125,39 +67,9 @@ class QuizService
         return $quiz;
     }
 
-    public function create(Quiz $data)
-    {
-        $quiz = new Quiz(
-            $data->getName(),
-            $data->getDescription(),
-            true
-        );
 
-        foreach ($data->getQuestions() as $question) {
-            $quiz->addQuestion($this
-            ->entityManager
-            ->getRepository(Question::class)
-            ->findOneBy(['text' => $question->getText()])
-            );
-        }
 
-        $this->entityManager->persist($quiz);
-        $this->entityManager->flush();
-    }
 
-    /**
-     * @param Quiz $quiz
-     * @return void
-     */
-    public function delete(Quiz $quiz): void
-    {
-        //TODO should create custom exception
-        /*if (!$quiz) {
-            throw $this->createNotFoundException('Данный вопрос не найден!');
-        }*/
-
-        $this->entityManager->remove($quiz);
-    }
 
     /**
      * @param Quiz $quiz

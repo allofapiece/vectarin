@@ -10,6 +10,7 @@ use App\Service\DataChecker\QuizDataChecker;
 use App\Service\QuestionService;
 use App\Service\QuizCreateFormHandler;
 use App\Service\QuizCreator;
+use App\Service\QuizDeleter;
 use App\Service\QuizService;
 use App\Service\QuizUpdateFormHandler;
 use App\Service\QuizUpdater;
@@ -26,25 +27,25 @@ class QuizController extends Controller
 
     private $quizUpdateFormHandler;
 
+    private $quizDeleter;
+
     private $quizService;
 
     private $quizDataChecker;
 
-    private $updater;
-
     public function __construct(
         QuizCreateFormHandler $quizCreateFormHandler,
         QuizUpdateFormHandler $quizUpdateFormHandler,
+        QuizDeleter $quizDeleter,
         QuizService $quizService,
-        QuizUpdater $updater,
         QuizDataChecker $quizDataChecker
     )
     {
         $this->quizCreateFormHandler = $quizCreateFormHandler;
         $this->quizUpdateFormHandler = $quizUpdateFormHandler;
+        $this->quizDeleter = $quizDeleter;
         $this->quizService = $quizService;
         $this->quizDataChecker = $quizDataChecker;
-        $this->updater = $updater;
     }
 
     /**
@@ -99,15 +100,15 @@ class QuizController extends Controller
 
     /**
      * @Route("/admin/quiz/delete/{id}", name="quiz.delete")
+     *
+     * @param int $id
      * @return Response
      */
     public function deleteQuiz(int $id)
     {
-        $quiz = $this->quizService->find($id);
-
-        $this->quizService->delete($quiz);
-
-        $this->quizService->commit($quiz);
+        if(!$this->quizDeleter->delete($id)){
+            throw $this->createNotFoundException('Викторины с индексом ' . $id . ' не существует ');
+        }
 
         return $this->redirectToRoute('quiz.show');
     }
@@ -130,7 +131,10 @@ class QuizController extends Controller
      */
     public function showAllQuiz()
     {
-        $quizzes = $this->quizService->findAll();
+        $quizzes = $this
+            ->getDoctrine()
+            ->getRepository(Quiz::class)
+            ->findAll();
 
         return $this->render('quizzes/quizzes.html.twig', [
             'quizzes' => $quizzes
