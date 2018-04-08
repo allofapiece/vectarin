@@ -328,6 +328,16 @@ class GameService
         return $users;
     }
 
+    public function findAllUserGames(int $userId)
+    {
+        $games=$this
+            ->entityManager
+            ->getRepository(Game::class)
+            ->findBy(['user'=>$userId]);
+
+        return $games;
+    }
+
     /**
      * @param int $userId
      * @param int $quizId

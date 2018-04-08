@@ -38,7 +38,7 @@
                                             {% if is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')%}
 
                                                 {% block btn_my_quizzes %}
-                                                    <li><a href="{{ path('quiz.user.show') }}">Мои викторины</a></li>
+                                                    <li><a href="{{ path('user.games.show') }}">Мои викторины</a></li>
                                                 {% endblock %}
 
                                                 {% if is_granted('ROLE_ADMIN') %}

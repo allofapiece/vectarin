@@ -29,7 +29,6 @@ class GameController extends Controller
     }
 
     /**
-     * @Route("/game/{gameId}")
      * @Route("/game/{gameId}/show/{questionNumber}",
      *     name="game.show",
      *     requirements={
@@ -203,7 +202,22 @@ class GameController extends Controller
             ->gameService
             ->createGame($quizId, $this->getUser()->getId());
 
-        return $this->redirectToRoute('game.play', ['gameId' => $gameId,
-            'questionNumber' => 0]);
+        return $this->redirectToRoute('game.play', [
+            'gameId' => $gameId,
+            'questionNumber' => 0,
+        ]);
+    }
+
+    /**
+     * @Route("/game/show-my-games", name="user.games.show")
+     * @return Response
+     */
+    public function showUserGames()
+    {
+        $userGames=$this->gameService->findAllUserGames($this->getUser()->getId());
+
+        return $this->render('games/user_games_show.html.twig',[
+            'userGames'=>$userGames,
+        ]);
     }
 }
