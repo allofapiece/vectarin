@@ -5,7 +5,6 @@ namespace App\Controller;
 
 use App\Entity\UserAnswer;
 use App\Form\GameType;
-use App\Service\DataChecker\ResultDataChecker;
 use App\Service\GameService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,15 +16,12 @@ class GameController extends Controller
 
     private $gameService;
 
-    private $resultDataChecker;
 
     public function __construct(
-        GameService $gameService,
-        ResultDataChecker $resultDataChecker
+        GameService $gameService
     )
     {
         $this->gameService = $gameService;
-        $this->resultDataChecker = $resultDataChecker;
     }
 
     /**

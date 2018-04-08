@@ -6,9 +6,9 @@ namespace App\Controller;
 
 use App\Entity\Quiz;
 use App\Form\QuizType;
-use App\Service\QuizCreateFormHandler;
-use App\Service\QuizDeleter;
-use App\Service\QuizUpdateFormHandler;
+use App\Service\FormHandler\QuizCreateFormHandler;
+use App\Service\FormHandler\QuizUpdateFormHandler;
+use App\Service\Deleter\QuizDeleter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,41 +16,29 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class QuizController extends Controller
 {
-    private $quizCreateFormHandler;
-
-    private $quizUpdateFormHandler;
-
-    private $quizDeleter;
-
-    public function __construct(
-        QuizCreateFormHandler $quizCreateFormHandler,
-        QuizUpdateFormHandler $quizUpdateFormHandler,
-        QuizDeleter $quizDeleter
-    )
-    {
-        $this->quizCreateFormHandler = $quizCreateFormHandler;
-        $this->quizUpdateFormHandler = $quizUpdateFormHandler;
-        $this->quizDeleter = $quizDeleter;
-    }
 
     /**
      * @Route("/admin/quiz/create", name="quiz.create")
      *
      * @param Request $request
+     * @param QuizCreateFormHandler $quizCreateFormHandler
      * @return Response
      */
-    public function createQuiz(Request $request): Response
+    public function createQuiz(
+        Request $request,
+        QuizCreateFormHandler $quizCreateFormHandler
+    ): Response
     {
         $quiz = new Quiz();
 
         $form = $this->createForm(QuizType::class, $quiz);
-        if($this->quizCreateFormHandler->handle($form, $request)){
+        if($quizCreateFormHandler->handle($form, $request)){
             return $this->redirectToRoute('quiz.show');
         }
 
         return $this->render('quizzes/quiz_create.html.twig', [
             'form' => $form->createView(),
-            'errors' => $this->quizCreateFormHandler->getFormErrorMessages()
+            'errors' => $quizCreateFormHandler->getFormErrorMessages()
         ]);
     }
 
@@ -59,9 +47,14 @@ class QuizController extends Controller
      *
      * @param int $id
      * @param Request $request
+     * @param QuizUpdateFormHandler $quizUpdateFormHandler
      * @return Response
      */
-    public function updateQuiz(int $id, Request $request): Response
+    public function updateQuiz(
+        int $id,
+        Request $request,
+        QuizUpdateFormHandler $quizUpdateFormHandler
+    ): Response
     {
         $quiz = $this
             ->getDoctrine()
@@ -73,13 +66,13 @@ class QuizController extends Controller
         }
         
         $form = $this->createForm(QuizType::class, $quiz);
-        if($this->quizUpdateFormHandler->handle($form, $request, ['entity' => $quiz])){
+        if($quizUpdateFormHandler->handle($form, $request, ['entity' => $quiz])){
             return $this->redirectToRoute('quiz.show');
         }
 
         return $this->render('quizzes/quiz_update.html.twig', [
             'form' => $form->createView(),
-            'errors' => $this->quizUpdateFormHandler->getFormErrorMessages()
+            'errors' => $quizUpdateFormHandler->getFormErrorMessages()
         ]);
     }
 
@@ -87,11 +80,15 @@ class QuizController extends Controller
      * @Route("/admin/quiz/delete/{id}", name="quiz.delete")
      *
      * @param int $id
+     * @param QuizDeleter $quizDeleter
      * @return Response
      */
-    public function deleteQuiz(int $id): Response
+    public function deleteQuiz(
+        int $id,
+        QuizDeleter $quizDeleter
+    ): Response
     {
-        if(!$this->quizDeleter->delete($id)){
+        if(!$quizDeleter->delete($id)){
             throw $this->createNotFoundException('Викторины с индексом ' . $id . ' не существует ');
         }
 

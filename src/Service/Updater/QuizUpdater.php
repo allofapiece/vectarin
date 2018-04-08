@@ -6,7 +6,7 @@
  * Time: 14:38
  */
 
-namespace App\Service;
+namespace App\Service\Updater;
 
 
 use App\Entity\Question;

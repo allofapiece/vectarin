@@ -2,8 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
-
+namespace App\Service\Validator;
 
 use App\Entity\Question;
 use App\Entity\Quiz;

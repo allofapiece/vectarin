@@ -3,19 +3,12 @@
 namespace App\Controller;
 
 
-use App\Entity\Answer;
 use App\Entity\Question;
 use App\Form\Question\QuestionType;
-use App\Service\DataChecker\QuestionDataChecker;
-use App\Service\QuestionCreateFormHandler;
-use App\Service\QuestionCreator;
-use App\Service\QuestionDeleter;
-use App\Service\QuestionService;
-use App\Service\QuestionUpdateFormHandler;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use App\Service\FormHandler\QuestionCreateFormHandler;
+use App\Service\FormHandler\QuestionUpdateFormHandler;
+use App\Service\Paginator\QuestionPaginator;
+use App\Service\Deleter\QuestionDeleter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,67 +17,49 @@ use Symfony\Component\Routing\Annotation\Route;
 class QuestionController extends Controller
 {
 
-    const QUESTIONS_ON_PAGE = 15;
-
-    private $questionCreateFormHandler;
-
-    private $questionUpdateFormHandler;
-
-    private $questionDeleter;
-
-    private $questionDataChecker;
-
-    private $questionService;
-
-    /**
-     * QuestionController constructor.
-     * @param QuestionDeleter $questionDeleter
-     * @param QuestionService $questionService
-     * @param QuestionDataChecker $questionDataChecker
-     */
-    public function __construct(
-        QuestionCreateFormHandler $questionCreateFormHandler,
-        QuestionUpdateFormHandler $questionUpdateFormHandler,
-        QuestionDeleter $questionDeleter,
-        QuestionService $questionService,
-        QuestionDataChecker $questionDataChecker
-    )
-    {
-        $this->questionCreateFormHandler = $questionCreateFormHandler;
-        $this->questionUpdateFormHandler = $questionUpdateFormHandler;
-        $this->questionDeleter = $questionDeleter;
-        $this->questionService = $questionService;
-        $this->questionDataChecker = $questionDataChecker;
-    }
-
     /**
      * @Route("/admin/question/create", name="question.create")
+     *
      * @param Request $request
+     * @param QuestionCreateFormHandler $questionCreateFormHandler
      * @return Response
      */
-    public function createQuestion(Request $request): Response
+    public function createQuestion(
+        Request $request,
+        QuestionCreateFormHandler $questionCreateFormHandler
+    ): Response
     {
         $question = new Question();
 
         $form = $this->createForm(QuestionType::class, $question);
-        if($this->questionCreateFormHandler->handle($form, $request)){
+        if($questionCreateFormHandler->handle($form, $request)){
             return $this->redirectToRoute('questions.show');
         }
 
         return $this->render('questions/question_create.html.twig', [
             'form' => $form->createView(),
             'action' => 'create',
-            'errors' => $this->questionCreateFormHandler->getFormErrorMessages()
+            'errors' => $questionCreateFormHandler->getFormErrorMessages()
         ]);
     }
 
     /**
-     * @Route("/admin/question/update/{id}", name="question.update")
+     * @Route(
+     *     "/admin/question/update/{id}",
+     *     name="question.update",
+     *     requirements={"id"="\d+"}
+     * )
+     *
      * @param int $id
      * @param Request $request
+     * @param QuestionUpdateFormHandler $questionUpdateFormHandler
      * @return Response
      */
-    public function updateQuestion(int $id, Request $request): Response
+    public function updateQuestion(
+        int $id,
+        Request $request,
+        QuestionUpdateFormHandler $questionUpdateFormHandler
+    ): Response
     {
         $question = $this
             ->getDoctrine()
@@ -96,14 +71,14 @@ class QuestionController extends Controller
         }
 
         $form = $this->createForm(QuestionType::class, $question);
-        if($this->questionUpdateFormHandler->handle($form, $request, ['entity' => $question])){
+        if($questionUpdateFormHandler->handle($form, $request, ['entity' => $question])){
             return $this->redirectToRoute('questions.show');
         }
 
         return $this->render('questions/question_update.html.twig', [
             'form' => $form->createView(),
             'action' => 'update',
-            'errors' => $this->questionUpdateFormHandler->getFormErrorMessages()
+            'errors' => $questionUpdateFormHandler->getFormErrorMessages()
         ]);
     }
 
@@ -115,11 +90,15 @@ class QuestionController extends Controller
      * )
      *
      * @param int $id
+     * @param QuestionDeleter $questionDeleter
      * @return Response
      */
-    public function deleteQuestion(int $id): Response
+    public function deleteQuestion(
+        int $id,
+        QuestionDeleter $questionDeleter
+    ): Response
     {
-        if(!$this->questionDeleter->delete($id)){
+        if(!$questionDeleter->delete($id)){
             throw $this->createNotFoundException('Вопроса с индексом ' . $id . ' не существует ');
         }
 
@@ -128,15 +107,18 @@ class QuestionController extends Controller
 
     /**
      * @Route("/admin/questions/show",name="questions.show")
+     *
      * @param Request $request
+     * @param QuestionPaginator $questionPaginator
      * @return Response
      */
-    public function showQuestions(Request $request): Response
+    public function showQuestions(
+        Request $request,
+        QuestionPaginator $questionPaginator
+    ): Response
     {
-        $this->questionService->createPaginator(self::QUESTIONS_ON_PAGE, $request);
-
         return $this->render('questions/questions_show.html.twig', [
-            'pagination' => $this->questionService->getPaginator(),
+            'pagination' => $questionPaginator->createPaginator($request)
         ]);
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Util;
 
 use App\Entity\Question;
-use App\Service\AnswerDeleter;
+use App\Service\Deleter\AnswerDeleter;
 use Doctrine\ORM\EntityManagerInterface;
 
 class QuestionUtils
