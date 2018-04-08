@@ -29,7 +29,7 @@ function $addQuestionForm($collectionHolder, $id, value) {
 
     var newForm = prototype;
 
-    newForm = newForm.replace(/__name__/g, index);
+    newForm = newForm.replace(/__name__/g, $id);
 
     $collectionHolder.data('index', index + 1);
 

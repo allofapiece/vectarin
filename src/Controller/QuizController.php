@@ -52,18 +52,17 @@ class QuizController extends Controller
 
         $form = $this->createForm(QuizType::class, $quiz);
 
-        $form->handleRequest($request);
+        $form->submit($request->request->get($form->getName()));
 
-        $quiz = $form->getData();
+        $data = $form->getData();
 
-        if($form->isSubmitted() &&
-            $form->isValid() &&
-            true === $this->quizDataChecker->checkData($quiz)
+        if($request->isMethod('POST') &&
+            true === $this->quizDataChecker->checkData($data)
         ){
 
-            $this->quizService->create($quiz);
+            $this->quizService->create($data);
 
-            $this->quizService->commit($quiz);
+            //$this->quizService->commit($quiz);
 
             return $this->redirectToRoute('quiz.show');
         }

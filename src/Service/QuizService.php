@@ -9,6 +9,7 @@
 namespace App\Service;
 
 
+use App\Entity\Question;
 use App\Entity\Quiz;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -99,9 +100,24 @@ class QuizService
         return $quiz;
     }
 
-    public function create(Quiz $quiz)
+    public function create(Quiz $data)
     {
+        $quiz = new Quiz(
+            $data->getName(),
+            $data->getDescription(),
+            true
+        );
 
+        foreach ($data->getQuestions() as $question) {
+            $quiz->addQuestion($this
+            ->entityManager
+            ->getRepository(Question::class)
+            ->findOneBy(['text' => $question->getText()])
+            );
+        }
+
+        $this->entityManager->persist($quiz);
+        $this->entityManager->flush();
     }
 
     /**

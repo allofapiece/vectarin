@@ -47,11 +47,19 @@ class Quiz
      */
     private $isActive;
 
-    public function __construct()
+    public function __construct(
+        string $name = '',
+        string $description = '',
+        bool $isActive = true
+    )
     {
         $this->users = new ArrayCollection();
         $this->games = new ArrayCollection();
         $this->questions = new ArrayCollection();
+
+        $this->name = $name;
+        $this->description = $description;
+        $this->isActive = $isActive;
     }
 
     public function getId()
