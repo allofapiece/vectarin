@@ -15,7 +15,7 @@ class HomeController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('/quizzes/quizzes.html.twig');
+        return $this->redirectToRoute('quiz.show');
     }
 
     /**
@@ -23,6 +23,6 @@ class HomeController extends Controller
      */
     public function home()
     {
-        return $this->render('/quizzes/quizzes.html.twig');
+        return $this->redirectToRoute('quiz.show');
     }
 }

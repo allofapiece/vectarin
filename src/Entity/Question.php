@@ -34,7 +34,7 @@ class Question
     private $answers;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Quiz", mappedBy="questions")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Quiz", mappedBy="questions",cascade={"persist"})
      */
     private $quizzes;
 
@@ -59,7 +59,7 @@ class Question
         return $this->text;
     }
 
-    public function setText(string $text): self
+    public function setText(?string $text): self
     {
         $this->text = $text;
 

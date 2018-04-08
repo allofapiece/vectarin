@@ -2,37 +2,28 @@
 /**
  * Created by PhpStorm.
  * User: Listratsenka Stas
- * Date: 06.04.2018
- * Time: 22:49
+ * Date: 08.04.2018
+ * Time: 20:14
  */
 
 namespace App\Service;
 
 
+use App\Entity\Answer;
 use Doctrine\ORM\EntityManagerInterface;
 
-class AnswerService
+class AnswerDeleter
 {
-
     private $entityManager;
 
-    /**
-     * AnswerService constructor.
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @param $answer
-     * @return void
-     */
-    public function deleteAnswer($answer): void
+    public function delete(Answer $answer)
     {
         $this->entityManager->remove($answer);
-
         $this->entityManager->flush();
     }
 }

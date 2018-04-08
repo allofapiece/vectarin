@@ -9,26 +9,46 @@
 namespace App\Service;
 
 
+use App\Entity\Question;
 use App\Entity\Quiz;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
 class QuizService
 {
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    private $questionService;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        QuestionService $questionService
+    )
     {
         $this->entityManager = $entityManager;
+        $this->questionService = $questionService;
     }
 
-    public function findAll(): array
+    /**
+     * @param Quiz $quiz
+     * @return void
+     */
+    public function deleteEmptyQuestions(Quiz $quiz): void
     {
-        $quizzes = $this
-            ->entityManager
-            ->getRepository(Quiz::class)
-            ->findAll();
+        foreach($quiz->getQuestions() as $question){
 
-        return $quizzes;
+            if($question->getText() == null || $question->getText() == ""){
+
+                $quiz->getQuestions()->removeElement($question);
+
+                $this->entityManager->remove($question);
+
+                $this->questionService->deleteQuestion($question);
+            }
+
+        }
+
+        $this->entityManager->flush();
     }
 
     /**
@@ -47,19 +67,9 @@ class QuizService
         return $quiz;
     }
 
-    /**
-     * @param Quiz $quiz
-     * @return void
-     */
-    public function delete(Quiz $quiz): void
-    {
-        //TODO should create custom exception
-        /*if (!$quiz) {
-            throw $this->createNotFoundException('Данный вопрос не найден!');
-        }*/
 
-        $this->entityManager->remove($quiz);
-    }
+
+
 
     /**
      * @param Quiz $quiz
