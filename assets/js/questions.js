@@ -2,8 +2,7 @@ var $collectionHolder;
 
 // setup an "add a tag" link
 var $addAnswerLink = $(
-    '<button type="button" class="btn btn-primary">Добавить ответ</button>' +
-    ''
+    '<button type="button" class="btn btn-primary">Добавить ответ</button>'
 );
 var $newLinkLi = $('<li></li>').append($addAnswerLink);
 

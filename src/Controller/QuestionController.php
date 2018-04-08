@@ -7,7 +7,11 @@ use App\Entity\Answer;
 use App\Entity\Question;
 use App\Form\Question\QuestionType;
 use App\Service\DataChecker\QuestionDataChecker;
+use App\Service\QuestionCreateFormHandler;
+use App\Service\QuestionCreator;
+use App\Service\QuestionDeleter;
 use App\Service\QuestionService;
+use App\Service\QuestionUpdateFormHandler;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -22,20 +26,33 @@ class QuestionController extends Controller
 
     const QUESTIONS_ON_PAGE = 15;
 
+    private $questionCreateFormHandler;
+
+    private $questionUpdateFormHandler;
+
+    private $questionDeleter;
+
     private $questionDataChecker;
 
     private $questionService;
 
     /**
      * QuestionController constructor.
+     * @param QuestionDeleter $questionDeleter
      * @param QuestionService $questionService
      * @param QuestionDataChecker $questionDataChecker
      */
     public function __construct(
+        QuestionCreateFormHandler $questionCreateFormHandler,
+        QuestionUpdateFormHandler $questionUpdateFormHandler,
+        QuestionDeleter $questionDeleter,
         QuestionService $questionService,
         QuestionDataChecker $questionDataChecker
     )
     {
+        $this->questionCreateFormHandler = $questionCreateFormHandler;
+        $this->questionUpdateFormHandler = $questionUpdateFormHandler;
+        $this->questionDeleter = $questionDeleter;
         $this->questionService = $questionService;
         $this->questionDataChecker = $questionDataChecker;
     }
@@ -50,27 +67,14 @@ class QuestionController extends Controller
         $question = new Question();
 
         $form = $this->createForm(QuestionType::class, $question);
-
-        $form->handleRequest($request);
-
-        $question = $form->getData();
-
-        if($form->isSubmitted() &&
-            $form->isValid() &&
-            false === $this->questionDataChecker->checkData($question)
-        ){
-
-            $this->questionService->create($question);
-
-            $this->questionService->commit($question);
-
+        if($this->questionCreateFormHandler->handle($form, $request)){
             return $this->redirectToRoute('questions.show');
         }
 
         return $this->render('questions/question_create.html.twig', [
             'form' => $form->createView(),
             'action' => 'create',
-            'errors' => $this->questionDataChecker->getMessages()
+            'errors' => $this->questionCreateFormHandler->getFormErrorMessages()
         ]);
     }
 
@@ -82,54 +86,42 @@ class QuestionController extends Controller
      */
     public function updateQuestion(int $id, Request $request): Response
     {
-        $question = $this->questionService->find($id);
+        $question = $this
+            ->getDoctrine()
+            ->getRepository(Question::class)
+            ->find($id);
 
         if (!$question) {
-            throw $this->createNotFoundException('No task found for id ' . $id);
+            throw $this->createNotFoundException('Викторины с индексом ' . $id . ' не существует');
         }
 
-        $originalAnswers = new ArrayCollection();
-
-        // Create an ArrayCollection of the current Tag objects in the database
-        foreach ($question->getAnswers() as $answer) {
-            $originalAnswers->add($answer);
-        }
-
-        $editForm = $this->createForm(QuestionType::class, $question);
-
-        $editForm->handleRequest($request);
-
-        $this->questionService->deleteEmptyAnswers($question);
-
-        if($editForm->isSubmitted() &&
-            $editForm->isValid() &&
-            false === $this->questionDataChecker->checkData($question)
-        ){
-
-            $this->questionService->update($question, $originalAnswers);
-
-            $this->questionService->commit($question);
-            // redirect back to question show page
+        $form = $this->createForm(QuestionType::class, $question);
+        if($this->questionUpdateFormHandler->handle($form, $request, ['entity' => $question])){
             return $this->redirectToRoute('questions.show');
         }
 
         return $this->render('questions/question_update.html.twig', [
-            'form' => $editForm->createView(),
+            'form' => $form->createView(),
             'action' => 'update',
-            'errors' => $this->questionDataChecker->getMessages()
+            'errors' => $this->questionUpdateFormHandler->getFormErrorMessages()
         ]);
     }
 
     /**
-     * @Route("/admin/question/delete/{id}", name="question.delete")
+     * @Route(
+     *     "/admin/question/delete/{id}",
+     *      name="question.delete",
+     *      requirements={"id"="\d+"}
+     * )
+     *
      * @param int $id
      * @return Response
      */
     public function deleteQuestion(int $id): Response
     {
-        $question = $this->questionService->find($id);
-
-        $this->questionService->delete($question);
+        if(!$this->questionDeleter->delete($id)){
+            throw $this->createNotFoundException('Вопроса с индексом ' . $id . ' не существует ');
+        }
 
         return $this->redirectToRoute('questions.show');
     }

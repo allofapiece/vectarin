@@ -1,111 +1,129 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
-
-use App\Entity\Question;
-use App\Service\QuestionService;
-use App\Service\QuizService;
+use App\Entity\Quiz;
+use App\Form\QuizType;
+use App\Service\QuizCreateFormHandler;
+use App\Service\QuizDeleter;
+use App\Service\QuizUpdateFormHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class QuizController extends Controller
 {
+    private $quizCreateFormHandler;
 
-    private $quizService;
+    private $quizUpdateFormHandler;
 
-    public function __construct(QuizService $quizService)
+    private $quizDeleter;
+
+    public function __construct(
+        QuizCreateFormHandler $quizCreateFormHandler,
+        QuizUpdateFormHandler $quizUpdateFormHandler,
+        QuizDeleter $quizDeleter
+    )
     {
-        $this->quizService = $quizService;
-    }
-
-
-    /**
-     * @Route("/admin/quiz/control",name="quiz.control")
-     * @return Response
-     */
-    public function quizControl()
-    {
-        return new Response();
+        $this->quizCreateFormHandler = $quizCreateFormHandler;
+        $this->quizUpdateFormHandler = $quizUpdateFormHandler;
+        $this->quizDeleter = $quizDeleter;
     }
 
     /**
      * @Route("/admin/quiz/create", name="quiz.create")
+     *
+     * @param Request $request
      * @return Response
      */
-    public function createQuiz()
+    public function createQuiz(Request $request): Response
     {
-        return new Response();
+        $quiz = new Quiz();
+
+        $form = $this->createForm(QuizType::class, $quiz);
+        if($this->quizCreateFormHandler->handle($form, $request)){
+            return $this->redirectToRoute('quiz.show');
+        }
+
+        return $this->render('quizzes/quiz_create.html.twig', [
+            'form' => $form->createView(),
+            'errors' => $this->quizCreateFormHandler->getFormErrorMessages()
+        ]);
     }
 
     /**
      * @Route("/admin/quiz/update/{id}", name="quiz.update")
      *
      * @param int $id
+     * @param Request $request
      * @return Response
      */
-    public function updateQuiz(int $id)
+    public function updateQuiz(int $id, Request $request): Response
     {
-        return new Response();
+        $quiz = $this
+            ->getDoctrine()
+            ->getRepository(Quiz::class)
+            ->find($id);
+
+        if (!$quiz) {
+            throw $this->createNotFoundException('Викторины с индексом ' . $id . ' не существует');
+        }
+        
+        $form = $this->createForm(QuizType::class, $quiz);
+        if($this->quizUpdateFormHandler->handle($form, $request, ['entity' => $quiz])){
+            return $this->redirectToRoute('quiz.show');
+        }
+
+        return $this->render('quizzes/quiz_update.html.twig', [
+            'form' => $form->createView(),
+            'errors' => $this->quizUpdateFormHandler->getFormErrorMessages()
+        ]);
     }
 
     /**
      * @Route("/admin/quiz/delete/{id}", name="quiz.delete")
+     *
+     * @param int $id
      * @return Response
      */
-    public function deleteQuiz(int $id)
+    public function deleteQuiz(int $id): Response
     {
-        $quiz = $this->quizService->find($id);
-
-        $this->quizService->delete($quiz);
-
-        $this->quizService->commit($quiz);
+        if(!$this->quizDeleter->delete($id)){
+            throw $this->createNotFoundException('Викторины с индексом ' . $id . ' не существует ');
+        }
 
         return $this->redirectToRoute('quiz.show');
     }
 
     /**
-     * @Route("/admin/quiz/show/{id}",name="quiz.show.id")
+     * @Route("/quiz/own",name="quiz.own")
+     *
+     * @param Request $request=
      * @return Response
      */
-    public function showQuizById()
+    public function showOwnQuizzes(Request $request)
     {
         return new Response();
     }
 
     /**
-     * @Route("/quiz/own",name="quiz.own")
-     * @param Request $request
-     * @param QuestionService $questionService
+     * @Route("/quiz/show",name="quiz.show")
+     *
      * @return Response
      */
-    public function showOwnQuizzes(Request $request, QuestionService $questionService)
+    public function showAllQuizzes(): Response
     {
-        $result=$questionService->getQuestionsByText($request->get('q'));
-
-        return new JsonResponse($result);
-    }
-
-    /**
-     * @Route("/quiz/show",name="quiz.show")
-     */
-    public function showAllQuiz()
-    {
-        $quizzes = $this->quizService->findAll();
+        $quizzes = $this
+            ->getDoctrine()
+            ->getRepository(Quiz::class)
+            ->findAll();
 
         return $this->render('quizzes/quizzes.html.twig', [
             'quizzes' => $quizzes
         ]);
     }
 
-    /**
-     * @Route("/quiz/user",name="quiz.user.show")
-     */
-    public function showUserQuizzes()
-    {
-
-    }
 }

@@ -38,15 +38,28 @@ class Quiz
     private $games;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Question", inversedBy="quizzes")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Question", inversedBy="quizzes",cascade={"persist"})
      */
     private $questions;
 
-    public function __construct()
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActive;
+
+    public function __construct(
+        string $name = '',
+        string $description = '',
+        bool $isActive = true
+    )
     {
         $this->users = new ArrayCollection();
         $this->games = new ArrayCollection();
         $this->questions = new ArrayCollection();
+
+        $this->name = $name;
+        $this->description = $description;
+        $this->isActive = $isActive;
     }
 
     public function getId()
@@ -59,7 +72,7 @@ class Quiz
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -131,6 +144,18 @@ class Quiz
         if ($this->questions->contains($question)) {
             $this->questions->removeElement($question);
         }
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

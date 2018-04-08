@@ -31,19 +31,16 @@ class QuestionService
      * @param EntityManagerInterface $entityManager
      * @param QuestionOptimization $questionOptimization
      * @param PaginatorInterface $paginator
-     * @param AnswerService $answerService
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         QuestionOptimization $questionOptimization,
-        PaginatorInterface $paginator,
-        AnswerService $answerService
+        PaginatorInterface $paginator
     )
     {
         $this->entityManager = $entityManager;
         $this->questionOptimization = $questionOptimization;
         $this->paginator = $paginator;
-        $this->answerService = $answerService;
     }
 
     /**
@@ -66,7 +63,6 @@ class QuestionService
         $this->questionOptimization->optimizeQuestionText($question);
         $this->questionOptimization->addQuestionCharacterIfNotExist($question);
 
-        // remove the relationship between the tag and the Task
         foreach ($originalAnswers as $answer) {
             if (false === $question->getAnswers()->contains($answer)) {
 
@@ -129,27 +125,6 @@ class QuestionService
         $this->entityManager->flush();
     }
 
-    /**
-     * @param Question $question
-     * @return void
-     */
-    public function deleteEmptyAnswers(Question $question): void
-    {
-        foreach($question->getAnswers() as $answer){
-
-            if($answer->getText() == null || $answer->getText() == ""){
-
-                $question->getAnswers()->removeElement($answer);
-
-                $this->entityManager->remove($answer);
-
-                $this->answerService->deleteAnswer($answer);
-            }
-
-        }
-
-        $this->entityManager->flush();
-    }
 
     /**
      * @param int $usersOnPage
@@ -194,30 +169,6 @@ class QuestionService
     public function setPaginator(PaginatorInterface $paginator): void
     {
         $this->paginator = $paginator;
-    }
-
-
-    public function getQuestionsByText(string $text): array
-    {
-        $questions = $this->entityManager
-            ->getRepository(Question::class)
-            ->findEntitiesByString($text);
-
-        if (!$questions) {
-            $result['entities']['error'] = 'Вопросы не найдены...';
-        } else {
-            $result['entities'] = $this->getFoundData($questions);
-        }
-
-        return $result;
-    }
-
-    public function getFoundData($questions)
-    {
-        foreach ($questions as $question) {
-            $foundData[$question->getId()] = $question->getText();
-        }
-        return $foundData;
     }
 
 }
