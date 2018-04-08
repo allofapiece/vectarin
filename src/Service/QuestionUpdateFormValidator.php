@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+
 use App\Entity\Question;
+use App\Entity\Quiz;
 use Doctrine\ORM\EntityManagerInterface;
 
-class QuestionCreateFormValidator
+class QuestionUpdateFormValidator
 {
     protected $isValid;
 
@@ -19,7 +21,6 @@ class QuestionCreateFormValidator
      * QuizCreateFormValidator constructor.
      * @param bool $isValid
      * @param array $errorMessages
-     * @param EntityManagerInterface $entityManager
      */
     public function __construct(
         bool $isValid = true,
@@ -33,7 +34,7 @@ class QuestionCreateFormValidator
     }
 
     /**
-     * @param Question $data
+     * @param Quiz $data
      * @return bool
      */
     public function validate(Question $data): bool
@@ -73,23 +74,6 @@ class QuestionCreateFormValidator
 
                     break(2);
                 }
-            }
-        }
-
-        $questions = $this
-            ->entityManager
-            ->getRepository(Question::class)
-            ->findAll();
-
-        foreach($questions as $question){
-            if(
-                strtolower($question->getText()) == strtolower($data->getText()) &&
-                $question->getId() != $data->getId()
-            ){
-                $this->setIsValid(false);
-                $this->addMessage('Вопрос с таким текстом уже существует.');
-
-                break;
             }
         }
 

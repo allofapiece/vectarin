@@ -5,15 +5,35 @@ declare(strict_types=1);
 namespace App\Service\Util;
 
 use App\Entity\Question;
+use App\Service\AnswerDeleter;
+use Doctrine\ORM\EntityManagerInterface;
 
 class QuestionUtils
 {
+
+    private $entityManager;
+
+    private $answerDeleter;
+
+    /**
+     * QuestionUtils constructor.
+     * @param EntityManagerInterface $entityManager
+     * @param AnswerDeleter $answerDeleter
+     */
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        AnswerDeleter $answerDeleter
+    )
+    {
+        $this->entityManager = $entityManager;
+        $this->answerDeleter = $answerDeleter;
+    }
 
     /**
      * @param Question $question
      * @return Question
      */
-    public function deleteWhiteSpaces(Question $question)
+    public function deleteWhiteSpaces(Question $question): Question
     {
         $questionText = $question->getText();
         trim($questionText);
@@ -26,7 +46,7 @@ class QuestionUtils
      * @param Question $question
      * @return Question
      */
-    public function addQuestionCharacterIfNotExist(Question $question)
+    public function addQuestionCharacterIfNotExist(Question $question): Question
     {
         $questionText = $question->getText();
 
@@ -42,7 +62,7 @@ class QuestionUtils
      * @param Question $question
      * @return Question
      */
-    public function deleteQuestionCharacterIfExist(Question $question)
+    public function deleteQuestionCharacterIfExist(Question $question): Question
     {
         $questionText = $question->getText();
 
@@ -52,5 +72,22 @@ class QuestionUtils
         }
 
         return $question;
+    }
+
+    /**
+     * @param Question $question
+     * @return void
+     */
+    public function deleteEmptyAnswers(Question $question): void
+    {
+        foreach($question->getAnswers() as $answer){
+            if($answer->getText() == null || $answer->getText() == ""){
+                $question->getAnswers()->removeElement($answer);
+                $this->entityManager->remove($answer);
+                $this->answerDeleter->delete($answer);
+            }
+        }
+
+        $this->entityManager->flush();
     }
 }

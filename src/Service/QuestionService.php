@@ -31,19 +31,16 @@ class QuestionService
      * @param EntityManagerInterface $entityManager
      * @param QuestionOptimization $questionOptimization
      * @param PaginatorInterface $paginator
-     * @param AnswerService $answerService
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         QuestionOptimization $questionOptimization,
-        PaginatorInterface $paginator,
-        AnswerService $answerService
+        PaginatorInterface $paginator
     )
     {
         $this->entityManager = $entityManager;
         $this->questionOptimization = $questionOptimization;
         $this->paginator = $paginator;
-        $this->answerService = $answerService;
     }
 
     /**
@@ -128,27 +125,6 @@ class QuestionService
         $this->entityManager->flush();
     }
 
-    /**
-     * @param Question $question
-     * @return void
-     */
-    public function deleteEmptyAnswers(Question $question): void
-    {
-        foreach($question->getAnswers() as $answer){
-
-            if($answer->getText() == null || $answer->getText() == ""){
-
-                $question->getAnswers()->removeElement($answer);
-
-                $this->entityManager->remove($answer);
-
-                $this->answerService->deleteAnswer($answer);
-            }
-
-        }
-
-        $this->entityManager->flush();
-    }
 
     /**
      * @param int $usersOnPage

@@ -11,6 +11,7 @@ use App\Service\QuestionCreateFormHandler;
 use App\Service\QuestionCreator;
 use App\Service\QuestionDeleter;
 use App\Service\QuestionService;
+use App\Service\QuestionUpdateFormHandler;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -27,6 +28,8 @@ class QuestionController extends Controller
 
     private $questionCreateFormHandler;
 
+    private $questionUpdateFormHandler;
+
     private $questionDeleter;
 
     private $questionDataChecker;
@@ -41,12 +44,14 @@ class QuestionController extends Controller
      */
     public function __construct(
         QuestionCreateFormHandler $questionCreateFormHandler,
+        QuestionUpdateFormHandler $questionUpdateFormHandler,
         QuestionDeleter $questionDeleter,
         QuestionService $questionService,
         QuestionDataChecker $questionDataChecker
     )
     {
         $this->questionCreateFormHandler = $questionCreateFormHandler;
+        $this->questionUpdateFormHandler = $questionUpdateFormHandler;
         $this->questionDeleter = $questionDeleter;
         $this->questionService = $questionService;
         $this->questionDataChecker = $questionDataChecker;
@@ -81,41 +86,24 @@ class QuestionController extends Controller
      */
     public function updateQuestion(int $id, Request $request): Response
     {
-        $question = $this->questionService->find($id);
+        $question = $this
+            ->getDoctrine()
+            ->getRepository(Question::class)
+            ->find($id);
 
         if (!$question) {
-            throw $this->createNotFoundException('No task found for id ' . $id);
+            throw $this->createNotFoundException('Викторины с индексом ' . $id . ' не существует');
         }
 
-        $originalAnswers = new ArrayCollection();
-
-        // Create an ArrayCollection of the current Tag objects in the database
-        foreach ($question->getAnswers() as $answer) {
-            $originalAnswers->add($answer);
-        }
-
-        $editForm = $this->createForm(QuestionType::class, $question);
-
-        $editForm->handleRequest($request);
-
-        $this->questionService->deleteEmptyAnswers($question);
-
-        if($editForm->isSubmitted() &&
-            $editForm->isValid() &&
-            false === $this->questionDataChecker->checkData($question)
-        ){
-
-            $this->questionService->update($question, $originalAnswers);
-
-            $this->questionService->commit($question);
-            // redirect back to question show page
+        $form = $this->createForm(QuestionType::class, $question);
+        if($this->questionUpdateFormHandler->handle($form, $request, ['entity' => $question])){
             return $this->redirectToRoute('questions.show');
         }
 
         return $this->render('questions/question_update.html.twig', [
-            'form' => $editForm->createView(),
+            'form' => $form->createView(),
             'action' => 'update',
-            'errors' => $this->questionDataChecker->getMessages()
+            'errors' => $this->questionUpdateFormHandler->getFormErrorMessages()
         ]);
     }
 
