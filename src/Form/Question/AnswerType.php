@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form\Question;
 
 
@@ -10,11 +12,16 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AnswerType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     * @return void
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('text', TextType::class, [
@@ -41,7 +48,11 @@ class AnswerType extends AbstractType
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     * @return void
+     */
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Answer::class

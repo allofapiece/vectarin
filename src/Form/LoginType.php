@@ -1,10 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Listratsenka Stas
- * Date: 01.04.2018
- * Time: 11:46
- */
+
+declare(strict_types=1);
 
 namespace App\Form;
 
@@ -22,7 +18,13 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class LoginType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     * @return void
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('username', TextType::class, [
@@ -63,7 +65,11 @@ class LoginType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     * @return void
+     */
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => User::class,

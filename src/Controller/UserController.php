@@ -25,6 +25,7 @@ class UserController extends Controller
 
     /**
      * @Route("/admin/users",name="user.list")
+     *
      * @param Request $request
      * @return Response
      */
@@ -38,7 +39,12 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/update-is-active/{id}",name="user.update.is_active")
+     * @Route(
+     *     "/user/update-is-active/{id}",
+     *     name="user.update.is_active",
+     *     requirements={"id"="\d+"}
+     * )
+     *
      * @param Request $request
      * @param $id
      * @return Response
@@ -57,7 +63,12 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("admin/user/delete/{id}", name="user.delete")
+     * @Route(
+     *     "admin/user/delete/{id}",
+     *     name="user.delete",
+     *     requirements={"id"="\d+"}
+     * )
+     *
      * @param Request $request
      * @param $id
      * @return RedirectResponse

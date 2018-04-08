@@ -23,7 +23,11 @@ class QuizActivateController extends Controller
     }
 
     /**
-     * @Route("/admin/quiz/activate/{id}", name="quiz.activate")
+     * @Route(
+     *     "/admin/quiz/activate/{id}",
+     *     name="quiz.activate",
+     *     requirements={"id"="\d+"}
+     * )
      * @param int $id
      * @return Response
      */
@@ -35,7 +39,11 @@ class QuizActivateController extends Controller
     }
 
     /**
-     * @Route("/admin/quiz/disactivate/{id}", name="quiz.disactivate")
+     * @Route(
+     *     "/admin/quiz/disactivate/{id}",
+     *     name="quiz.disactivate",
+     *     requirements={"id"="\d+"}
+     * )
      * @param int $id
      * @return Response
      */

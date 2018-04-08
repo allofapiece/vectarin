@@ -23,6 +23,7 @@ class SecurityController extends Controller
 {
     /**
      * @Route("/login",name="login")
+     *
      * @param Request $request
      * @param AuthenticationUtils $authenticationUtils
      * @return Response
@@ -106,6 +107,7 @@ class SecurityController extends Controller
 
     /**
      * @Route("/recovery-password-1", name="recovery.password.email")
+     *
      * @param Request $request
      * @param MessageSender $messageSender
      * @param GenerateToken $generateToken

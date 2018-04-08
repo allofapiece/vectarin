@@ -1,16 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form\Question;
 
-use App\Entity\Answer;
 use App\Entity\Question;
-use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,7 +16,13 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class QuestionType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     * @return void
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('text', TextType::class, [
@@ -40,26 +42,30 @@ class QuestionType extends AbstractType
                     ])
                 ]
             ])
-            ->add('answers', CollectionType::class, array(
+            ->add('answers', CollectionType::class, [
                 'label' => false,
                 'by_reference' => false,
                 'allow_add' => true,
                 'entry_type' => AnswerType::class,
                 // these options are passed to each "email" type
-                'entry_options' => array(
+                'entry_options' => [
                     'label' => false,
-                    'attr' => array(
+                    'attr' => [
                         'class' => 'form-cotrol',
-                        ),
-
-                ),
-
-                ))
-            ->add('save', SubmitType::class, array('label' => 'Сохранить вопрос'))
+                    ],
+                ],
+            ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Сохранить вопрос'
+            ])
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     * @return void
+     */
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Question::class,
