@@ -16,9 +16,14 @@ abstract class FormHandler
     /**
      * @param FormInterface $form
      * @param Request $request
+     * @param array $parameters
      * @return bool
      */
-    abstract public function handle(FormInterface $form, Request $request): bool;
+    abstract public function handle(
+        FormInterface $form,
+        Request $request,
+        array $parameters
+    ): bool;
 
     /**
      * @return bool

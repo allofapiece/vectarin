@@ -37,9 +37,10 @@ class QuizCreateFormHandler extends FormHandler
     /**
      * @param FormInterface $form
      * @param Request $request
+     * @param array $parameters
      * @return bool
      */
-    public function handle(FormInterface $form, Request $request): bool
+    public function handle(FormInterface $form, Request $request, array $parameters = []): bool
     {
         if($request->isMethod('POST')){
 

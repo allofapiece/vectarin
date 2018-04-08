@@ -11,6 +11,7 @@ use App\Service\QuestionService;
 use App\Service\QuizCreateFormHandler;
 use App\Service\QuizCreator;
 use App\Service\QuizService;
+use App\Service\QuizUpdateFormHandler;
 use App\Service\QuizUpdater;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -23,6 +24,8 @@ class QuizController extends Controller
 {
     private $quizCreateFormHandler;
 
+    private $quizUpdateFormHandler;
+
     private $quizService;
 
     private $quizDataChecker;
@@ -31,29 +34,23 @@ class QuizController extends Controller
 
     public function __construct(
         QuizCreateFormHandler $quizCreateFormHandler,
+        QuizUpdateFormHandler $quizUpdateFormHandler,
         QuizService $quizService,
         QuizUpdater $updater,
         QuizDataChecker $quizDataChecker
     )
     {
         $this->quizCreateFormHandler = $quizCreateFormHandler;
+        $this->quizUpdateFormHandler = $quizUpdateFormHandler;
         $this->quizService = $quizService;
         $this->quizDataChecker = $quizDataChecker;
         $this->updater = $updater;
     }
 
-
-    /**
-     * @Route("/admin/quiz/control",name="quiz.control")
-     * @return Response
-     */
-    public function quizControl()
-    {
-        return new Response();
-    }
-
     /**
      * @Route("/admin/quiz/create", name="quiz.create")
+     *
+     * @param Request $request
      * @return Response
      */
     public function createQuiz(Request $request)
@@ -75,39 +72,28 @@ class QuizController extends Controller
      * @Route("/admin/quiz/update/{id}", name="quiz.update")
      *
      * @param int $id
+     * @param Request $request
      * @return Response
      */
-    public function updateQuiz(int $id, Request $request)
+    public function updateQuiz(int $id, Request $request): Response
     {
-        $quiz = $this->quizService->find($id);
+        $quiz = $this
+            ->getDoctrine()
+            ->getRepository(Quiz::class)
+            ->find($id);
 
         if (!$quiz) {
-            throw $this->createNotFoundException('No task found for id ' . $id);
+            throw $this->createNotFoundException('Викторины с индексом ' . $id . ' не существует');
         }
-
-        $originalQuestions = new ArrayCollection();
-
-        foreach ($quiz->getQuestions() as $question) {
-            $originalQuestions->add($question);
-        }
-
-        $editForm = $this->createForm(QuizType::class, $quiz);
-
-        if(
-            $request->isMethod('POST') &&
-            true === $this->quizDataChecker->checkData($quiz)
-        ){
-            $editForm->submit($request->request->get($editForm->getName()));
-            $data = $editForm->getData();
-            $this->quizService->update($data, $originalQuestions);
-
+        
+        $form = $this->createForm(QuizType::class, $quiz);
+        if($this->quizUpdateFormHandler->handle($form, $request, ['entity' => $quiz])){
             return $this->redirectToRoute('quiz.show');
         }
 
         return $this->render('quizzes/quiz_update.html.twig', [
-            'form' => $editForm->createView(),
-            'action' => 'update',
-            'errors' => $this->quizDataChecker->getMessages()
+            'form' => $form->createView(),
+            'errors' => $this->quizUpdateFormHandler->getFormErrorMessages()
         ]);
     }
 
