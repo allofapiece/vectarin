@@ -52,13 +52,13 @@ class QuizController extends Controller
 
         $form = $this->createForm(QuizType::class, $quiz);
 
-        $form->submit($request->request->get($form->getName()));
 
-        $data = $form->getData();
 
-        if($request->isMethod('POST') &&
-            true === $this->quizDataChecker->checkData($data)
+        if($request->isMethod('POST')
         ){
+            $form->submit($request->request->get($form->getName()));
+
+            $data = $form->getData();
 
             $this->quizService->create($data);
 
@@ -97,18 +97,16 @@ class QuizController extends Controller
 
         $editForm = $this->createForm(QuizType::class, $quiz);
 
-        $editForm->handleRequest($request);
+        $editForm->submit($request->request->get($editForm->getName()));
 
-        $this->quizService->deleteEmptyQuestions($quiz);
-
-        if($editForm->isSubmitted() &&
-            $editForm->isValid() &&
+        if($request->isMethod('POST') &&
             true === $this->quizDataChecker->checkData($quiz)
         ){
 
-            $this->quizService->update($quiz, $originalQuestions);
+            $data = $editForm->getData();
+            $this->quizService->update($data, $originalQuestions);
 
-            $this->quizService->commit($quiz);
+            //$this->quizService->commit($quiz);
             // redirect back to question show page
             return $this->redirectToRoute('quiz.show');
         }

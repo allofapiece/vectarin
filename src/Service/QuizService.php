@@ -66,22 +66,35 @@ class QuizService
      * @param ArrayCollection $originalAnswers
      * @return void
      */
-    public function update(Quiz $quiz, ArrayCollection $originalQuestions): void
+    public function update(Quiz $data, ArrayCollection $originalQuestions): void
     {
         //$this->questionOptimization->optimizeQuestionText($quiz);
         //$this->questionOptimization->addQuestionCharacterIfNotExist($quiz);
+        foreach($data->getQuestions() as $question){
 
-        // remove the relationship between the tag and the Task
-        foreach ($originalQuestions as $question) {
-            if (false === $quiz->getQuestions()->contains($question)) {
-                $question->getQuizzes()->removeElement($quiz);
-                //$question->setQuiz(null);
+            if($question->getText() == null || $question->getText() == ""){
 
-                $this->entityManager->persist($question);
-                $this->entityManager->remove($question);
+                $data->getQuestions()->removeElement($question);
 
             }
+
         }
+        /*echo "<pre>";
+        var_dump($data->getQuestions());
+        echo "<pre>";
+        die;*/
+        // remove the relationship between the tag and the Task
+        foreach ($originalQuestions as $question) {
+            if (false === $data->getQuestions()->contains($question)) {
+                $question->getQuizzes()->removeElement($data);
+                //$question->setQuiz(null);
+
+
+                $this->entityManager->remove($question);
+                $this->entityManager->persist($question);
+
+            }
+        }$this->entityManager->flush($data);
     }
 
     /**
