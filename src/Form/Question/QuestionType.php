@@ -29,17 +29,6 @@ class QuestionType extends AbstractType
                 'label' => 'Текст вопроса',
                 'attr' => [
                     'placeholder' => 'Вопрос'
-                ],
-                'constraints' => [
-                    new Length([
-                        'min' => 2,
-                        'max' => 50,
-                        'minMessage' => 'Число символов не должно быть меньше {{ limit }}',
-                        'maxMessage' => 'Число символов не должно быть больше {{ limit }}'
-                    ]),
-                    new NotBlank([
-                        'message' => 'Поле не должно быть пустым.'
-                    ])
                 ]
             ])
             ->add('answers', CollectionType::class, [
@@ -47,7 +36,6 @@ class QuestionType extends AbstractType
                 'by_reference' => false,
                 'allow_add' => true,
                 'entry_type' => AnswerType::class,
-                // these options are passed to each "email" type
                 'entry_options' => [
                     'label' => false,
                     'attr' => [

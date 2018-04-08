@@ -42,6 +42,11 @@ class QuestionCreateFormValidator
 
         $this->setIsValid(true);
 
+        if($data->getText() == '' || $data->getText() == null){
+            $this->setIsValid(false);
+            $this->addMessage('Текст вопроса не должен быть пустым');
+        }
+
         $answers = $data->getAnswers();
 
         if(count($answers) < 2){

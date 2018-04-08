@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AnswerType extends AbstractType
 {
@@ -26,11 +27,8 @@ class AnswerType extends AbstractType
         $builder
             ->add('text', TextType::class, [
                 'constraints' => [
-                    new Length([
-                        'min' => 1,
-                        'max' => 50,
-                        'minMessage' => 'Число символов не должно быть меньше {{ limit }}',
-                        'maxMessage' => 'Число символов не должно быть больше {{ limit }}'
+                    new NotBlank([
+                        'message' => 'Поле должно быть заполнено'
                     ])
                 ],
                 'label' => false,
@@ -55,7 +53,7 @@ class AnswerType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Answer::class
+            'data_class' => Answer::class,
         ]);
     }
 }
