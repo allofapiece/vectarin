@@ -7,6 +7,8 @@ use App\Entity\Answer;
 use App\Entity\Question;
 use App\Form\Question\QuestionType;
 use App\Service\DataChecker\QuestionDataChecker;
+use App\Service\QuestionCreateFormHandler;
+use App\Service\QuestionCreator;
 use App\Service\QuestionDeleter;
 use App\Service\QuestionService;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,6 +25,8 @@ class QuestionController extends Controller
 
     const QUESTIONS_ON_PAGE = 15;
 
+    private $questionCreateFormHandler;
+
     private $questionDeleter;
 
     private $questionDataChecker;
@@ -36,11 +40,13 @@ class QuestionController extends Controller
      * @param QuestionDataChecker $questionDataChecker
      */
     public function __construct(
+        QuestionCreateFormHandler $questionCreateFormHandler,
         QuestionDeleter $questionDeleter,
         QuestionService $questionService,
         QuestionDataChecker $questionDataChecker
     )
     {
+        $this->questionCreateFormHandler = $questionCreateFormHandler;
         $this->questionDeleter = $questionDeleter;
         $this->questionService = $questionService;
         $this->questionDataChecker = $questionDataChecker;
@@ -56,27 +62,14 @@ class QuestionController extends Controller
         $question = new Question();
 
         $form = $this->createForm(QuestionType::class, $question);
-
-        $form->handleRequest($request);
-
-        $question = $form->getData();
-
-        if($form->isSubmitted() &&
-            $form->isValid() &&
-            false === $this->questionDataChecker->checkData($question)
-        ){
-
-            $this->questionService->create($question);
-
-            $this->questionService->commit($question);
-
+        if($this->questionCreateFormHandler->handle($form, $request)){
             return $this->redirectToRoute('questions.show');
         }
 
         return $this->render('questions/question_create.html.twig', [
             'form' => $form->createView(),
             'action' => 'create',
-            'errors' => $this->questionDataChecker->getMessages()
+            'errors' => $this->questionCreateFormHandler->getFormErrorMessages()
         ]);
     }
 
