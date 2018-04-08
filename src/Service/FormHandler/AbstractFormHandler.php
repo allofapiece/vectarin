@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Service\FormHandler;
 
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-abstract class FormHandler
+abstract class AbstractFormHandler
 {
     protected $isFormValid;
 

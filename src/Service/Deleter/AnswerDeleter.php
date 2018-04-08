@@ -6,7 +6,7 @@
  * Time: 20:14
  */
 
-namespace App\Service;
+namespace App\Service\Deleter;
 
 
 use App\Entity\Answer;

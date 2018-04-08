@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Service\FormHandler;
 
-
+use App\Service\Updater\QuizUpdater;
+use App\Service\Validator\QuizUpdateFormValidator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class QuizUpdateFormHandler extends FormHandler
+class QuizUpdateFormHandler extends AbstractFormHandler
 {
     private $updater;
 

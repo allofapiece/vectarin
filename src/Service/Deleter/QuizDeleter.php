@@ -1,38 +1,42 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Listratsenka Stas
- * Date: 08.04.2018
- * Time: 18:44
- */
 
-namespace App\Service;
+declare(strict_types=1);
+
+namespace App\Service\Deleter;
 
 
-use App\Entity\Question;
+use App\Entity\Quiz;
 use Doctrine\ORM\EntityManagerInterface;
 
-class QuestionDeleter
+class QuizDeleter
 {
     private $entityManager;
 
+    /**
+     * QuizDeleter constructor.
+     * @param EntityManagerInterface $entityManager
+     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @param int $id
+     * @return bool
+     */
     public function delete(int $id): bool
     {
-        $question = $this
+        $quiz = $this
             ->entityManager
-            ->getRepository(Question::class)
+            ->getRepository(Quiz::class)
             ->find($id);
 
-        if(!$question){
+        if(!$quiz){
             return false;
         }
 
-        $this->entityManager->remove($question);
+        $this->entityManager->remove($quiz);
         $this->entityManager->flush();
 
         return true;

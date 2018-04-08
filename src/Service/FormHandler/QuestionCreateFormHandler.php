@@ -2,30 +2,31 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Service\FormHandler;
 
-
+use App\Service\Creator\QuestionCreator;
+use App\Service\Validator\QuestionCreateFormValidator;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class QuizCreateFormHandler extends FormHandler
+class QuestionCreateFormHandler extends AbstractFormHandler
 {
-    private $creator;
-
     private $validator;
 
+    private $creator;
+
     /**
-     * QuizCreateFormHandler constructor.
+     * QuestionCreateFormHandler constructor.
      * @param bool $isFormValid
      * @param array $formErrorMessages
-     * @param QuizCreator $creator
-     * @param QuizCreateFormValidator $validator
+     * @param QuestionCreator $creator
+     * @param QuestionCreateFormValidator $validator
      */
     public function __construct(
         bool $isFormValid = true,
         array $formErrorMessages = [],
-        QuizCreator $creator,
-        QuizCreateFormValidator $validator
+        QuestionCreator $creator,
+        QuestionCreateFormValidator $validator
     )
     {
         $this->isFormValid = $isFormValid;
@@ -40,15 +41,19 @@ class QuizCreateFormHandler extends FormHandler
      * @param array $parameters
      * @return bool
      */
-    public function handle(FormInterface $form, Request $request, array $parameters = []): bool
+    public function handle(
+        FormInterface $form,
+        Request $request,
+        array $parameters = []
+    ): bool
     {
-        if($request->isMethod('POST')){
+        $form->handleRequest($request);
+        $question = $form->getData();
 
-            $form->submit($request->request->get($form->getName()));
-            $data = $form->getData();
+        if($form->isSubmitted()){
 
-            if($this->validator->validate($data)){
-                $this->creator->create($data);
+            if($form->isValid() && $this->validator->validate($question)){
+                $this->creator->create($question);
             } else {
                 $this->setIsFormValid(false);
                 $this->setFormErrorMessages($this->validator->getErrorMessages());

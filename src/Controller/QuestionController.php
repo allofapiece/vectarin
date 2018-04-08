@@ -5,10 +5,10 @@ namespace App\Controller;
 
 use App\Entity\Question;
 use App\Form\Question\QuestionType;
+use App\Service\FormHandler\QuestionCreateFormHandler;
+use App\Service\FormHandler\QuestionUpdateFormHandler;
 use App\Service\Paginator\QuestionPaginator;
-use App\Service\QuestionCreateFormHandler;
-use App\Service\QuestionDeleter;
-use App\Service\QuestionUpdateFormHandler;
+use App\Service\Deleter\QuestionDeleter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
