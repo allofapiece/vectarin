@@ -66,7 +66,6 @@ class QuestionService
         $this->questionOptimization->optimizeQuestionText($question);
         $this->questionOptimization->addQuestionCharacterIfNotExist($question);
 
-        // remove the relationship between the tag and the Task
         foreach ($originalAnswers as $answer) {
             if (false === $question->getAnswers()->contains($answer)) {
 

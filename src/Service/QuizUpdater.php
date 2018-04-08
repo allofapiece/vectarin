@@ -12,4 +12,8 @@ namespace App\Service;
 class QuizUpdater
 {
 
+    public function update()
+    {
+        
+    }
 }

@@ -80,7 +80,7 @@ function setNumbers() {
 }
 
 function checkRemoveButtonsAmount() {
-    if($('.delete').length == 2){
+    if($('.delete').length < 3){
         $('.delete').addClass('disabled');
         $('.input-group-btn').addClass('disabled');
     } else {

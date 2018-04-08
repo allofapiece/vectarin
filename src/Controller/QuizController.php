@@ -8,7 +8,10 @@ use App\Entity\Quiz;
 use App\Form\QuizType;
 use App\Service\DataChecker\QuizDataChecker;
 use App\Service\QuestionService;
+use App\Service\QuizCreateFormHandler;
+use App\Service\QuizCreator;
 use App\Service\QuizService;
+use App\Service\QuizUpdater;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,18 +21,25 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class QuizController extends Controller
 {
+    private $quizCreateFormHandler;
 
     private $quizService;
 
     private $quizDataChecker;
 
+    private $updater;
+
     public function __construct(
+        QuizCreateFormHandler $quizCreateFormHandler,
         QuizService $quizService,
+        QuizUpdater $updater,
         QuizDataChecker $quizDataChecker
     )
     {
+        $this->quizCreateFormHandler = $quizCreateFormHandler;
         $this->quizService = $quizService;
         $this->quizDataChecker = $quizDataChecker;
+        $this->updater = $updater;
     }
 
 
@@ -51,26 +61,13 @@ class QuizController extends Controller
         $quiz = new Quiz();
 
         $form = $this->createForm(QuizType::class, $quiz);
-
-
-
-        if($request->isMethod('POST')
-        ){
-            $form->submit($request->request->get($form->getName()));
-
-            $data = $form->getData();
-
-            $this->quizService->create($data);
-
-            //$this->quizService->commit($quiz);
-
+        if($this->quizCreateFormHandler->handle($form, $request)){
             return $this->redirectToRoute('quiz.show');
         }
 
         return $this->render('quizzes/quiz_create.html.twig', [
             'form' => $form->createView(),
-            'action' => 'create',
-            'errors' => $this->quizDataChecker->getMessages()
+            'errors' => $this->quizCreateFormHandler->getFormErrorMessages()
         ]);
     }
 
@@ -90,24 +87,20 @@ class QuizController extends Controller
 
         $originalQuestions = new ArrayCollection();
 
-        // Create an ArrayCollection of the current Tag objects in the database
         foreach ($quiz->getQuestions() as $question) {
             $originalQuestions->add($question);
         }
 
         $editForm = $this->createForm(QuizType::class, $quiz);
 
-
-
-        if($request->isMethod('POST') &&
+        if(
+            $request->isMethod('POST') &&
             true === $this->quizDataChecker->checkData($quiz)
         ){
             $editForm->submit($request->request->get($editForm->getName()));
             $data = $editForm->getData();
             $this->quizService->update($data, $originalQuestions);
 
-            //$this->quizService->commit($quiz);
-            // redirect back to question show page
             return $this->redirectToRoute('quiz.show');
         }
 
@@ -131,15 +124,6 @@ class QuizController extends Controller
         $this->quizService->commit($quiz);
 
         return $this->redirectToRoute('quiz.show');
-    }
-
-    /**
-     * @Route("/admin/quiz/show/{id}",name="quiz.show.id")
-     * @return Response
-     */
-    public function showQuizById()
-    {
-        return new Response();
     }
 
     /**
