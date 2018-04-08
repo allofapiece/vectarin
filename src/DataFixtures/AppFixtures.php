@@ -2,6 +2,10 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Answer;
+use App\Entity\Question;
+use App\Entity\Quiz;
+
 class AppFixtures extends \Doctrine\Bundle\FixturesBundle\Fixture
 {
 
@@ -12,18 +16,24 @@ class AppFixtures extends \Doctrine\Bundle\FixturesBundle\Fixture
      */
     public function load(\Doctrine\Common\Persistence\ObjectManager $manager)
     {
-        for ($i = 0; $i < 100; $i++) {
-            $question=new \App\Entity\Question();
-            $question->setText('qwerty');
+        for ($i = 0; $i < 20; $i++) {
+            $quiz = new Quiz();
+            $quiz->setName('Викторина № ' . $i);
+            $quiz->setDescription('Очеень длинное описание для викторины №' . $i);
 
-            $answer=new \App\Entity\Answer();
-            $answer->setText('yes');
+            $answer = new Answer();
+            $answer->setText('YEs');
             $answer->setIsCorrect('1');
 
+            $question = new Question();
+            $question->setText('Yes?');
             $question->addAnswer($answer);
 
-            $manager->persist($question);
+            $quiz->addQuestion($question);
+
+            $manager->persist($quiz);
         }
+
         $manager->flush();
     }
 }

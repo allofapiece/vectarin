@@ -4,8 +4,17 @@
 
 {% block section_content %}
     <div class="quiz-game">
-        {{ form_start(form) }}
-
+        {{ form_start(form, {
+            'action': path('game.play',{'gameId': gameId,'questionNumber': questionNumber}),
+            'method': 'POST',
+            'attr':{novalidate:'novalidate'},
+        }) }}
+        <h2>Вопрос:</h2>
+        <h2>{{ question.getText }}</h2>
+        {% for answer in answers %}
+            <li>{{ answer.text|e }}</li>
+        {% endfor %}
+        {{ form_row(form.number) }}
         {{ form_end(form) }}
     </div>
 {% endblock %}
