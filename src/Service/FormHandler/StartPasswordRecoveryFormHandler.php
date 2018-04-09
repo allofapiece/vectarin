@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\FormHandler;
 
 
+use App\Entity\User;
 use App\Service\Security\PasswordRecovery;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;

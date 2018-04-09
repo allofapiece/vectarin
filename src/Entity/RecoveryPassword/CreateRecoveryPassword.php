@@ -11,6 +11,11 @@ class CreateRecoveryPassword
      * @Assert\NotBlank(
      *     message="Поле пароля должно быть обязательно заполнено"
      * )
+     * @Assert\Regex(
+     *     pattern     = "/^[a-z0-9]+$/i",
+     *     htmlPattern = "^[a-zA-Z]+$",
+     *     message="Пароль не может содержать русские символы"
+     * )
      * @Assert\Length(
      *     min="6",
      *     max="255",

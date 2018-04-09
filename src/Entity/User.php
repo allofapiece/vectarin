@@ -7,12 +7,15 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="app_users")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(fields={"username"}, message="Данное имя уже используется")
+ * @UniqueEntity(fields={"email"}, message="Данная почта уже используется")
  */
 class User implements AdvancedUserInterface, \Serializable
 {
@@ -26,12 +29,15 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @ORM\Column(type="string", length=25, unique=true)
      *
+     * @Assert\Regex(
+     *     pattern     = "/^[a-z]+$/i",
+     *     htmlPattern = "^[a-zA-Z]+$",
+     *     message="Используйте латиницу"
+     * )
      * @Assert\NotBlank(
-     *     groups={"login", "register"},
      *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
      * )
      * @Assert\Length(
-     *     groups={"login", "register"},
      *     min = 4,
      *     max = 18,
      *     minMessage = "Число символов не должно быть меньше {{ limit }}",
@@ -42,13 +48,8 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=64)
-     *
-     * @Assert\NotBlank(
-     *     groups={"login", "register"},
-     *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
-     * )
+
      * @Assert\Length(
-     *     groups={"login", "register"},
      *     min = 4,
      *     max = 18,
      *     minMessage = "Число символов не должно быть меньше {{ limit }}",
@@ -59,11 +60,14 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @Assert\NotBlank(
-     *     groups={"register"},
      *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
      * )
+     * @Assert\Regex(
+     *     pattern     = "/^[a-z0-9]+$/i",
+     *     htmlPattern = "^[a-zA-Z]+$",
+     *     message="Пароль не может содержать русские символы"
+     * )
      * @Assert\Length(
-     *     groups={"login", "register"},
      *     min = 4,
      *     max = 18,
      *     minMessage = "Число символов не должно быть меньше {{ limit }}",
@@ -82,11 +86,14 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(type="string", length=255)
      *
      * @Assert\NotBlank(
-     *     groups={"register"},
      *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
      * )
+     * @Assert\Regex(
+     *     pattern     = "/^[a-zа-я]+$/u",
+     *     htmlPattern = "^[a-zA-Z]+$",
+     *     message="Имя не должно содержать цифры"
+     * )
      * @Assert\Length(
-     *     groups={"login", "register"},
      *     min = 2,
      *     max = 50,
      *     minMessage = "Число символов не должно быть меньше {{ limit }}",
@@ -99,11 +106,9 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(type="string", length=255, unique=true)
      *
      * @Assert\NotBlank(
-     *     groups={"register"},
      *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
      * )
      * @Assert\Length(
-     *     groups={"login", "register"},
      *     min = 2,
      *     max = 50,
      *     minMessage = "Число символов не должно быть меньше {{ limit }}",
@@ -119,11 +124,14 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(type="string", length=255)
      *
      * @Assert\NotBlank(
-     *     groups={"register"},
      *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
      * )
+     * @Assert\Regex(
+     *     pattern     = "/^[a-zа-я]+$/u",
+     *     htmlPattern = "^[a-zA-Z]+$",
+     *     message="Фамилия не должна содержать цифры"
+     * )
      * @Assert\Length(
-     *     groups={"login", "register"},
      *     min = 2,
      *     max = 50,
      *     minMessage = "Число символов не должно быть меньше {{ limit }}",
@@ -136,11 +144,14 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(type="string", length=255)
      *
      * @Assert\NotBlank(
-     *     groups={"register"},
      *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
      * )
+     * @Assert\Regex(
+     *     pattern     = "/^[a-zа-я]+$/u",
+     *     htmlPattern = "^[a-zA-Z]+$",
+     *     message="Отчество не должно содержать цифры"
+     * )
      * @Assert\Length(
-     *     groups={"login", "register"},
      *     min = 2,
      *     max = 50,
      *     minMessage = "Число символов не должно быть меньше {{ limit }}",

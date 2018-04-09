@@ -32,7 +32,7 @@ class QuizController extends Controller
         $quiz = new Quiz();
 
         $form = $this->createForm(QuizType::class, $quiz);
-        if($quizCreateFormHandler->handle($form, $request)){
+        if ($quizCreateFormHandler->handle($form, $request)) {
             return $this->redirectToRoute('quiz.show');
         }
 
@@ -68,9 +68,9 @@ class QuizController extends Controller
         if (!$quiz) {
             throw $this->createNotFoundException('Викторины с индексом ' . $id . ' не существует');
         }
-        
+
         $form = $this->createForm(QuizType::class, $quiz);
-        if($quizUpdateFormHandler->handle($form, $request, ['entity' => $quiz])){
+        if ($quizUpdateFormHandler->handle($form, $request, ['entity' => $quiz])) {
             return $this->redirectToRoute('quiz.show');
         }
 
@@ -92,7 +92,7 @@ class QuizController extends Controller
         QuizDeleter $quizDeleter
     ): Response
     {
-        if(!$quizDeleter->delete($id)){
+        if (!$quizDeleter->delete($id)) {
             throw $this->createNotFoundException('Викторины с индексом ' . $id . ' не существует ');
         }
 
@@ -102,7 +102,7 @@ class QuizController extends Controller
     /**
      * @Route("/quiz/own",name="quiz.own")
      *
-     * @param Request $request=
+     * @param Request $request =
      * @return Response
      */
     public function showOwnQuizzes(Request $request)

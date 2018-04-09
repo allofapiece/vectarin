@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 
+use App\Entity\Quiz;
 use App\Entity\UserAnswer;
 use App\Form\GameType;
 use App\Service\GameService;
+use App\Service\Validator\UserAnswerValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,12 +18,15 @@ class GameController extends Controller
 
     private $gameService;
 
+    private $userAnswerValidator;
 
     public function __construct(
-        GameService $gameService
+        GameService $gameService,
+        UserAnswerValidator $userAnswerValidator
     )
     {
         $this->gameService = $gameService;
+        $this->userAnswerValidator = $userAnswerValidator;
     }
 
     /**
@@ -39,10 +44,11 @@ class GameController extends Controller
     public function showGame(int $gameId, int $questionNumber)
     {
         $game = $this->gameService->find($gameId);
-
         if (!$this->gameService->checkPermission($game, $this->getUser())) {
             throw $this->createNotFoundException();
         }
+
+        $this->checkGameAccess($game->getQuiz()->getId());
 
         $currentQuestion = $this->gameService->getCurrentQuestionNumber($game);
 
@@ -57,7 +63,7 @@ class GameController extends Controller
 
             return $this->render('games/game_show.html.twig', [
                 'gameInfo' => $this->gameService->find($gameId),
-                'quizId'=>$game->getQuiz()->getId(),
+                'quizId' => $game->getQuiz()->getId(),
             ]);
         }
 
@@ -85,10 +91,11 @@ class GameController extends Controller
     public function playGame(Request $request, $gameId, $questionNumber)
     {
         $game = $this->gameService->find($gameId);
-
         if ($game == null || !$this->gameService->checkPermission($game, $this->getUser())) {
             throw $this->createNotFoundException();
         }
+
+        $this->checkGameAccess($game->getQuiz()->getId());
 
         if ($game->getGameIsOver()) {
 
@@ -115,6 +122,16 @@ class GameController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $result = $form->getData();
 
+            if (!$this->userAnswerValidator->validate($result, $game->getCurrentQuestion())) {
+                return $this->render('games/game_play.html.twig', [
+                    'form' => $form->createView(),
+                    'question' => $this->gameService->getCurrentQuestion($game),
+                    'answers' => $this->gameService->getAnswersForQuestion(),
+                    'gameId' => $gameId,
+                    'questionNumber' => $currentQuestionNumber,
+                    'errors'=>$this->userAnswerValidator->getErrorMessages(),
+                ]);
+            }
             $this->gameService->checkResult($result, $game->getCurrentQuestion());
             $this->gameService->stop();
 
@@ -143,6 +160,8 @@ class GameController extends Controller
      */
     public function showResults(int $quizId)
     {
+        $this->checkGameAccess($quizId);
+
         $games = $this->gameService->findAllByQuizId($quizId);
 
         if (!$this->gameService->checkUserParticipation($games, $this->getUser()->getId())) {
@@ -155,14 +174,14 @@ class GameController extends Controller
         }
 
         $thisUserResult = $this->gameService->findByQuizUserId($this->getUser()->getId(), $quizId);
-        $thisUserPosition=$this->gameService->getUserPosition($games, $this->getUser()->getId());
+        $thisUserPosition = $this->gameService->getUserPosition($games, $this->getUser()->getId());
 
         $users = $this->gameService->getTopUsers($games);
 
         return $this->render('games/game_result.html.twig', [
             'users' => $users,
-            'thisUserResult'=>$thisUserResult->getCorrectQuestionsAmount(),
-            'thisUserPosition'=>$thisUserPosition,
+            'thisUserResult' => $thisUserResult->getCorrectQuestionsAmount(),
+            'thisUserPosition' => $thisUserPosition,
         ]);
     }
 
@@ -177,6 +196,8 @@ class GameController extends Controller
      */
     public function createGame(int $quizId)
     {
+        $this->checkGameAccess($quizId);
+
         $game = $this->gameService->findByQuizUserId($this->getUser()->getId(), $quizId);
 
         if ($game) {
@@ -210,10 +231,25 @@ class GameController extends Controller
      */
     public function showUserGames()
     {
-        $userGames=$this->gameService->findAllUserGames($this->getUser()->getId());
+        $userGames = $this->gameService->findAllUserGames($this->getUser()->getId());
 
-        return $this->render('games/user_games_show.html.twig',[
-            'userGames'=>$userGames,
+        return $this->render('games/user_games_show.html.twig', [
+            'userGames' => $userGames,
         ]);
+    }
+
+    /**
+     * @param int $quizId
+     */
+    public function checkGameAccess(int $quizId)
+    {
+        $quiz = $this
+            ->getDoctrine()
+            ->getRepository(Quiz::class)
+            ->findOneBy(['id' => $quizId]);
+
+        if (!$quiz->getIsActive()) {
+            throw $this->createAccessDeniedException('Викторина неактивна!');
+        }
     }
 }

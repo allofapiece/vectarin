@@ -49,7 +49,7 @@ class SignupService
     {
         $this->passwordEncoder->encode($user);
         $user->setToken($this->tokenGenerator->generate($user->getEmail()));
-        $user->setIsActive(0);
+        $user->setIsActive(false);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

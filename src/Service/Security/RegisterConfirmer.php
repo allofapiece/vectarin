@@ -28,7 +28,7 @@ class RegisterConfirmer
      */
     public function confirm(User $user): void
     {
-        $user->setIsActive(1);
+        $user->setIsActive(true);
         $user->setToken('');
         $user->setRoles(['ROLE_USER']);
 
