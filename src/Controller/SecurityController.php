@@ -39,7 +39,7 @@ class SecurityController extends Controller
         $form = $this->createForm(LoginType::class, new User());
 
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             return $this->redirectToRoute('home');
         }
 
@@ -67,7 +67,11 @@ class SecurityController extends Controller
     ): Response
     {
         $form = $this->createForm(SignupType::class, new User());
-        if($signupFormHandler->handle($form, $request)){
+        if ($signupFormHandler->handle($form, $request)) {
+            $this->addFlash(
+                'success',
+                'На вашу почту отправлено сообщение с дальнейшей инструкцией регистрации'
+            );
             return $this->redirectToRoute('home');
         }
 
@@ -117,8 +121,12 @@ class SecurityController extends Controller
     ): Response
     {
         $form = $this->createForm(RecoveryTypeEmail::class, new CreateEmailRequest());
-        if($formHandler->handle($form, $request)){
-            //TODO should to create flash success message and redirect
+        if ($formHandler->handle($form, $request)) {
+            $this->addFlash(
+                'success',
+                'На вашу почту отправлено сообщение с дальнейшей инструкцией по восстановлению пароля'
+            );
+            return $this->redirectToRoute('quiz.show');
         }
 
         return $this->render('security/recovery_password_step_1.html.twig', [
@@ -149,13 +157,13 @@ class SecurityController extends Controller
         }
 
         $form = $this->createForm(RecoveryTypePassword::class, new CreateRecoveryPassword());
-        if($formHandler->handle($form, $request, ['entity' => $user])){
+        if ($formHandler->handle($form, $request, ['entity' => $user])) {
             return $this->redirect('/login');
         }
 
         return $this->render('security/recovery_password_step_2.html.twig', [
             'form' => $form->createView(),
-            'token'=>$token,
+            'token' => $token,
         ]);
     }
 

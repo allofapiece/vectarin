@@ -13,10 +13,10 @@ class TokenGenerator
 
     /**
      * @param string $stringForGenerateToken
-     * @return UuidInterface
+     * @return string
      */
-    public function generate(string $stringForGenerateToken): UuidInterface
+    public function generate(string $stringForGenerateToken): string
     {
-        return Uuid::uuid5(Uuid::NAMESPACE_DNS, $stringForGenerateToken);
+        return Uuid::uuid5(Uuid::NAMESPACE_DNS, $stringForGenerateToken)->toString();
     }
 }

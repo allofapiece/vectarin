@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Service\Security;
 
 
+use App\Entity\RecoveryPassword\CreateEmailRequest;
+use App\Entity\RecoveryPassword\CreateRecoveryPassword;
 use App\Entity\User;
 use App\Service\Util\MessageSender;
 use App\Service\Util\PasswordEncoder;
@@ -46,7 +48,7 @@ class PasswordRecovery
      * @param User $data
      * @return bool
      */
-    public function startRecovery(User $data): bool
+    public function startRecovery(CreateEmailRequest $data): bool
     {
         $user = $this
             ->entityManager
@@ -66,11 +68,11 @@ class PasswordRecovery
     }
 
     /**
-     * @param User $data
+     * @param CreateRecoveryPassword $data
      * @param User $user
      * @return void
      */
-    public function finishRecovery(User $data, User $user): void
+    public function finishRecovery(CreateRecoveryPassword $data, User $user): void
     {
         $user->setPlainPassword($data->getPlainPassword());
 
