@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,14 +25,51 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=25, unique=true)
+     *
+     * @Assert\NotBlank(
+     *     groups={"login", "register"},
+     *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
+     * )
+     * @Assert\Length(
+     *     groups={"login", "register"},
+     *     min = 4,
+     *     max = 18,
+     *     minMessage = "Число символов не должно быть меньше {{ limit }}",
+     *     maxMessage = "Число символов не должно быть больше {{ limit }}"
+     * )
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=64)
+     *
+     * @Assert\NotBlank(
+     *     groups={"login", "register"},
+     *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
+     * )
+     * @Assert\Length(
+     *     groups={"login", "register"},
+     *     min = 4,
+     *     max = 18,
+     *     minMessage = "Число символов не должно быть меньше {{ limit }}",
+     *     maxMessage = "Число символов не должно быть больше {{ limit }}"
+     * )
      */
     private $password;
 
+    /**
+     * @Assert\NotBlank(
+     *     groups={"register"},
+     *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
+     * )
+     * @Assert\Length(
+     *     groups={"login", "register"},
+     *     min = 4,
+     *     max = 18,
+     *     minMessage = "Число символов не должно быть меньше {{ limit }}",
+     *     maxMessage = "Число символов не должно быть больше {{ limit }}"
+     * )
+     */
     private $plainPassword;
 
     /**
@@ -41,21 +80,72 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Assert\NotBlank(
+     *     groups={"register"},
+     *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
+     * )
+     * @Assert\Length(
+     *     groups={"login", "register"},
+     *     min = 2,
+     *     max = 50,
+     *     minMessage = "Число символов не должно быть меньше {{ limit }}",
+     *     maxMessage = "Число символов не должно быть больше {{ limit }}"
+     * )
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     *
+     * @Assert\NotBlank(
+     *     groups={"register"},
+     *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
+     * )
+     * @Assert\Length(
+     *     groups={"login", "register"},
+     *     min = 2,
+     *     max = 50,
+     *     minMessage = "Число символов не должно быть меньше {{ limit }}",
+     *     maxMessage = "Число символов не должно быть больше {{ limit }}"
+     * )
+     * @Assert\Email(
+     *      message = "Поле должно быть в формате электронной почты"
+     * )
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Assert\NotBlank(
+     *     groups={"register"},
+     *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
+     * )
+     * @Assert\Length(
+     *     groups={"login", "register"},
+     *     min = 2,
+     *     max = 50,
+     *     minMessage = "Число символов не должно быть меньше {{ limit }}",
+     *     maxMessage = "Число символов не должно быть больше {{ limit }}"
+     * )
      */
     private $surname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Assert\NotBlank(
+     *     groups={"register"},
+     *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
+     * )
+     * @Assert\Length(
+     *     groups={"login", "register"},
+     *     min = 2,
+     *     max = 50,
+     *     minMessage = "Число символов не должно быть меньше {{ limit }}",
+     *     maxMessage = "Число символов не должно быть больше {{ limit }}"
+     * )
      */
     private $secondname;
 
@@ -80,7 +170,9 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $games;
 
-
+    /**
+     * User constructor.
+     */
     public function __construct()
     {
         $this->isActive = true;
@@ -93,11 +185,17 @@ class User implements AdvancedUserInterface, \Serializable
         $this->games = new ArrayCollection();
     }
 
+    /**
+     * @return string
+     */
     public function getUsername(): string
     {
         return $this->username;
     }
 
+    /**
+     * @return null
+     */
     public function getSalt()
     {
         // you *may* need a real salt depending on your encoder
@@ -105,47 +203,76 @@ class User implements AdvancedUserInterface, \Serializable
         return null;
     }
 
+    /**
+     * @return string
+     */
     public function getPassword(): string
     {
         return $this->password;
     }
 
+    /**
+     * @return array
+     */
     public function getRoles(): array
     {
         return $this->roles;
     }
 
-    public function setRoles(array $roles)
+    /**
+     * @param array $roles
+     * @return User|static
+     */
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
+
+        return $this;
     }
 
-    public function eraseCredentials()
+    /**
+     * @return void
+     */
+    public function eraseCredentials(): void
     {
     }
 
-    public function isAccountNonExpired()
-    {
-        return true;
-    }
-
-    public function isAccountNonLocked()
-    {
-        return true;
-    }
-
-    public function isCredentialsNonExpired()
+    /**
+     * @return bool
+     */
+    public function isAccountNonExpired(): bool
     {
         return true;
     }
 
-    public function isEnabled()
+    /**
+     * @return bool
+     */
+    public function isAccountNonLocked(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCredentialsNonExpired(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled(): bool
     {
         return $this->isActive;
     }
 
-    /** @see \Serializable::serialize() */
-    public function serialize()
+    /** @see \Serializable::serialize()
+     * @return string
+     */
+    public function serialize(): string
     {
         return serialize(array(
             $this->id,
@@ -250,43 +377,52 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getToken()
+    public function getToken(): string
     {
         return $this->token;
     }
 
     /**
      * @param mixed $token
+     * @return User
      */
-    public function setToken($token)
+    public function setToken($token): self
     {
         $this->token = $token;
+
+        return $this;
     }
 
     /**
      * @param mixed $isActive
+     * @return User
      */
-    public function setIsActive($isActive)
+    public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getRecoveryToken()
+    public function getRecoveryToken(): string
     {
         return $this->recoveryToken;
     }
 
     /**
      * @param mixed $recoveryToken
+     * @return User
      */
-    public function setRecoveryToken($recoveryToken)
+    public function setRecoveryToken(string $recoveryToken): self
     {
         $this->recoveryToken = $recoveryToken;
+
+        return $this;
     }
 
     /**
@@ -313,6 +449,10 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->games;
     }
 
+    /**
+     * @param Game $game
+     * @return User
+     */
     public function addGame(Game $game): self
     {
         if (!$this->games->contains($game)) {
@@ -323,6 +463,10 @@ class User implements AdvancedUserInterface, \Serializable
         return $this;
     }
 
+    /**
+     * @param Game $game
+     * @return User
+     */
     public function removeGame(Game $game): self
     {
         if ($this->games->contains($game)) {
