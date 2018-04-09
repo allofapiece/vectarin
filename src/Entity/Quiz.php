@@ -31,7 +31,7 @@ class Quiz
      * )
      * @Assert\Length(
      *     min = 2,
-     *     max = 50,
+     *     max = 100,
      *     minMessage = "Число символов не должно быть меньше {{ limit }}",
      *     maxMessage = "Число символов не должно быть больше {{ limit }}"
      * )
