@@ -26,11 +26,6 @@ class AnswerType extends AbstractType
     {
         $builder
             ->add('text', TextType::class, [
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Поле должно быть заполнено'
-                    ])
-                ],
                 'label' => false,
                 'attr' => [
                     'placeholder' => 'Ответ',

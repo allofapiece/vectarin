@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\FormHandler;
 
 use App\Service\Updater\QuizUpdater;
+use App\Service\Util\QuizUtils;
 use App\Service\Validator\QuizUpdateFormValidator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\FormInterface;
@@ -16,24 +17,29 @@ class QuizUpdateFormHandler extends AbstractFormHandler
 
     private $validator;
 
+    private $quizUtils;
+
     /**
      * QuizCreateFormHandler constructor.
      * @param bool $isFormValid
      * @param array $formErrorMessages
      * @param QuizUpdater $updater
      * @param QuizUpdateFormValidator $validator
+     * @param QuizUtils $quizUtils
      */
     public function __construct(
         bool $isFormValid = true,
         array $formErrorMessages = [],
         QuizUpdater $updater,
-        QuizUpdateFormValidator $validator
+        QuizUpdateFormValidator $validator,
+        QuizUtils $quizUtils
     )
     {
         $this->isFormValid = $isFormValid;
         $this->formErrorMessages = $formErrorMessages;
         $this->updater = $updater;
         $this->validator = $validator;
+        $this->quizUtils = $quizUtils;
     }
 
     /**
@@ -53,7 +59,9 @@ class QuizUpdateFormHandler extends AbstractFormHandler
             $form->submit($request->request->get($form->getName()));
             $data = $form->getData();
 
-            if($this->validator->validate($data)){
+            $this->quizUtils->deleteEmptyQuestions($data);
+
+            if($form->isSubmitted() && $form->isValid() && $this->validator->validate($data)){
                 $this->updater->update($data, $originalQuestions);
             } else {
                 $this->setIsFormValid(false);

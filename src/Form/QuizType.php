@@ -31,31 +31,12 @@ class QuizType extends AbstractType
                 'label' => 'Название викторины',
                 'attr' => [
                     'placeholder' => 'Название'
-                ],
-                'constraints' => [
-                    new Length([
-                        'min' => 2,
-                        'max' => 50,
-                        'minMessage' => 'Число символов не должно быть меньше {{ limit }}',
-                        'maxMessage' => 'Число символов не должно быть больше {{ limit }}'
-                    ]),
-                    new NotBlank([
-                        'message' => 'Поле не должно быть пустым.'
-                    ])
                 ]
             ])
             ->add('description', TextType::class, [
                 'label' => 'Описание викторины',
                 'attr' => [
                     'placeholder' => 'Описание'
-                ],
-                'constraints' => [
-                    new Length([
-                        'min' => 2,
-                        'max' => 50,
-                        'minMessage' => 'Число символов не должно быть меньше {{ limit }}',
-                        'maxMessage' => 'Число символов не должно быть больше {{ limit }}'
-                    ])
                 ]
             ])
             ->add('questions', CollectionType::class, [
