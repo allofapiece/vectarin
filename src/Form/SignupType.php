@@ -14,9 +14,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SignupType extends AbstractType
 {
@@ -30,113 +27,32 @@ class SignupType extends AbstractType
     {
         $builder
             ->add('firstname', TextType::class, [
-                'label' => 'Имя',
-                'constraints' => [
-                    new Length([
-                        'min' => 2,
-                        'max' => 50,
-                        'minMessage' => 'Число символов не должно быть меньше {{ limit }}',
-                        'maxMessage' => 'Число символов не должно быть больше {{ limit }}'
-                    ]),
-                    new NotBlank([
-                        'message' => 'Поле не должно быть пустым.'
-                    ])
-                ]
+                'label' => 'Имя'
             ])
             ->add('surname', TextType::class, [
-                'label' => 'Фамилия',
-                'constraints' => [
-                    new Length([
-                        'min' => 2,
-                        'max' => 50,
-                        'minMessage' => 'Число символов не должно быть меньше {{ limit }}',
-                        'maxMessage' => 'Число символов не должно быть больше {{ limit }}'
-                    ]),
-                    new NotBlank([
-                        'message' => 'Поле не должно быть пустым.'
-                    ])
-                ]
+                'label' => 'Фамилия'
             ])
             ->add('secondname', TextType::class, [
                 'label' => 'Отчество',
-                'constraints' => [
-                    new Length([
-                        'min' => 2,
-                        'max' => 50,
-                        'minMessage' => 'Число символов не должно быть меньше {{ limit }}',
-                        'maxMessage' => 'Число символов не должно быть больше {{ limit }}'
-                    ]),
-                    new NotBlank([
-                        'message' => 'Поле не должно быть пустым.'
-                    ])
-                ]
             ])
             ->add('username', TextType::class, [
-                'label' => 'Логин',
-                'constraints' => [
-                    new Length([
-                        'min' => 4,
-                        'max' => 18,
-                        'minMessage' => 'Число символов не должно быть меньше {{ limit }}',
-                        'maxMessage' => 'Число символов не должно быть больше {{ limit }}'
-                    ]),
-                    new NotBlank([
-                        'message' => 'Поле не должно быть пустым.'
-                    ])
-                ]
+                'label' => 'Логин'
             ])
             ->add('plainPassword', RepeatedType::class,[
                 'type' => PasswordType::class,
                 'first_options'  => [
-                    'label' => 'Пароль',
-                    'constraints' => [
-                        new Length([
-                            'min' => 4,
-                            'max' => 18,
-                            'minMessage' => 'Число символов не должно быть меньше {{ limit }}',
-                            'maxMessage' => 'Число символов не должно быть больше {{ limit }}'
-                        ]),
-                        new NotBlank([
-                            'message' => 'Поле не должно быть пустым.'
-                        ])
-                    ]
+                    'label' => 'Пароль'
                 ],
                 'second_options' => [
-                    'label' => 'Повторите пароль',
-                    'constraints' => [
-                        new Length([
-                            'min' => 4,
-                            'max' => 18,
-                            'minMessage' => 'Число символов не должно быть меньше {{ limit }}',
-                            'maxMessage' => 'Число символов не должно быть больше {{ limit }}'
-                        ]),
-                        new NotBlank([
-                            'message' => 'Поле не должно быть пустым.'
-                        ])
-                    ]
+                    'label' => 'Повторите пароль'
                 ],
             ])
             ->add('email', EmailType::class, [
-                'label'    => 'Электронная почта',
-                'constraints' => [
-                    new Email([
-                        'message' => 'Данные должны быть в формате электронной почты'
-                    ]),
-                    new Length([
-                        'min' => 2,
-                        'max' => 50,
-                        'minMessage' => 'Число символов не должно быть меньше {{ limit }}',
-                        'maxMessage' => 'Число символов не должно быть больше {{ limit }}'
-                    ]),
-                    new NotBlank([
-                        'message' => 'Поле не должно быть пустым.'
-                    ])
-                ]
+                'label'    => 'Электронная почта'
             ])
             ->add('confirm', SubmitType::class, [
                 'label' => 'Зарегистрироваться'
-            ])
-        ;
+            ]);
     }
 
     /**
@@ -147,6 +63,9 @@ class SignupType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'validation_groups' => [
+                'register'
+            ]
         ]);
     }
 }

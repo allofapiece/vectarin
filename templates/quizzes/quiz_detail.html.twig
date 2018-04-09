@@ -1,8 +1,4 @@
 <div class="quiz">
-    {% if not quiz.isActive %}
-        <div class="disactive-layer">
-
-    {% endif %}
     {% if is_granted("ROLE_ADMIN") %}
         <div class="quiz-tools">
             <a class="btn btn-primary btn-xs" href="{{ path('quiz.update', {'id': quiz.id}) }}">
@@ -22,12 +18,24 @@
             </a>
         </div>
     {% endif %}
+
+    {% if not quiz.isActive %}
+        <div class="disactive-layer">
+    {% endif %}
+
     <div class="jumbotron">
         <h3>{{ quiz.name }}</h3>
         <p>{{ quiz.description }}</p>
-        <p><a class="btn btn-primary btn-lg" href="{{ path('game.create', {'quizId': quiz.id}) }}" role="button">Старт</a></p>
+        <p><a class="btn btn-primary btn-lg"
+              {% if not quiz.isActive %}
+              disabled
+              {% else %}
+              href="{{ path('game.create', {'quizId': quiz.id}) }}"
+              {% endif %}
+              role="button">Старт</a></p>
     </div>
-            {% if not quiz.isActive %}
+
+    {% if not quiz.isActive %}
         </div>
-{% endif %}
+    {% endif %}
 </div>
