@@ -126,7 +126,7 @@ class SecurityController extends Controller
                 'success',
                 'На вашу почту отправлено сообщение с дальнейшей инструкцией по восстановлению пароля'
             );
-            return $this->redirectToRoute('quiz.show');
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('security/recovery_password_step_1.html.twig', [

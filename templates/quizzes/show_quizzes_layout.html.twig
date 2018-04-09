@@ -24,14 +24,6 @@
                 </button>
             </div>
         {% endfor %}
-        {% for message in app.flashes('success') %}
-            <div class="alert alert-success col-lg-11">
-                <strong>{{ message }}</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        {% endfor %}
 
         {% for quiz in quizzes %}
             {% include('quizzes/quiz_detail.html.twig') %}

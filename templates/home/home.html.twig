@@ -5,4 +5,13 @@
 {% endblock %}
 {% block section_content %}
     <h2>Здесь вы можете проверить свои знания!</h2>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success col-lg-11">
+            <strong>{{ message }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
 {% endblock %}

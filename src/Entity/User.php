@@ -89,7 +89,7 @@ class User implements AdvancedUserInterface, \Serializable
      *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
      * )
      * @Assert\Regex(
-     *     pattern     = "/^[a-zа-я]+$/u",
+     *     pattern     = "/^[a-zа-я]+$/iu",
      *     htmlPattern = "^[a-zA-Z]+$",
      *     message="Имя не должно содержать цифры"
      * )
@@ -127,7 +127,7 @@ class User implements AdvancedUserInterface, \Serializable
      *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
      * )
      * @Assert\Regex(
-     *     pattern     = "/^[a-zа-я]+$/u",
+     *     pattern     = "/^[a-zа-я]+$/iu",
      *     htmlPattern = "^[a-zA-Z]+$",
      *     message="Фамилия не должна содержать цифры"
      * )
@@ -147,9 +147,9 @@ class User implements AdvancedUserInterface, \Serializable
      *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
      * )
      * @Assert\Regex(
-     *     pattern     = "/^[a-zа-я]+$/u",
+     *     pattern     = "/^[a-zа-я]+$/iu",
      *     htmlPattern = "^[a-zA-Z]+$",
-     *     message="Отчество не должно содержать цифры"
+     *     message="Отвечство не должно содержать цифры"
      * )
      * @Assert\Length(
      *     min = 2,
