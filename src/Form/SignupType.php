@@ -63,9 +63,7 @@ class SignupType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'validation_groups' => [
-                'register'
-            ]
+            'cascade_validation' => true,
         ]);
     }
 }

@@ -33,7 +33,8 @@ class LoginType extends AbstractType
             ])
             ->add('remember_me', CheckboxType::class, [
                 'label' => 'Запомнить пароль',
-                'mapped' => false
+                'mapped' => false,
+                'required'=>false,
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Войти'
