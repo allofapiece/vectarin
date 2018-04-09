@@ -2,9 +2,7 @@ var $collectionHolder;
 
 jQuery(document).ready(function() {
     ajaxSearch();
-    
     elementHandling();
-    
     blurSearch();
 });
 
@@ -46,7 +44,8 @@ function addQuestionFormDeleteLink($questionFormLi) {
         '<button class="btn btn-danger btn-md delete" type="button">' +
         '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>' +
         '</button>' +
-        '</span>');
+        '</span>'
+    );
     $questionFormLi.find('.input-group').append($removeFormA);
 
     $removeFormA.on('click', function(e) {
@@ -113,7 +112,7 @@ function ajaxSearch() {
         if (value.length >= minlength ) {
             if (searchRequest != null)
                 searchRequest.abort();
-            searchRequest = jQuery.ajax({
+                searchRequest = jQuery.ajax({
                 type: "GET",
                 url: "http://127.0.0.1:8000/ajax/front-controller",
                 data: {
@@ -134,11 +133,12 @@ function ajaxSearch() {
                                         var listElement = $('<li><a class="question-'+id+'">'+value+'</a></li>');
 
                                         listElement.on('click', function(e) {
-                                            // prevent the link from creating a "#" on the URL
                                             e.preventDefault();
-
-                                            // add a new tag form (see next code block)
                                             $addQuestionForm($collectionHolder, id, value);
+
+                                            entitySelector.hide();
+                                            jQuery("#search").val('');
+                                            entitySelector.empty();
 
                                             checkChanges();
                                         });
@@ -160,8 +160,9 @@ function ajaxSearch() {
 }
 
 function blurSearch() {
-    $('html').on('click', function (e) {
-        if($(this) != $('#enitiesNav') && $(this) != $('input#search.form-control')){
+    $(document).mouseup(function (e) {
+        var container = $(".sidebar-search, #side-menu");
+        if (container.has(e.target).length === 0){
             $('#entitiesNav').hide();
         }
     });
