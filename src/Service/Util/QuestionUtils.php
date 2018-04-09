@@ -83,11 +83,9 @@ class QuestionUtils
         foreach($question->getAnswers() as $answer){
             if($answer->getText() == null || $answer->getText() == ""){
                 $question->getAnswers()->removeElement($answer);
-                $this->entityManager->remove($answer);
                 $this->answerDeleter->delete($answer);
             }
         }
 
-        $this->entityManager->flush();
     }
 }

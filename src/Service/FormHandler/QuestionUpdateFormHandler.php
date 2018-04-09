@@ -56,14 +56,12 @@ class QuestionUpdateFormHandler extends AbstractFormHandler
 
         $form->handleRequest($request);
 
-        $this->questionUtils->deleteEmptyAnswers($parameters['entity']);
-
         if($form->isSubmitted()){
-
             $data = $form->getData();
+            $this->questionUtils->deleteEmptyAnswers($parameters['entity']);
 
-            if($form->isValid() && $this->validator->validate($data)){
-                $this->updater->update($data, $originalAnswers);
+            if($this->validator->validate($parameters['entity'])){
+                $this->updater->update($parameters['entity'], $originalAnswers);
             } else {
                 $this->setIsFormValid(false);
                 $this->setFormErrorMessages($this->validator->getErrorMessages());

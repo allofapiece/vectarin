@@ -24,6 +24,5 @@ class AnswerDeleter
     public function delete(Answer $answer)
     {
         $this->entityManager->remove($answer);
-        $this->entityManager->flush();
     }
 }

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\Validator;
 
+use App\Entity\Question;
 use App\Entity\Quiz;
+use Doctrine\ORM\EntityManagerInterface;
 
 class QuizUpdateFormValidator
 {
@@ -12,18 +14,23 @@ class QuizUpdateFormValidator
 
     protected $errorMessages;
 
+    private $entityManager;
+
     /**
      * QuizCreateFormValidator constructor.
      * @param bool $isValid
      * @param array $errorMessages
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(
         bool $isValid = true,
-        array $errorMessages = []
+        array $errorMessages = [],
+        EntityManagerInterface $entityManager
     )
     {
         $this->isValid = $isValid;
         $this->errorMessages = $errorMessages;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -32,6 +39,41 @@ class QuizUpdateFormValidator
      */
     public function validate(Quiz $data): bool
     {
+        $this->setIsValid(true);
+
+        if(count($data->getQuestions()) < 2){
+            $this->setIsValid(false);
+            $this->addMessage('Должны быть минимум 2 вопроса');
+        }
+
+        foreach($data->getQuestions() as $outerQuestion){
+            $outerQuestionText = strtolower($outerQuestion->getText());
+
+            foreach($data->getQuestions() as $innerQuestion){
+                if($innerQuestion != $outerQuestion &&
+                    strtolower($innerQuestion->getText()) == $outerQuestionText
+                ){
+                    $this->setIsValid(false);
+                    $this->addMessage('Не должно быть одинаковых вопросов.');
+
+                    break(2);
+                }
+            }
+        }
+
+        $count = 1;
+        foreach ($data->getQuestions() as $question){
+            if(!$this
+                ->entityManager
+                ->getRepository(Question::class)
+                ->findOneBy(['text' => $question->getText()])
+            ){
+                $this->setIsValid(false);
+                $this->addMessage('Вопроса под номером ' . $count . ' не существует');
+            }
+
+            $count++;
+        }
 
         return $this->isValid;
     }

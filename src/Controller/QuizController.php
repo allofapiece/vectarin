@@ -43,7 +43,11 @@ class QuizController extends Controller
     }
 
     /**
-     * @Route("/admin/quiz/update/{id}", name="quiz.update")
+     * @Route(
+     *     "/admin/quiz/update/{id}",
+     *     name="quiz.update",
+     *     requirements={"id"="\d+"}
+     * )
      *
      * @param int $id
      * @param Request $request

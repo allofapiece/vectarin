@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form\Question;
 
 
@@ -14,18 +16,16 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AnswerType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     * @return void
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('text', TextType::class, [
-                'constraints' => [
-                    new Length([
-                        'min' => 1,
-                        'max' => 50,
-                        'minMessage' => 'Число символов не должно быть меньше {{ limit }}',
-                        'maxMessage' => 'Число символов не должно быть больше {{ limit }}'
-                    ])
-                ],
                 'label' => false,
                 'attr' => [
                     'placeholder' => 'Ответ',
@@ -41,10 +41,14 @@ class AnswerType extends AbstractType
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     * @return void
+     */
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Answer::class
+            'data_class' => Answer::class,
         ]);
     }
 }

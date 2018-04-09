@@ -1,14 +1,12 @@
 <?php
-/**
- * Created by Listratenko Stas.
- * Date: 27.03.2018
- * Time: 23:30
- */
+
+declare(strict_types=1);
 
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,6 +23,18 @@ class Answer
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Assert\NotBlank(
+     *     groups={"answer"},
+     *     message = "Поле не должно быть пустым. Удалите его если оно не нужно."
+     * )
+     * @Assert\Length(
+     *     groups={"answer"},
+     *     min = 1,
+     *     max = 50,
+     *     minMessage = "Число символов не должно быть меньше {{ limit }}",
+     *     maxMessage = "Число символов не должно быть больше {{ limit }}"
+     * )
      */
     private $text;
 
