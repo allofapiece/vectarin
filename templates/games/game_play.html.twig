@@ -2,8 +2,7 @@
 
 {% block section_title %}Ответьте на вопрос{% endblock %}
 
-{% block section_content %}
-    <div class="quiz-game">
+{% block game_content %}
         {{ form_start(form, {
             'action': path('game.play',{'gameId': gameId,'questionNumber': questionNumber}),
             'method': 'POST',
@@ -23,11 +22,14 @@
             {% endfor %}
             <br>
         {% endif %}
-
         {% for answer in answers %}
-            <li>{{ answer.text|e }}</li>
+            {% include('games/game_answer_detail.html.twig') %}
         {% endfor %}
+        </ul>
         {{ form_row(form.number) }}
+
+        {{ form_widget(form.save, {
+            'attr': {'class': 'btn btn-success'},
+        }) }}
         {{ form_end(form) }}
-    </div>
 {% endblock %}

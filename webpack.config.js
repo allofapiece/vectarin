@@ -14,6 +14,7 @@ Encore
     .addEntry('js/app', './assets/js/app.js')
     .addEntry('js/questions', './assets/js/questions.js')
     .addEntry('js/quizzes', './assets/js/quizzes.js')
+    .addEntry('js/games', './assets/js/games.js')
 
     .addStyleEntry('css/app', './assets/css/app.scss')
     .addStyleEntry('css/style', './assets/css/style.css')
@@ -22,6 +23,7 @@ Encore
     .addStyleEntry('css/footer', './assets/css/footer.css')
     .addStyleEntry('css/questions', './assets/css/questions.css')
     .addStyleEntry('css/quizzes', './assets/css/quizzes.css')
+    .addStyleEntry('css/games', './assets/css/games.css')
 
 
     // uncomment if you use Sass/SCSS files
