@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Service;
+declare(strict_types=1);
+
+namespace App\Service\Util;
 
 
 use App\Entity\User;
@@ -8,6 +10,7 @@ use App\Entity\User;
 class MessageSender
 {
     private $mailer;
+
     private $templating;
 
     /**
@@ -23,8 +26,9 @@ class MessageSender
 
     /**
      * @param User $user
+     * @return void
      */
-    public function sendConfirmationMessage(User $user)
+    public function sendConfirmationMessage(User $user): void
     {
         $message = (new \Swift_Message('Подтверждение регистрации на Victarin.by'))
             ->setFrom('stasana1998@gmail.com')
@@ -41,7 +45,11 @@ class MessageSender
         $this->mailer->send($message);
     }
 
-    public function sendRecoveryPasswordMessage(User $user)
+    /**
+     * @param User $user
+     * @return void
+     */
+    public function sendRecoveryPasswordMessage(User $user): void
     {
         $message = (new \Swift_Message('Восстановление пароля на Victarin.by'))
         ->setFrom('stasana1998@gmail.com')

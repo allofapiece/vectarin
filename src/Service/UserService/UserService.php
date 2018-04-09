@@ -15,7 +15,6 @@ class UserService
 {
     private $passwordEncoder;
 
-    private $generateToken;
 
     private $entityManager;
 
@@ -30,12 +29,10 @@ class UserService
      */
     public function __construct(
         UserPasswordEncoderInterface $passwordEncoder,
-        GenerateToken $generateToken,
         EntityManagerInterface $entityManager,
         PaginatorInterface $paginator
     )
     {
-        $this->generateToken = $generateToken;
         $this->passwordEncoder = $passwordEncoder;
         $this->entityManager = $entityManager;
         $this->paginator = $paginator;

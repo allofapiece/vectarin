@@ -40,10 +40,10 @@ class AjaxQuestionsSearch
     }
 
     /**
-     * @param array $questions
+     * @param array& $questions
      * @return array
      */
-    public function getFoundData(array $questions): array
+    public function getFoundData(array& $questions): array
     {
         $foundData = [];
 
