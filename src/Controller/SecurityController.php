@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\RecoveryPassword\CreateEmailRequest;
@@ -9,9 +11,10 @@ use App\Form\LoginType;
 use App\Form\RecoveryPassword\RecoveryTypeEmail;
 use App\Form\RecoveryPassword\RecoveryTypePassword;
 use App\Form\SignupType;
-use App\Service\GenerateToken;
-use App\Service\MessageSender;
-use App\Service\UserService\UserService;
+use App\Service\FormHandler\FinishPasswordRecoveryFormHandler;
+use App\Service\FormHandler\SignupFormHandler;
+use App\Service\FormHandler\StartPasswordRecoveryFormHandler;
+use App\Service\Security\RegisterConfirmer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -28,14 +31,15 @@ class SecurityController extends Controller
      * @param AuthenticationUtils $authenticationUtils
      * @return Response
      */
-    public function login(Request $request, AuthenticationUtils $authenticationUtils)
+    public function login(
+        Request $request,
+        AuthenticationUtils $authenticationUtils
+    ): Response
     {
         $form = $this->createForm(LoginType::class, new User());
 
         $form->handleRequest($request);
-
         if($form->isSubmitted() && $form->isValid()){
-
             return $this->redirectToRoute('home');
         }
 
@@ -45,33 +49,25 @@ class SecurityController extends Controller
         return $this->render('security/login.html.twig', [
             'form' => $form->createView(),
             'authenticationError' => $authenticationError,
+            'lastUsername' => $lastUsername
         ]);
     }
 
 
     /**
      * @Route("/signup",name="signup")
+     *
      * @param Request $request
-     * @param UserService $userService
-     * @param MessageSender $messageSender
+     * @param SignupFormHandler $signupFormHandler
      * @return Response
      */
-    public function signup(Request $request, UserService $userService, MessageSender $messageSender)
+    public function signup(
+        Request $request,
+        SignupFormHandler $signupFormHandler
+    ): Response
     {
         $form = $this->createForm(SignupType::class, new User());
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $user = $form->getData();
-
-            $userService->setDefaultValues($user);
-
-            $userService->commit($user);
-
-            $messageSender->sendConfirmationMessage($user);
-
+        if($signupFormHandler->handle($form, $request)){
             return $this->redirectToRoute('home');
         }
 
@@ -83,13 +79,18 @@ class SecurityController extends Controller
 
     /**
      * @Route("/register/confirm/{token}",name="confirm")
-     * @param $token
-     * @param UserService $userService
+     *
+     * @param string $token
+     * @param RegisterConfirmer $registerConfirmer
      * @return Response
      */
-    public function registerConfirm($token, UserService $userService)
+    public function registerConfirm(
+        string $token,
+        RegisterConfirmer $registerConfirmer
+    ): Response
     {
-        $user = $this->getDoctrine()
+        $user = $this
+            ->getDoctrine()
             ->getRepository(User::class)
             ->findOneBy(['token' => $token]);
 
@@ -97,9 +98,7 @@ class SecurityController extends Controller
             throw $this->createNotFoundException('Access denied!');
         }
 
-        $userService->setUserActive($user);
-
-        $userService->commit($user);
+        $registerConfirmer->confirm($user);
 
         return $this->redirect('/login');
     }
@@ -109,32 +108,17 @@ class SecurityController extends Controller
      * @Route("/recovery-password-1", name="recovery.password.email")
      *
      * @param Request $request
-     * @param MessageSender $messageSender
-     * @param GenerateToken $generateToken
-     * @param UserService $userService
+     * @param StartPasswordRecoveryFormHandler $formHandler
      * @return Response
      */
-    public function sendMessageToRecoveryPassword(Request $request, MessageSender $messageSender, GenerateToken $generateToken, UserService $userService)
+    public function startRecovery(
+        Request $request,
+        StartPasswordRecoveryFormHandler $formHandler
+    ): Response
     {
         $form = $this->createForm(RecoveryTypeEmail::class, new CreateEmailRequest());
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $email = $form->getData();
-
-            $user = $this->getDoctrine()
-                ->getRepository(User::class)
-                ->findOneBy(['email' => $email->getEmail()]);
-
-            if ($user) {
-                $user->setRecoveryToken($generateToken->generate($user->getPassword()));
-
-                $userService->commit($user);
-
-                $messageSender->sendRecoveryPasswordMessage($user);
-            }
+        if($formHandler->handle($form, $request)){
+            //TODO should to create flash success message and redirect
         }
 
         return $this->render('security/recovery_password_step_1.html.twig', [
@@ -144,12 +128,17 @@ class SecurityController extends Controller
 
     /**
      * @Route("/recovery-password-2/{token}",name="recovery.password")
+     *
      * @param Request $request
-     * @param UserService $userService
-     * @param $token
+     * @param string $token
+     * @param FinishPasswordRecoveryFormHandler $formHandler
      * @return Response
      */
-    public function passwordRecovery(Request $request, UserService $userService, $token)
+    public function passwordRecovery(
+        Request $request,
+        string $token,
+        FinishPasswordRecoveryFormHandler $formHandler
+    ): Response
     {
         $user = $this->getDoctrine()
             ->getRepository(User::class)
@@ -160,21 +149,7 @@ class SecurityController extends Controller
         }
 
         $form = $this->createForm(RecoveryTypePassword::class, new CreateRecoveryPassword());
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $password = $form->getData();
-
-            $user->setPlainPassword($password->getPlainPassword());
-
-            $userService->setEncodePassword($user);
-
-            $user->setRecoveryToken('');
-
-            $userService->commit($user);
-
+        if($formHandler->handle($form, $request, ['entity' => $user])){
             return $this->redirect('/login');
         }
 
