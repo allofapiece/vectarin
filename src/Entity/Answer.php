@@ -31,7 +31,7 @@ class Answer
      * @Assert\Length(
      *     groups={"answer"},
      *     min = 1,
-     *     max = 50,
+     *     max = 100,
      *     minMessage = "Число символов не должно быть меньше {{ limit }}",
      *     maxMessage = "Число символов не должно быть больше {{ limit }}"
      * )
