@@ -14,12 +14,21 @@ class HomeController extends Controller
 
     /**
      * @Route("/",name="home.index")
-     * @Route("/home",name="home")
      *
      * @return Response
      */
     public function indexAction(): Response
     {
         return $this->redirectToRoute('quiz.show');
+    }
+
+    /**
+     * @Route("/home",name="home")
+     *
+     * @return Response
+     */
+    public function homeAction(): Response
+    {
+        return $this->render('home/home.html.twig');
     }
 }
